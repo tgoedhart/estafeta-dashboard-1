@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Fundación Estafeta</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root {
+  --primary:#1a3a5c; --accent:#e8a020; --accent2:#38a169;
+  --bg:#f0f4f8; --sidebar:#1a3a5c; --card:#fff;
+  --text:#1a202c; --muted:#718096; --border:#e2e8f0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text)}
+body{display:flex;flex-direction:column}
+
+/* TOP */
+.topbar{background:var(--primary);color:#fff;padding:10px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.logo{font-weight:700;font-size:17px;color:var(--accent)}
+.title{font-size:12px;color:#a0aec0}
+.spacer{flex:1}
+.ts{font-size:10px;color:#718096}
+
+/* FILTER BAR */
+.filterbar{background:#fff;border-bottom:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;flex-shrink:0}
+.fg{display:flex;align-items:center;gap:6px}
+.step{background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:9px}
+.fg label{font-size:11px;font-weight:600;color:var(--muted)}
+.fg select{font-size:12px;padding:4px 7px;border:1px solid var(--border);border-radius:5px;min-width:140px;max-width:210px}
+.total-wrap{display:flex;align-items:center;gap:7px;margin-left:auto}
+.badge{background:var(--primary);color:#fff;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.btn-clear{font-size:11px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:5px;padding:3px 8px;cursor:pointer}
+
+/* TABS */
+.tabs{background:#fff;border-bottom:2px solid var(--border);padding:0 16px;display:flex;flex-shrink:0}
+.tab{padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;background:none;border:none;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab.active{color:var(--primary);border-bottom-color:var(--accent)}
+
+/* LAYOUT */
+.layout{display:flex;flex:1;min-height:0}
+.sidebar{width:200px;background:var(--sidebar);overflow-y:auto;flex-shrink:0}
+.nav-btn{display:block;width:100%;text-align:left;padding:8px 13px;font-size:11px;font-weight:500;color:#a0aec0;background:none;border:none;cursor:pointer;border-left:3px solid transparent;line-height:1.4}
+.nav-btn:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-btn.active{background:rgba(255,255,255,.1);color:#fff;border-left-color:var(--accent)}
+.nav-sep{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#4a5568;padding:10px 13px 3px}
+
+.content{flex:1;overflow-y:auto;padding:16px}
+
+/* CARDS */
+.card{background:var(--card);border-radius:8px;padding:15px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.ct{font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:6px}
+.csub{font-size:11px;font-weight:600;color:var(--muted);margin:9px 0 4px}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+.f{margin-bottom:8px}
+.fl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+.fv{font-size:12px;color:var(--text);line-height:1.5}
+.fv.big{font-size:14px;font-weight:600;color:var(--primary)}
+.fv.pre{white-space:pre-wrap}
+.fv.em{color:#a0aec0;font-style:italic}
+
+.tag{display:inline-block;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:600;margin:2px;background:#ebf8ff;color:#2b6cb0}
+.tag.g{background:#f0fff4;color:#276749}
+.tag.o{background:#fffaf0;color:#c05621}
+.tag.gr{background:#f7fafc;color:#4a5568}
+.tag.p{background:#faf5ff;color:#553c9a}
+.tag.r{background:#fff5f5;color:#9b2c2c}
+
+.kpi{background:var(--card);border-radius:8px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);text-align:center}
+.kn{font-size:24px;font-weight:700;color:var(--primary)}
+.kl{font-size:10px;color:var(--muted);margin-top:2px}
+
+.chart-wrap{position:relative;height:190px}
+
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{background:var(--bg);font-weight:600;padding:5px 8px;text-align:left;border-bottom:2px solid var(--border);color:var(--muted);font-size:10px;text-transform:uppercase}
+.tbl td{padding:5px 8px;border-bottom:1px solid var(--border)}
+.tbl tr:hover td{background:#f7fafc}
+.tbl-wrap{overflow-x:auto}
+
+.brow{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.brow:last-child{border:none;font-weight:700}
+.amt{font-weight:600;color:var(--primary)}
+
+.fr{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.fl2{font-size:10px;width:140px;text-align:right;flex-shrink:0;color:var(--text)}
+.fb{flex:1;height:18px;background:var(--bg);border-radius:3px;overflow:hidden}
+.fb-inner{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:5px;font-size:10px;font-weight:700;color:#fff;min-width:20px}
+.fc{font-size:10px;font-weight:700;color:var(--primary);width:24px}
+
+.sc-wrap{margin-bottom:6px}
+.sc-row{display:flex;justify-content:space-between;margin-bottom:2px}
+.sc-label{font-size:11px}
+.sc-val{font-size:11px;font-weight:700;color:var(--primary)}
+.sc-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.sc-fill{height:100%;background:var(--accent2);border-radius:3px}
+
+.sh{margin-bottom:14px}
+.sh h2{font-size:16px;font-weight:700;color:var(--primary)}
+.sh .org{font-size:11px;color:var(--muted);margin-top:2px}
+
+.spin{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{text-align:center;padding:40px 20px}
+.loading p{margin-top:8px;font-size:12px;color:var(--muted)}
+
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty h3{font-size:14px;color:var(--text);margin-bottom:5px}
+.err{background:#fff5f5;border:1px solid #fed7d7;border-radius:7px;padding:10px 14px;color:#c53030;font-size:12px;margin:12px 0}
+.div{height:1px;background:var(--border);margin:10px 0}
+
+.no-sel{text-align:center;padding:50px 20px}
+.arr{font-size:18px;color:var(--accent);animation:bob .8s ease-in-out infinite alternate;display:block;margin-bottom:8px}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+
+/* actor block */
+.actor-block{background:var(--bg);border-radius:6px;padding:10px 12px;margin-bottom:8px}
+.actor-title{font-size:11px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.ca{text-align:right;white-space:nowrap;padding:5px 10px !important;min-width:90px}
+.ce{color:var(--accent2) !important}
+.cs{font-size:11px;color:var(--muted);max-width:220px;word-break:break-word}
+.tbl tfoot td{border-top:2px solid var(--border);font-weight:700;padding:6px 8px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">ZIGLA</div>
+  <div class="title">Dashboard · Convocatoria Fundación Estafeta</div>
+  <div class="spacer"></div>
+  <div class="ts" id="ts">—</div>
+</div>
+
+<div class="filterbar">
+  <div class="fg"><span class="step">1</span><label>Año</label>
+    <select id="fAnio" onchange="onFC()"><option value="">Todos los años</option></select>
+  </div>
+  <div class="fg"><span class="step">2</span><label>Tipo de donativo</label>
+    <select id="fTipo" onchange="onFC()"><option value="">Todos</option></select>
+  </div>
+  <div class="fg"><span class="step">3</span><label>Organización</label>
+    <select id="fOrg" onchange="onOS()"><option value="">— Seleccionar —</option></select>
+  </div>
+  <button class="btn-clear" onclick="onClear()">✕ Limpiar</button>
+  <div class="total-wrap">
+    <div class="badge" id="badge">…</div>
+    <div><div style="font-size:10px;font-weight:700;color:var(--primary)">Total</div><div style="font-size:10px;color:var(--muted)">orgs</div></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" id="tnc" onclick="switchTab('nc')">📄 Nota Conceptual</button>
+  <button class="tab" id="tfp" onclick="switchTab('fp')">📋 Formulario Presentación</button>
+  <button class="tab" id="tev" onclick="switchTab('ev')">⭐ Rúbricas de Evaluación</button>
+</div>
+
+<div class="layout">
+  <nav class="sidebar"><div id="nav"></div></nav>
+  <div class="content" id="content">
+    <div class="loading" id="loader">
+      <div class="spin"></div>
+      <p id="lmsg">Conectando con Airtable…</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── CONFIG ────────────────────────────────────────────────
+const BASE = 'appOMWOtj4oueitEf';
+const TOKEN = 'patqT7PYYdauhOJUl.cbe4ec3144ce91563e50ca0a8d89fe4f1e0c31632339b286e04789caef7aea14'; // Read-only PAT
+const T = { F1:'tblXqjvwqeIVvyJmn', F3:'tblqnwYxeNH0vlfSj', R1:'tblgaJiEhdXXwFGpN', R2:'tblXZ2aWQOz4aI5dA' };
+
+const F1 = {
+  NOM:'fldF4SyCGk8ZWOEO0', RFC:'fldOw6jbLuLAXa4uN', TIPO:'fldOdIOMjZymh4aU6', ANO:'flda24MubWs0ItJ39',
+  ALCANCE:'flde6lK1LSibKlWkk', TEM:'fld0FAA8n5Y1KXKRL', TEM2:'fldMxQ5ZuTjXSnVyr', TEM3:'fldBuwJ4coM6bikuR',
+  ESTADOS:'fldqea1u2xZjb5fs8', POB:'fldszON89Q16wSyp2',
+  EST:'fldlbKzHqRGJ8a5Ps', DONAT:'fld4tPGKa8y9fobjD', FIGURA:'fld01pxIMiJ7DIYGf', MISION:'fldj0Hxji8QMJRkKb',
+  POB_OSC:'fldIpyUKP8xI5ihTs', POB_OSC2:'fldoPxQMQSxSJs6ay', POB_OSC3:'fldzF1TFupkrGnJJp', ODS1:'fldGaphzBoUZK2m4e', ODS2:'fldmrDOrLY0RzeZ0K', ODS3:'flde98Kkd7WbnOKNa',
+  NPROY:'fld0hprIqq3GHcJHc', OBJ:'fldLk5cYCNzloWys5',
+  A1:'fld220kEgm8V0Zxah', A2:'fldRmIOpDrZuZOycc', A3:'fldjY8k5aDBENKLbo', A4:'fldf2fZwf2PzvjpXP', A5:'fldelYtuSXKfVoN6P',
+  R1CP:'fldw2WIfZtUMF3chJ', R2CP:'fldv8N7vgEAjNdoW7', R3CP:'fldCc4YazDlJ9kCDk',
+  R1MP:'fld8mcDKC0Lwrk7l0', R2MP:'fldpcdbmaicpgfZnO', R3MP:'fldOm7HAAW611rsca',
+  R1LP:'fld4VAPJRRbno27z4', R2LP:'fldyS27JVM4SY1MGi', R3LP:'fldt9AryZ40kQZxk3',
+  COSTO:'fldstF6td1q7oYFQP', INTERV:'fldKIZOUE4NvSUkBE', FCONST:'fldmBGozz1z1Apwti',
+  DUR:'fld0LTGksKUXEqDqm', MUN:'fldcRBYp0AvYdo6Y2', COMLOC:'fldz0tphIxn62IZjm',
+  REGEN:'fldZ4hn9QgPLdf6Hp',
+  FINICIO:'fldr5LLltsMaJsbN6', FFIN:'fldEElEyf1xwXqPmY',
+  OTRA_FIN:'fldnaJHnv5TsORHiN', FIN_SRC:'fldS7ZsiQRzfgLlXR',
+  PORQUE_REGEN:'fldU8ZTWMBycN5Grr', ALIANZAS:'fldg7B8ShxdAkI9as'
+};
+
+const F3 = {
+  OSC:'fldIVlWK3kmzGkbVF', EMAIL:'fldehZ9Pqxg2WNM7x', FOPS:'fldFclOwShejh9xt1',
+  FDONAT:'fldGKJxvbEw74LYuu', DOM:'fld60ektILaMXkWFa', EOPS:'fldMc06mwSCL13Z7V',
+  ESTPRO:'flduD7A2A6PgpNrNi', PROB:'fldP7JYMb5VzgGI0f', POBDIR:'fldZiWQx3vYR1Dvy7',
+  GEN:'fld6Koz16yKY4HBkY', CARACT:'fldPOufy1z9CGnKE3', ETAR:'fldMWqTQAaWSrtsZg',
+  PPROY:'fldSjnKZffOLKVMAg', PHIST:'fldSA2cQRL2SQXBWi', PACT:'fldHMkJIhUQetzN9q',
+  R1:'fld6BN0IfZ819NSUS', R2:'fldg8DksqlQFN2GNg', R3:'fldLyYUs0oRv677WS',
+  // Objetivos y actividades — Año 1
+  O1:'fldE6LealMOKtGmpF',
+  A11:'fld7tkAduofn67pY0', A12:'fldB7tJJSripI2uwv', A13:'fldKhwAq8aTab9toi',
+  RA11:'fldyyTgu2LUSZQ3Fk', RA12:'fldUHYwllvF7bSED0', RA13:'fldXvY0JXYuzWYeRb',
+  O2:'flddhNImUgLpShvLm',
+  A21:'fldaWUZUZiAxYMyX7', A22:'fldW2EqhmqAXaWBx6', A23:'fldlZfZKkK4HIhA1p',
+  RA21:'fld8NZjk6ApbpHrLD', RA22:'fldSiIqMDlFqS4fGd', RA23:'fldGN3MTNWzW1wAjf',
+  // Año 2
+  O1_Y2:'fldJ6nRmke8MeeelS',
+  A11_Y2:'fldJLuDtt1nqGtTjb', A12_Y2:'fldyiKc8kmwHw06Fj', A13_Y2:'flduRBGoVNbvQBiu0',
+  RA11_Y2:'fldMFAPWnXAJtVpNu', RA12_Y2:'flduDYGsda4g9ziqK', RA13_Y2:'fldFcgZRFd2xDigh1',
+  O2_Y2:'fldA9ZArEN8oapcmL',
+  A21_Y2:'fldsCMssYPhzMbi0f', A22_Y2:'fld2afoVNH4NmkBw3', A23_Y2:'fldl4aKDOL3zFheq0',
+  RA21_Y2:'fldjmB5aEGlwQnWF8', RA22_Y2:'fld01Catd26YKCHLz', RA23_Y2:'fldsuc7A7sbdE5mKZ',
+  // Año 3
+  O1_Y3:'fldQ3YQr5ykFOeIvC',
+  A11_Y3:'fld9yCrjrLjpniefl', A12_Y3:'fldSJsDoRhwymW8Yo', A13_Y3:'fld2Z69HLpCaBGqdb',
+  RA11_Y3:'fld0aLn04nrqhDNwK', RA12_Y3:'fldgjB6KP6omPsEZo', RA13_Y3:'fldZ47xsVVOvkcMLR',
+  O2_Y3:'fld8dM2cF5V9EQdTK',
+  A21_Y3:'fldupaKvKtncPTD8y', A22_Y3:'fldufd3tFPEN09C75', A23_Y3:'fldqbAAekZApyJcSL',
+  RA21_Y3:'fld99wcDXoAyB7pSP', RA22_Y3:'fldlmBe6SB0Jy4lNt', RA23_Y3:'fldUWzNWsSjPC1SN2',
+  // Indicadores
+  INDS:'fldg8SaWhWJjdHglo',
+  I1:'fldwJ4LHXyP1bEQUi', M1:'fldeyiUKa4aozRT2y',
+  I2:'fldcUz4X7riTwAA0p', M2:'fldDyfPsFpya0rgpp',
+  I3:'fldsik92i5eVbtO9h', M3:'fld46vwEeIRRqmE6J',
+  I4:'fldU4GuRZyMJBg2S7', M4:'fldZDvxkT1DOSVNdc',
+  // Actores estratégicos 1-5
+  ACT1:'fldPQvYDp5BvqicFX', TACT1:'fldY5u2jlfnRid5lY', CACT1:'fldFoGXVPTAC4wZBz',
+  ACT2:'fldw05Sos90iY5Z6u', TACT2:'fldEA9Sky06PiQN8c', CACT2:'fldcsG5RZHfOHhtcX',
+  ACT3:'fldRSNdKJDaqPqQGK', TACT3:'fldHUKqYCid8CzeA7', CACT3:'fld8DgChe4a3XCz1C',
+  ACT4:'fldrk5TmxjJVYR8mN', TACT4:'fld607xJBKG6AhYT6', CACT4:'fldfxroYASn8plSjR',
+  ACT5:'fldJhfaYTnSDARPT6', TACT5:'fldn6DGE3i6e0gAEX', CACT5:'fld6XHN7hPJRraNvA',
+  // Seguimiento
+  SEG:'fldXae8Kn2n93zoiQ', CSEG:'fldcToWuWX4ZJtx5l', CRIT:'fld3aEeMwytVPZ2us',
+  // Finanzas
+  FTES:'fldWALSTFyIScUp5L',
+  // Donantes principales
+  DON1:'fldywyc7CXEVlHykM', MON1:'fldn3lzjFRkfdmMfj', ESP1:'fld39bdU1WTwmZXVW', PDON1:'fldYz49eMdoSIg6BO',
+  DON2:'fldHZQio93BSICdsD', MON2:'fldnse2PoJcqBF8gR', ESP2:'fldQNcMZUfFH3UX88', PDON2:'fld50x1DAugTAL9oM',
+  DON3:'fldE1KLI0ZVxKYjNm', MON3:'fldJhd8OicSJDsUHe', ESP3:'fldaTIhT76C1dzORQ', PDON3:'fld9ltuHtT76lEybT',
+  // Fuentes porcentajes
+  CUAL_FTE:'fldHn1tnaVToILklQ', PCT_DONREC:'fldhU6EDNCuzDseoj', PCT_OTRA:'fldt04bQNfoC9yCkE',
+  // Fuentes de financiamiento – todos los % por tipo
+  PCT_OSC_NAC:'fldiabP2INvUwc2QZ', PCT_OSC_INT:'fldS5poFyrxa82wZj', PCT_MULTI:'fldz3seUe1zcFUQmw',
+  PCT_GOB:'fldBQYXHbX9IKjstO', PCT_PROP:'fldAAkC0uQa8YdP7O', PCT_INT_REN:'fldSwMxEPRc65CZdG',
+  PCT_EMP:'fld1cagMhKoCIOCKT',
+  // Sección A – Donativo info
+  DT1:'fldxxbrhL4aL6zlPm', DA1:'fldRTAm5ta6h08t22', DN1_MON:'fld5EwN2twjWKuxkW', DC1:'fldLuSahGmLoa0LKg',
+  OTRO_DON2:'fldy85mBXvglgrcz7',
+  DT2:'fldDR8EjqIkq3pK8t', DA2:'fldIE9TMxnLAUKyVe', DN2_MON:'fldRA7Ut1FnlV4LIv', DC2:'fld7ADgICaPgE5wY6',
+  OTRO_DON3:'fld7xEg4SSbLAIt9t',
+  DT3:'fldbO0TFWCqYCZxXz', DA3:'fldF06GDi0VyLbP7V', DN3_MON:'flda8Qgbiwn1slbZO', DC3:'fldxQKiutZmbq6Z6K',
+  // Sección B – Costos administrativos
+  SEL_ADM:'fld9WI1bdWs2IBhpQ',
+  SAL_ADM:'fldRrIe0nW0c5OWw2', SAL_ADM_E:'fld8UBonpeugG2s1f',
+  PRES_ADM:'fldThLYuxPbxyIQRi', PRES_ADM_E:'fldJ6dySvkNFYdo8U',
+  EQUIP_ADM:'fld9vOMlYbL9PLXH9', EQUIP_ADM_E:'fldIS1lGzBSDhHxx6',
+  SERV_ADM:'fldeTwdjwA6Cn4GS0', SERV_ADM_E:'fldusFG8G2XSHBLBH',
+  MAT_ADM:'fldsYwXZVQIzEWnJM', MAT_ADM_E:'fld8cVoGFb3eHoMgU',
+  MANT_ADM:'fldFc8ldKS2coUxK8', MANT_ADM_E:'fld1nvdOyEFAtgL1H',
+  ACT_ADM:'fld6CPcG5nkgbuMw5', ACT_ADM_E:'fldxr8rZp6IlhFNL4',
+  PROP_ADM1_N:'fldwl3ZWDcBhdMYzF', PROP_ADM1:'fldlHK1tKa2TydxO4', PROP_ADM1_E:'fldWHq2hhqaxGFphy',
+  PROP_ADM2_N:'fldgOYLuWBHxUXRZM', PROP_ADM2:'fldsidWpQwy6k33ZH', PROP_ADM2_E:'fldGJsv2USvTNzPaR',
+  PROP_ADM3_N:'fldDNwYTt7br4AiIt', PROP_ADM3:'fldHStowP1w3EerVm', PROP_ADM3_E:'fldwvZHxS25963TEM',
+  CADM_E:'fldWzPoJoYrdkyKcH',
+  // Sección B – Costos operativos
+  SEL_OP:'fldz7AUgc0cL1gwDe',
+  SAL_OP:'fld0G9GPK5s3wwHZj', SAL_OP_E:'fldeTYlNMiMsdr4yL',
+  VIAT_OP:'fldG0tLmRmelSEMTZ', VIAT_OP_E:'fldgtdwlu6zTFQxla',
+  MAT_OP:'fldpKSOIfAwpweLyA', MAT_OP_E:'fldbxXbMXow6KW3ZY',
+  EQUIP_OP:'fld1Y9raWIlOUFTGN', EQUIP_OP_E:'fldNQJUfMrtjCMfgZ',
+  EVT_OP:'fldSoDKOyRSOHlFzK', EVT_OP_E:'fldc0rhvw5LlTwQqK',
+  PROP_OP1_N:'fldHb10ZG16qtiBzd', PROP_OP1:'fldUvzmrbDowyjuyV', PROP_OP1_E:'fldCnrOlCFKgHKnwB',
+  PROP_OP2_N:'fldukbEkOl2sSKypE', PROP_OP2:'fld63qSa4BepCZFXr', PROP_OP2_E:'fldi033UaJy4bUSKj',
+  PROP_OP3_N:'fldx0pR2KpBkxwlnp', PROP_OP3:'fldTgJ1pkiL91ATxC', PROP_OP3_E:'flddJqgThUTVEvXGz',
+  COP_E:'fldFnwYAzsbYM5N9K',
+  // Sección B – Costos financieros
+  SEL_FIN:'fldLgBFTWDIjXT39N',
+  IMP_FIN:'fldvM1DWISkzfo3cB', IMP_FIN_E:'fldL2FULk7NfUNug0',
+  INT_FIN:'fldw1QwVTby73KLdu', INT_FIN_E:'fldNZRxC2gGVO7Wnj',
+  COM_FIN:'fldMxsjfnJeICYgow', COM_FIN_E:'flduXNzsOz7gFy3fi',
+  INV_FIN:'fld8XdWHaxZXORzB3', INV_FIN_E:'fldozM8vDJOG3HAdS',
+  FID_FIN:'fldkKnrwIIM5W1s9m', FID_FIN_E:'fldI2ellXrKNsapCn',
+  PROP_FIN1_N:'fld7bPWpSDioRzqbK', PROP_FIN1:'fld7DErwhMHhY0AZt', PROP_FIN1_E:'fldGkDv5gKiGGsPlQ',
+  PROP_FIN2_N:'fldWMleI3G1GonOis', PROP_FIN2:'fldepiLbdmORkBCy8', PROP_FIN2_E:'fldU5qXyELsWpBbtQ',
+  PROP_FIN3_N:'fldPMvEa56KJarlhm', PROP_FIN3:'fld3rogpagfGSFH5h', PROP_FIN3_E:'fldChMmfq2Uq78gUl',
+  CFIN_E:'fldi8OMxQXYJtivCo',
+  // Especificaciones de costos administrativos
+  SAL_ADM_S:'fldsRKBqv2rWdSSua', PRES_ADM_S:'fldbH1bZrJd3lfJwn', EQUIP_ADM_S:'fldxS9cCGB654jalA',
+  SERV_ADM_S:'fld4nD2j8YIdWDRPM', MAT_ADM_S:'fldQWgoAjP1653Juw', MANT_ADM_S:'fldkrBEJ0ftfcyK5r',
+  ACT_ADM_S:'fldhQmwktakVkbo5N', PROP_ADM1_S:'fldPLARlIFmFTl6ul', PROP_ADM2_S:'fldHQjv87xgC38uTO', PROP_ADM3_S:'fldjmHl1V75HizPYD',
+  // Especificaciones de costos operativos
+  SAL_OP_S:'fldiTfN8lOjMCgso9', VIAT_OP_S:'fldGzDONt5MP3pyvS', MAT_OP_S:'fldQHV7sUc3LbQqLo',
+  EQUIP_OP_S:'fldNVsI767pu8pd9V', EVT_OP_S:'fldU64d9x1YWdcTXk',
+  PROP_OP1_S:'fldGcqpUVRBfd3tWm', PROP_OP2_S:'fldCroCSGKuQkQuou', PROP_OP3_S:'fldtknKd9QCm0OFxQ',
+  // Especificaciones de costos financieros
+  IMP_FIN_S:'flddMkhp7ohX4nPfS', INT_FIN_S:'fldqhkYSzQgdWvqfw', COM_FIN_S:'fldYMWbxbiBsD0X9k',
+  INV_FIN_S:'fldHL0T5ZvncMGInl', FID_FIN_S:'fld9Yjz14DKR4uEuL',
+  PROP_FIN1_S:'fldwshZJLzIotdita', PROP_FIN2_S:'fldeEuYNI892lqHwB', PROP_FIN3_S:'fld1cfCYxWPaMCAhi',
+  CADM:'fldFkKhMnBMdg7Vak', COP:'fldyJoDLW7jKGMzvy', CFIN:'fldLgtrXGHgdWQNCm',
+  CE1:'fld86imQ5BjXkmX6y', CE2:'fldmpaB8uXO5BZs3p', CE3:'fldlo21wnOo9tKNEW',
+  // RRHH
+  COL:'fld7chjxBcL9a7T0S', XPR:'fldETW5NUUmx59q5f', VOL:'fld2tzYdetCJiG43Y',
+  BEC:'fldhVhPw89WOxK4px', CONS:'fldV9Qxo0UO6YnArP',
+  // Presupuesto pasado/actual
+  GTP:'fld6CU6BmkVSU3gYK', GAP:'fld5QMgbY0m2JuTLh', GOP:'fld2veUtLwHDnzmvZ',
+  GTA:'fldn8YoNLgP5SI8Tu', GAA:'fldlrRWTAcIGKTWkI', GOA:'fldb3PzQmyy0Bnl28',
+  // Gobernanza
+  ORG:'fldDuuvqm1jqgA74U', TORG:'fldy9kwr0lgzupynp', PER:'fldqmzSaCJsVeklSD', NPER:'fld8GPTG7UI4f17De',
+  // Otros
+  PRIM:'flddoknQWpBSLuerV', PGEN:'fldttSmaQCstifffC',
+  // Desglose poblacional OSC – histórico
+  HIST_T06:'fldMbzyz28VKzR5Sr',HIST_H06:'fldsvFF59bE9pkcB0',HIST_M06:'fldW7tOKqHAiJ8rnL',
+  HIST_T715:'fld0U4hHqUw0hmuzY',HIST_H715:'fldsaIp8iuTAnzac0',HIST_M715:'fldjvFPI3kBqTexm9',
+  HIST_T1623:'fldH14dcMoFbMicjG',HIST_H1623:'fldmhP9HvgIMvqVYU',HIST_M1623:'fldLDzVD9lqS6qcbb',
+  HIST_T2440:'fldrIbAdCM6LRsaNc',HIST_H2440:'fldVJnAIWGYq3bv81',HIST_M2440:'fldgrRSR1CruHjNFA',
+  HIST_T4160:'fldVM0bxfnx5uuXQ9',HIST_H4160:'fld1YZWuaxhfl3yBF',HIST_M4160:'fld4E8U7p16A8eiFN',
+  HIST_T60P:'fldy7cgcfgH78UJdX',HIST_H60P:'fldlKgQzMs4ZXAXO5',HIST_M60P:'fldmB4elC78vLMvm5',
+  // Desglose poblacional OSC – actual
+  ACTL_T06:'fldDnZtq5efeW5mNY',ACTL_H06:'fldb0pvZzCWPdQlmq',ACTL_M06:'fldS91reiJbZfOa6J',
+  ACTL_T715:'flddGEa3RuVSE3w40',ACTL_H715:'fldgm70tA6dQvjJdV',ACTL_M715:'fldHwRCeQN93nYR8V',
+  ACTL_T1623:'fldsnkf0TcKblNSbg',ACTL_H1623:'fldbGvVhP0S2JSWWN',ACTL_M1623:'fldbZtd2wKQ2Kteho',
+  ACTL_T2440:'fld60P41FjCyGYbFU',ACTL_H2440:'fldrLQoPctR50l632',ACTL_M2440:'fld9lhkL94AAMB9Wn',
+  ACTL_T4160:'fldpHhrPJEEF5Izq8',ACTL_H4160:'fld7tHj6632Fu1KFn',ACTL_M4160:'fldnIHwoTWJP1oxBU',
+  ACTL_T60P:'fldaZZVqLF3FGDndx',ACTL_H60P:'fldupCF96aeVUuJFW',ACTL_M60P:'fldcT0tX0KpJWlU7R',
+  // Desglose poblacional proyecto
+  PROY_T06:'fld3S1VE5PGWqGZZW',PROY_H06:'fld9u0SsFpHHTYW9X',PROY_M06:'fldzQdZk2XFTqRq5M',
+  PROY_T715:'fldGQ7tzbmNgBjGu9',PROY_H715:'fldqkFZ3oEYZJmi0T',PROY_M715:'fldqUa9qR7fixeino',
+  PROY_T1623:'fldlc6M36rjfRyhM9',PROY_H1623:'fldc7dOUWICrwLFZW',PROY_M1623:'fldhsyYPvz435SbM0',
+  PROY_T2440:'fldF7Ns5JEqWGhMG6',PROY_H2440:'fldzSCeoCbJWQOHax',PROY_M2440:'fld9RAufW2p4m4c3a',
+  PROY_T4160:'fldKlrPIGb2FwVzT9',PROY_H4160:'fldOWJTx8INl0sNfZ',PROY_M4160:'fld6GDvMHw8NK0JB7',
+  PROY_T60P:'fldyHukyoafgrF00s',PROY_H60P:'fld6oHn9pZFda6Ich',PROY_M60P:'fldFWdahO3JQ9PoR0',
+  // Proyecto extra
+  LOC:'fld2gLdv8Qpz2p59P', INDIR:'fldC73RWUkziolaCP', CRIT_TXT:'fldY46nTHnCEL1f1f', EVAL_COMO:'fldP55PphUDI2WKnK',
+  // Perspectiva de género – actividades
+  ACCIONES_GEN:'fldmG6ld8zKW2JWWM', PERIODI_GEN:'fld1MkpNL56HwlLoZ',
+  OTRA_PERIODI_GEN:'fldpA86atK23U6VP1', TIEMPO_GEN:'fld3Yq9fW5Z64fbPI',
+  // Evaluación
+  EVAL_INST:'fldTgiqAM7VOmR055', EVAL_MOM:'fld5pHIF30sqKDtOB',
+  EVAL_QUIEN:'fld2Pw9scSRzpqc2R', EVAL_ENT:'fldXTCNaleZwh704z',
+  EVAL_QUE_ENT:'fldEfhdRjsQda3wmx', EVAL_SIST:'fldcGZ0Kp8cZq1Oqj',
+  PROY_SUMA:'fldvqX52DBGHbxPR7',
+  // Alianzas – aportación / contribución / descripción
+  TAPORT1:'fldeVSL40mivhSOIs',CAPORT1:'fldA9YccvZ09t0v8D',CONTRIB1:'fldwmqBBJKI3U7qwG',DESC1:'fldFdrX6R7jAyEsjs',
+  TAPORT2:'fldFnW3BD1065C8PJ',CAPORT2:'fld52K9OeybHMSGel',CONTRIB2:'fld6pncXLKWuNUBRO',DESC2:'fldl8veOORKRO3xLN',
+  TAPORT3:'fldDRosb3Oy8mhdU5',CAPORT3:'fldwsYzon3P5ImSKs',CONTRIB3:'fldOWjAGK4NvjGnpJ',DESC3:'fld4O7tBDfMNpwO6J',
+  TAPORT4:'fld6deZF8Dg7iszHa',CAPORT4:'fldmFCfrjyMjG9yEC',CONTRIB4:'fldRBtx6GIQDVmt79',DESC4:'fldtbaxdmEYlbFWrn',
+  TAPORT5:'fld8CGakeiln7hRc8',CAPORT5:'fldbIPpDEqCDBIhUf',CONTRIB5:'fldFAY0enUcOn3SDd',DESC5:'fldT1ss48vbFxK4Ee',
+  // Justificación
+  CONSEC:'fldxVqHIrxHBsHIew',CONS_OTR:'fldNg3JnzZ9FMiqqf',
+  RIESG:'fldwhLQUeWXNVeqRt',RIESG_OTR:'fldWgjuS8yYBvVv6O',
+  ESTRAT:'flduh68W6fDzVSwFT',ESTRAT_OTR:'fldqC26zQd18OO0EB',
+  ATEN:'fldnsYnpNZnS0y7XR',ATEN_OTR:'fld28gaA3nCuSo8rd',
+  // Metas indicadores estándar
+  MTA_COM:'fldTbERlujbyJongb',MTA_COM_H:'fld08VHIuHJzvuJK1',MTA_COM_M:'fldUmik5roZCPkfxR',MTA_COM_PROM:'fldJH1Gy4l3roFFtq',
+  MTA_CULT:'fldYK7AK1eGPAD3jh',
+  MTA_ING:'fldf4pHhcG4mjyG1L',MTA_ING_H:'fldRjFbPjqNSPYxZo',MTA_ING_M:'fldmM6CYeEz03KP3i',MTA_ING_MENS:'fldpyfRxHibwdhflh',
+  MTA_EMP_CON:'fld30OjE0Zj9CgqlO',MTA_EMP_CON_H:'fldbQ4UtnUj1iBDqo',MTA_EMP_CON_M:'fldlYd9EivOsrGyAU',
+  MTA_EMP_GEN:'fldTrRzOkrYLyAbHT',MTA_EMP_GEN_H:'fldcYGWSN9cus2Nke',MTA_EMP_GEN_M:'fldzqgpf2vn0N3lFA',
+  MTA_AUT:'fld32SGDvLsnuIfAa',MTA_AUT_H:'fld89uP1sgBUdcuN8',MTA_AUT_M:'fldCPvGVlzLpG3TLc',
+  MTA_CAP_AUT:'fldCKGOBdocLiblP7',MTA_CAP_AUT_H:'fldHVLnnZkiHXzL4u',MTA_CAP_AUT_M:'fldgFDTAcZC34RwiM',
+  MTA_BYS:'fldQstCfaLj4qghvT',MTA_BYS_H:'fldI17f4uRupak6Ze',MTA_BYS_M:'fldO4uCmqUop44Xap',
+  MTA_VIV:'fldylBeYqNqFHsYYj',MTA_ESP_PUB:'fldnO2IwyVfUk82Gl',
+  MTA_OBR:'fldxlNRQRcnHlBFj0',MTA_OBR_H:'fldOWszgrilk2yBlf',MTA_OBR_M:'fldhqntOPFkDuIsYU',
+  MTA_PROD:'fldk92Nd3s6BA9hVc',MTA_PROD_H:'fldQWNJleEryG3zmV',MTA_PROD_M:'fldRLDz0zXyGtHO74',
+  MTA_ING_PROD:'fld9QrZrJBp254DBU',
+  MTA_KWH:'fldwmlVAUddhV3y4i',
+  MTA_ENRG:'fld8JyWeL9NqBiCEQ',MTA_ENRG_H:'fldv4ts9VuZTqaEgJ',MTA_ENRG_M:'fld98MeQjKIHTyzpX',
+  MTA_POL:'fldTCf1Yrb9I9Elt3',MTA_HA_REG:'fldQF7o8eO8JonvlA',MTA_ESP_BIO:'fldAFf2TugPsn8TBp',
+  MTA_MAT:'fldpjeEku7XZOdGOU',MTA_AGUA_RES:'fld4EdWxR2lf3BL7B',MTA_AGUA_POT:'fldPqRMWu2eiN762b',
+  MTA_AGUA_EF:'fldqhCT1OWivnrOtV',MTA_AGUA_EF_H:'fldlpydYNdn6EQm50',MTA_AGUA_EF_M:'fld9CmCSFesKrw2aa',
+  MTA_SAN:'fldCe2BfeRkMjNWjF',MTA_SAN_H:'fldfGtfnVQbBfnhtj',MTA_SAN_M:'fldRio0glnfPm3CN4',
+  MTA_AGUA_PROT:'fldc1PnuRoRWmYqFx',MTA_ALIM:'fldXfseKgQHx5x8X5',MTA_FERT:'fld4boMPIh0n6wkOO',
+  MTA_ALIM_ORG:'fldDCxXLvbGdDr3qX',MTA_ALIM_ORG_H:'fldt7eh67C9xrpcKP',MTA_ALIM_ORG_M:'fldoRMNbUswqAr7eW',
+  MTA_AMB:'fld5kwNyXryg6efZ6',MTA_AMB_H:'fldkM0CQOyHhn4sbg',MTA_AMB_M:'fldOMzDrgJCDGFCNl',
+  MTA_TALL_AMB:'fldxEunVA1idVYA6r',MTA_RES_TOX:'fld00ogKmSkviQlQI',MTA_HA_MAN:'fldTvFWegrJoPjVk2',
+  MTA_MET:'fldjzz4qH5hH0hWB7',MTA_GRUP:'fldGmUWrfA7Vlvbs0',MTA_LID_F:'fldy0TblZPGma3rto',
+  MTA_JOV:'fldbooJGLhdUjXW4j',MTA_HUM:'fldZlY5HH1neCmQAt',MTA_SBN:'fldGFxZ8AJVFLnXSy',
+  MTA_TER:'fldh1jOgb7DqAW5mB',MTA_VEN:'fldMxp5XBpOok6Sjl',MTA_PRC:'fldioXePz3etivqYh',
+  MTA_ALI_COM:'fldgzaDnqMC2ZP2zV',MTA_CONV:'fldw1rWGOPKnrLvO0',MTA_PAG:'fldEh5RACfFu7OguR',
+  MTA_PROP:'fld6iyh9zRjeZPGTI',MTA_EST_COM:'fld9lEerxYi4Ivk4w',MTA_COORD:'fldrrJjCcqLzaTHLl',
+  MTA_DOC:'fldukP4vrU60ZAFXX'
+};
+
+const R1F = {
+  ORG:'fldrpmDFUf52TAp9U', ANO:'fldRsnVookYHYAqFF', EVAL:'fldYYEaWAUPH8rLdC',
+  ALIN:'fldbw1eSt3mw74X5E', ESOC:'fldSuSXzDpEsZoMDA', EECO:'fldOmtm1kNBBPy5Uu', EAMB:'flds6J675o0rO8z4l',
+  RALIN:'fldruBZilBA8WcEDI', CAP:'fldw1DVjawPmP4b8N', INFRA:'fldr9V27vYiHQuqsv', COM:'fldfU3jYpi2UC5YQr',
+  // Tipo de intervención
+  INTDES:'fldsmocRtea7VrYVr', INTEMP:'fldhOg3ndRuvTXLln'
+};
+
+const R2F = {
+  ORG:'fldmZOCKL0ZU3pskC', ANO:'fldzwnBacnZvTw6pm', EVAL:'fldxPfA5P00ng4qGl',
+  // Pertinencia (preguntas 1-4)
+  P1:'fldpsh7kZXNTiI15d', P2:'fld5Ersgm9PkMFMBV', P3:'fldyNDZqTOkifX8cZ', P4:'fldCV2clwmx1dyzv0',
+  COMP:'fldkAwBJH0t3TQsJO',
+  // Enfoque regenerativo (preguntas 1-8)
+  E1:'flduEj4ow2ujMkyxw', E2:'fld2nbEUqqzSOl9jt', E3:'fld3jSREigZPFlCjq', E4:'fldsATTZOUiGxilKv',
+  E5:'fldZQeSRG390ZYSNf', E6:'fldd8jmHeGi4D3Y64', E7:'fldZedcfMazPHvTtB', E8:'fldgNPo9BhsEcGGxO',
+  COME:'fldxL7jReOLrhNje3',
+  // Sustentabilidad (preguntas 1-4)
+  S1:'fldtvuzr5jM6Ox2xE', S2:'fldGRSiVyrQjdaYM9', S3:'fld38bQZ4Szns5Tv2', S4:'fldUhiXmKkng1Gm3F',
+  COMS:'fldBLXexxQHs82m12',
+  // Seguimiento (preguntas 1-2)
+  SEG1:'fldTEp59R6G0KSP8W', SEG2:'fldA82iUXN0jrnCAJ',
+  COMSEG:'fldkpxYTy86VK578y',
+  // Totales / promedios
+  ETOT:'fld4BF5LRSv438Ofs', EAVG:'fldBmCjHPfuvFImRL',
+  STOT:'fldEE6fmbJtaw9VKo', SAVG:'fldFIOmBtStsbGMEg',
+  SEGTOT:'fldgvgQmOR6q8qg01', SEGAVG:'fldKnxZi2T6vPcnVh'
+};
+
+// ─── STATE ────────────────────────────────────────────────
+const S = { f1:[],f3:[],r1:[],r2:[],d1:null,d3:null,r1m:[],r2m:[], id:null,tab:'nc',sec:'overview' };
+
+// ─── DUAL-MODE FETCH (Cowork MCP or Airtable REST) ────────
+const AT='https://api.airtable.com/v0';
+const MCP_TOOL='mcp__d59829d5-db3d-42ed-908c-ced257773c1c__list_records_for_table';
+const useCowork=()=>!!(window.cowork&&window.cowork.callMcpTool);
+
+// Normalize MCP record (cellValuesByFieldId) → REST format (fields)
+function norm(r){ return r.fields?r:{id:r.id,fields:r.cellValuesByFieldId||{}}; }
+
+async function fetchAll(tbl,fids){
+  if(useCowork()) return fetchAllMcp(tbl,fids);
+  const recs=[];let offset=null;
+  const fp=fids&&fids.length?'&'+fids.map(f=>'fields[]='+f).join('&'):'';
+  for(let i=0;i<50;i++){
+    const url=`${AT}/${BASE}/${tbl}?returnFieldsByFieldId=true&pageSize=100${fp}${offset?'&offset='+offset:''}`;
+    const r=await fetch(url,{headers:{Authorization:'Bearer '+TOKEN}});
+    const d=await r.json();
+    if(d.records) recs.push(...d.records);
+    offset=d.offset||null;
+    if(!offset) break;
+  }
+  return recs;
+}
+async function fetchAllMcp(tbl,fids){
+  const recs=[];let cur=null;
+  for(let i=0;i<20;i++){
+    const a={baseId:BASE,tableId:tbl,pageSize:100};
+    if(fids&&fids.length) a.fieldIds=fids;
+    if(cur) a.cursor=cur;
+    let res;
+    try{ res=await window.cowork.callMcpTool(MCP_TOOL,a); }catch(e){ break; }
+    let d;
+    try{
+      if(res&&res.structuredContent&&res.structuredContent.records) d=res.structuredContent;
+      else{ const t=Array.isArray(res.content)?res.content[0].text:res.content; d=JSON.parse(t); }
+    }catch(e){ break; }
+    if(d.records) d.records.forEach(r=>recs.push(norm(r)));
+    cur=d.nextCursor||null;
+    if(!cur) break;
+  }
+  return recs;
+}
+async function fetchIds(tbl,ids){
+  if(useCowork()) return fetchIdsMcp(tbl,ids);
+  const results=await Promise.all(ids.map(async id=>{
+    try{
+      const r=await fetch(`${AT}/${BASE}/${tbl}/${id}?returnFieldsByFieldId=true`,{headers:{Authorization:'Bearer '+TOKEN}});
+      return r.ok?r.json():null;
+    }catch(e){ return null; }
+  }));
+  return results.filter(Boolean);
+}
+async function fetchIdsMcp(tbl,ids){
+  const a={baseId:BASE,tableId:tbl,recordIds:ids};
+  let res;
+  try{ res=await window.cowork.callMcpTool(MCP_TOOL,a); }catch(e){ return []; }
+  let d;
+  try{
+    if(res&&res.structuredContent&&res.structuredContent.records) d=res.structuredContent;
+    else{ const t=Array.isArray(res.content)?res.content[0].text:res.content; d=JSON.parse(t); }
+  }catch(e){ return []; }
+  return (d.records||[]).map(norm);
+}
+async function fetchAll(tbl,fids){
+  const recs=[];let offset=null;
+  const fp=fids&&fids.length?'&'+fids.map(f=>'fields[]='+f).join('&'):'';
+  for(let i=0;i<50;i++){
+    const url=`${AT}/${BASE}/${tbl}?returnFieldsByFieldId=true&pageSize=100${fp}${offset?'&offset='+offset:''}`;
+    const r2=await fetch(url,{headers:{Authorization:'Bearer '+TOKEN}});
+    const d=await r2.json();
+    if(d.records) recs.push(...d.records);
+    offset=d.offset||null;
+    if(!offset) break;
+  }
+  return recs;
+}
+async function fetchIds(tbl,ids){
+  const results=await Promise.all(ids.map(async id=>{
+    try{ const resp=await fetch(`${AT}/${BASE}/${tbl}/${id}?returnFieldsByFieldId=true`,{headers:{Authorization:'Bearer '+TOKEN}}); return resp.ok?resp.json():null; }
+    catch(e){ return null; }
+  }));
+  return results.filter(Boolean);
+}
+
+// ─── FIELD HELPERS ────────────────────────────────────────
+const cv=(r,f)=>r&&r.fields?r.fields[f]??null:null;
+const sel=v=>!v?null:(v&&typeof v==='object'&&v.name?v.name:typeof v==='number'?String(v):String(v));
+const multi=v=>!v?[]:(Array.isArray(v)?v.map(x=>x&&x.name?x.name:String(x)):[sel(v)]);
+const lk=v=>!v?null:(Array.isArray(v)?v.length?String(v[0]):null:(v.valuesByLinkedRecordId?Object.values(v.valuesByLinkedRecordId).flat().map(String)[0]||null:String(v)));
+const lkAll=v=>!v?[]:(Array.isArray(v)?v.map(String):(v.valuesByLinkedRecordId?Object.values(v.valuesByLinkedRecordId).flat().map(String):[String(v)]));
+const n2s=v=>v===null||v===undefined?null:(typeof v==='number'?v.toLocaleString('es-MX'):String(v));
+const cur2s=v=>v===null||v===undefined?'—':new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',minimumFractionDigits:0}).format(v);
+const dt=v=>!v?'—':new Date(v+'T00:00:00').toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const f1v=f=>cv(S.d1,f);
+const f3v=f=>cv(S.d3,f);
+const f3n=f=>{const v=f3v(f);if(v==null)return null;if(typeof v==='number')return v;const n=parseFloat(String(v).replace(/[^0-9.-]/g,''));return isNaN(n)?null:n;};
+const ON=()=>{ const v=cv(S.d1,F1.NOM); return v?String(v):''; };
+
+// ─── INIT ─────────────────────────────────────────────────
+async function init(){
+  const msg=document.getElementById('lmsg');
+  // Standalone mode: Airtable REST API
+  try{
+    msg.textContent='Cargando organizaciones…';
+    S.f1=await fetchAll(T.F1,[F1.NOM,F1.ANO,F1.TIPO,F1.EST]);
+    if(!S.f1.length){ document.getElementById('loader').innerHTML='<div class="err">No se pudieron cargar datos de Airtable. Verificá la conexión.</div>'; return; }
+
+    msg.textContent='Cargando rúbricas…';
+    S.r1=await fetchAll(T.R1,[
+      R1F.ORG,R1F.ANO,R1F.EVAL,R1F.ALIN,R1F.ESOC,R1F.EECO,R1F.EAMB,R1F.RALIN,
+      R1F.CAP,R1F.INFRA,R1F.COM,R1F.INTDES,R1F.INTEMP
+    ]);
+    S.r2=await fetchAll(T.R2,[
+      R2F.ORG,R2F.ANO,R2F.EVAL,
+      R2F.P1,R2F.P2,R2F.P3,R2F.P4,R2F.COMP,
+      R2F.E1,R2F.E2,R2F.E3,R2F.E4,R2F.E5,R2F.E6,R2F.E7,R2F.E8,R2F.COME,
+      R2F.S1,R2F.S2,R2F.S3,R2F.S4,R2F.COMS,
+      R2F.SEG1,R2F.SEG2,R2F.COMSEG,
+      R2F.ETOT,R2F.EAVG,R2F.STOT,R2F.SAVG,R2F.SEGTOT,R2F.SEGAVG
+    ]);
+
+    buildFilters();
+    document.getElementById('loader').style.display='none';
+    document.getElementById('ts').textContent='Actualizado: '+new Date().toLocaleString('es-MX',{dateStyle:'short',timeStyle:'short'});
+    renderNav(); renderContent();
+  }catch(e){
+    console.warn('init error',e);
+    document.getElementById('loader').innerHTML=`<div class="err">Error al cargar datos: ${esc(e.message)}</div>`;
+  }
+}
+
+// ─── FILTERS ──────────────────────────────────────────────
+const getF=()=>{
+  const a=document.getElementById('fAnio').value, t=document.getElementById('fTipo').value;
+  return S.f1.filter(r=>{
+    if(a&&String(r.fields[F1.ANO]||'')!==a) return false;
+    if(t&&sel(r.fields[F1.TIPO])!==t) return false;
+    return true;
+  });
+};
+
+function buildFilters(){
+  const anos=[...new Set(S.f1.map(r=>String(r.fields[F1.ANO]||'')).filter(Boolean))].sort().reverse();
+  const tipos=[...new Set(S.f1.map(r=>sel(r.fields[F1.TIPO])||'').filter(Boolean))].sort();
+  const sA=document.getElementById('fAnio'), sT=document.getElementById('fTipo');
+  anos.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;sA.appendChild(o);});
+  tipos.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;sT.appendChild(o);});
+  rebuildOrgs();
+}
+
+function rebuildOrgs(){
+  const f=getF(), sO=document.getElementById('fOrg'), prev=sO.value;
+  sO.innerHTML='<option value="">— Seleccionar —</option>';
+  f.map(r=>({id:r.id,name:String(r.fields[F1.NOM]||r.id)}))
+   .sort((a,b)=>a.name.localeCompare(b.name,'es'))
+   .forEach(o=>{const opt=document.createElement('option');opt.value=o.id;opt.textContent=o.name;sO.appendChild(opt);});
+  if(prev&&f.find(r=>r.id===prev)) sO.value=prev;
+  else{S.id=null;S.d1=null;S.d3=null;S.r1m=[];S.r2m=[];}
+  document.getElementById('badge').textContent=f.length;
+}
+
+function onFC(){rebuildOrgs();renderNav();renderContent();}
+function onClear(){
+  document.getElementById('fAnio').value='';document.getElementById('fTipo').value='';
+  S.id=null;S.d1=null;S.d3=null;S.r1m=[];S.r2m=[];
+  rebuildOrgs();renderNav();renderContent();
+}
+
+async function onOS(){
+  const id=document.getElementById('fOrg').value;
+  if(!id){S.id=null;S.d1=null;S.d3=null;S.r1m=[];S.r2m=[];S.sec='overview';renderNav();renderContent();return;}
+  S.id=id; S.sec=S.tab==='nc'?'datos-osc':'a-osc';
+  renderNav();
+  setLoading('Cargando datos de la organización…');
+  await loadDetail(id);
+  renderContent();
+}
+
+async function loadDetail(rid){
+  const recs=await fetchIds(T.F1,[rid]);
+  S.d1=recs[0]||null;
+
+  setLoading('Cargando formulario de presentación…');
+  S.f3=await fetchAll(T.F3,null);
+  // Match F3: use linked record field (REST → record IDs) with name fallback (MCP → names)
+  const F3_LINK='fldYptuOrsGB9ybgJ';
+  const orgName=S.d1?String(S.d1.fields[F1.NOM]||'').trim().toLowerCase():'';
+  S.d3=S.f3.find(r=>{
+    const link=r.fields[F3_LINK];
+    if(link){
+      const vals=Array.isArray(link)?link:[link];
+      // Try record ID match (REST) then name match (MCP)
+      if(vals.some(v=>String(v)===rid)) return true;
+      if(orgName&&vals.some(v=>String(v).trim().toLowerCase()===orgName)) return true;
+    }
+    // Fallback: formula field with org name
+    const osc=r.fields[F3.OSC];
+    if(osc&&orgName){
+      const vals2=Array.isArray(osc)?osc:[osc];
+      if(vals2.some(v=>String(v).trim().toLowerCase()===orgName)) return true;
+    }
+    return false;
+  })||null;
+
+  // Match R1/R2 by record ID OR org name
+  S.r1m=S.r1.filter(r=>{
+    const o=r.fields[R1F.ORG]; if(!o) return false;
+    const vals=Array.isArray(o)?o:[o];
+    return vals.some(v=>{ const s=String(v).trim().toLowerCase(); return s===rid||s===orgName; });
+  });
+  S.r2m=S.r2.filter(r=>{
+    const o=r.fields[R2F.ORG]; if(!o) return false;
+    const vals=Array.isArray(o)?o:[o];
+    return vals.some(v=>{ const s=String(v).trim().toLowerCase(); return s===rid||s===orgName; });
+  });
+}
+
+function setLoading(msg){
+  document.getElementById('content').innerHTML=`<div class="loading"><div class="spin"></div><p>${esc(msg)}</p></div>`;
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────
+const NAVNC=[
+  {id:'overview',l:'📊 Resumen convocatoria'},
+  {id:'datos-osc',l:'🏢 Datos de la OSC'},
+  {id:'proyecto',l:'📁 Acerca del proyecto'},
+  {id:'actividades',l:'📋 Actividades y resultados'},
+  {id:'rubricas',l:'⭐ Evaluación – Rúbricas'}
+];
+const NAVFP=[
+  {sep:true,l:'A · Información de la organización'},
+  {id:'a-osc',  l:'I. Información general de la OSC'},
+  {id:'a-gov',  l:'II. Gobernanza'},
+  {id:'a-gasto',l:'III. Presupuesto y fuentes'},
+  {id:'a-rrhh', l:'IV. Recursos humanos'},
+  {id:'a-res',  l:'V. Resultados e indicadores'},
+  {sep:true,l:'B · Información del proyecto'},
+  {id:'b-gen',  l:'I. Información general'},
+  {id:'b-pob',  l:'II. Población objetivo'},
+  {id:'b-obj',  l:'III. Objetivos, actividades e indicadores'},
+  {id:'b-gen2', l:'IV. Perspectiva de género'},
+  {id:'b-ali',  l:'V. Alianzas'},
+  {id:'b-jus',  l:'VI. Justificación'},
+  {id:'b-eval', l:'VII. Evaluación'},
+  {id:'b-fin',  l:'VIII. Financiamiento y costos'},
+];
+
+const NAVEV=[
+  {id:'r1-nc', l:'📋 R1 · Nota Conceptual'},
+  {id:'r2-fp', l:'📁 R2 · Formulario de Proyecto'}
+];
+function switchTab(t){
+  S.tab=t; S.sec=t==='nc'?'overview':(t==='fp'?'a-osc':'r1-nc');
+  document.getElementById('tnc').classList.toggle('active',t==='nc');
+  document.getElementById('tfp').classList.toggle('active',t==='fp');
+  document.getElementById('tev').classList.toggle('active',t==='ev');
+  renderNav();renderContent();
+}
+function setSec(id){S.sec=id;renderNav();renderContent();}
+
+function renderNav(){
+  const items=S.tab==='nc'?NAVNC:(S.tab==='fp'?NAVFP:NAVEV);
+  document.getElementById('nav').innerHTML=items.map(i=>
+    i.sep?`<div class="nav-sep">${i.l}</div>`
+         :`<button class="nav-btn${S.sec===i.id?' active':''}" onclick="setSec('${i.id}')">${i.l}</button>`
+  ).join('');
+}
+
+// ─── CONTENT ──────────────────────────────────────────────
+const RENDERS={
+  'overview':rOverview,'datos-osc':rDatosOSC,'proyecto':rProyecto,'actividades':rActividades,'rubricas':rRubricas,
+  // Grupo A – Organización
+  'a-osc':r21,'a-gov':r12,'a-gasto':rGastos,'a-rrhh':r14,'a-res':r15,
+  // Grupo B – Proyecto
+  'b-gen':rInfoProy,'b-pob':rPobAll,'b-obj':rObjetivosInd,
+  'b-gen2':rGenero,'b-ali':r25,'b-jus':r26,'b-eval':rEval,'b-fin':r27,
+  'r1-nc':rRubrica1,'r2-fp':rRubrica2,
+  // aliases para compatibilidad
+  '2-1':r21,'2-2':r22,'2-2b':r22b,'pob-osc':rPobOSC,'2-3a':r23a,'2-3b':r23b,'2-5':r25,'2-6':r26,'2-7':r27,
+  '1-2':r12,'1-3a':r13a,'1-3b':r13b,'1-4':r14,'1-5':r15
+};
+
+function renderContent(){
+  const ca=document.getElementById('content');
+  const fn=RENDERS[S.sec];
+  if(!fn){ca.innerHTML=`<div class="err">Sección no encontrada: ${esc(S.sec)}</div>`;return;}
+  ca.innerHTML=fn();
+  if(S.sec==='overview') initChart();
+}
+
+// ─── HTML UTILS ───────────────────────────────────────────
+const fd=(label,val,pre)=>{
+  const v=val!==null&&val!==undefined&&val!==''?val:null;
+  return `<div class="f"><div class="fl">${label}</div><div class="fv${v?'':" em"}${pre?' pre':''}">${v?esc(String(v)):'—'}</div></div>`;
+};
+const fdBig=(l,v)=>`<div class="f"><div class="fl">${l}</div><div class="fv big">${v?esc(String(v)):'—'}</div></div>`;
+const tgs=arr=>!arr||!arr.length?'<span class="fv em">—</span>':arr.map(v=>`<span class="tag">${esc(String(v))}</span>`).join('');
+const stag=v=>{const s=sel(v)||'—';const lo=s.toLowerCase();let c='gr';if(lo.includes('pasa')||lo.includes('apro')||lo.includes('activ'))c='g';else if(lo.includes('no pasa')||lo.includes('rechaz'))c='r';else if(lo.includes('pend')||lo.includes('revis')||lo.includes('visita'))c='o';return`<span class="tag ${c}">${esc(s)}</span>`;};
+const hdr=(t)=>{const n=S.d1?esc(String(S.d1.fields[F1.NOM]||'')):'';return`<div class="sh"><h2>${t}</h2>${n?`<div class="org">${n}</div>`:''}</div>`;};
+const noOrg=t=>`${hdr(t)}<div class="empty"><h3>Seleccioná una organización</h3><p>Usá el filtro de arriba.</p></div>`;
+const noF3=t=>`${hdr(t)}<div class="empty"><h3>Sin formulario de presentación</h3><p>Esta organización no tiene datos en el Formulario de Presentación.</p></div>`;
+
+// ─── OVERVIEW ─────────────────────────────────────────────
+function rOverview(){
+  const f=getF(), tot=f.length;
+  const byS={},byT={};
+  const CLRS=['#1a3a5c','#2a5282','#e8a020','#38a169','#805ad5','#e53e3e','#dd6b20','#0987a0'];
+  f.forEach(r=>{
+    const s=sel(r.fields[F1.EST])||'Sin estatus';
+    const t=sel(r.fields[F1.TIPO])||'Sin tipo';
+    byS[s]=(byS[s]||0)+1; byT[t]=(byT[t]||0)+1;
+  });
+  const se=Object.entries(byS).sort((a,b)=>b[1]-a[1]);
+  const mx=Math.max(...se.map(e=>e[1]),1);
+  const funnel=se.map(([s,c],i)=>`<div class="fr"><div class="fl2">${esc(s)}</div><div class="fb"><div class="fb-inner" style="width:${Math.round(c/mx*100)}%;background:${CLRS[i%CLRS.length]}">${c}</div></div><div class="fc">${c}</div></div>`).join('');
+  const rows=f.slice(0,300).map(r=>{
+    const nm=String(r.fields[F1.NOM]||r.id);
+    const an=String(r.fields[F1.ANO]||'—');
+    const ti=sel(r.fields[F1.TIPO])||'—';
+    const es=r.fields[F1.EST];
+    return`<tr><td>${esc(nm)}</td><td>${esc(an)}</td><td>${esc(ti)}</td><td>${stag(es)}</td></tr>`;
+  }).join('');
+  return`<div class="sh"><h2>Resumen de la convocatoria</h2><div class="org">${tot} organización${tot!==1?'es':''}</div></div>
+    <div class="g3" style="margin-bottom:12px">
+      <div class="kpi"><div class="kn">${tot}</div><div class="kl">Total organizaciones</div></div>
+      <div class="kpi"><div class="kn">${Object.keys(byS).length}</div><div class="kl">Estatus distintos</div></div>
+      <div class="kpi"><div class="kn">${Object.keys(byT).length}</div><div class="kl">Tipos de donativo</div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="ct">Funnel de la convocatoria</div>${funnel||'<span class="fv em">Sin datos</span>'}</div>
+      <div class="card"><div class="ct">Tipo de donativo</div><div class="chart-wrap"><canvas id="cvt"></canvas></div></div>
+    </div>
+    <div class="card"><div class="ct">Organizaciones (${tot})</div><div class="tbl-wrap">
+      <table class="tbl"><thead><tr><th>Organización</th><th>Año</th><th>Tipo donativo</th><th>Estatus</th></tr></thead>
+      <tbody>${rows}</tbody></table></div></div>`;
+}
+function initChart(){
+  const f=getF(),byT={};
+  f.forEach(r=>{const t=sel(r.fields[F1.TIPO])||'Sin tipo';byT[t]=(byT[t]||0)+1;});
+  const cv=document.getElementById('cvt');
+  if(!cv)return;
+  const CLRS=['#1a3a5c','#2a5282','#e8a020','#38a169','#805ad5','#e53e3e','#dd6b20'];
+  new Chart(cv,{type:'doughnut',data:{labels:Object.keys(byT),datasets:[{data:Object.values(byT),backgroundColor:CLRS,borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10}}}}}});
+}
+
+// ─── NC SECTIONS ──────────────────────────────────────────
+function rDatosOSC(){
+  if(!S.d1)return noOrg('Datos de la OSC');
+  const ods=[f1v(F1.ODS1),f1v(F1.ODS2),f1v(F1.ODS3)].filter(Boolean).map(v=>sel(v)).filter(Boolean);
+  const tems=[f1v(F1.TEM),f1v(F1.TEM2),f1v(F1.TEM3)].filter(Boolean).map(v=>sel(v)).filter(Boolean);
+  return`${hdr('Datos de la OSC')}<div class="g2">
+    <div class="card"><div class="ct">Identificación</div>
+      ${fdBig('Nombre de la organización',f1v(F1.NOM))}
+      ${fd('RFC',f1v(F1.RFC))} ${fd('Figura legal',sel(f1v(F1.FIGURA)))}
+      ${fd('Fecha de constitución',dt(f1v(F1.FCONST)))} ${fd('Es donataria autorizada',sel(f1v(F1.DONAT)))}
+      <div class="f"><div class="fl">Estatus de postulación</div><div>${stag(f1v(F1.EST))}</div></div>
+    </div>
+    <div class="card"><div class="ct">Información de la postulación</div>
+      ${fd('Tipo de donativo',sel(f1v(F1.TIPO)))} ${fd('Año de convocatoria',n2s(f1v(F1.ANO)))}
+      ${fd('Alcance',sel(f1v(F1.ALCANCE)))}
+      <div class="f"><div class="fl">Temáticas principales</div><div>${tems.length?tems.map(t=>`<span class="tag">${esc(t)}</span>`).join(''):'<span class="fv em">—</span>'}</div></div>
+      <div class="f"><div class="fl">Población objetivo OSC</div><div>${[f1v(F1.POB_OSC),f1v(F1.POB_OSC2),f1v(F1.POB_OSC3)].filter(Boolean).map(v=>sel(v)).filter(Boolean).map(v=>`<span class="tag">${esc(v)}</span>`).join('')||'<span class="fv em">—</span>'}</div></div>
+    </div></div>
+    <div class="card"><div class="ct">Misión</div><div class="fv pre">${esc(f1v(F1.MISION)||'—')}</div></div>
+    <div class="card"><div class="ct">Principales intervenciones</div><div class="fv pre">${esc(f1v(F1.INTERV)||'—')}</div></div>
+    <div class="card"><div class="ct">ODS alineados</div><div>${ods.length?ods.map(o=>`<span class="tag g">${esc(o)}</span>`).join(''):'<span class="fv em">—</span>'}</div></div>`;
+}
+
+function rProyecto(){
+  if(!S.d1)return noOrg('Acerca del proyecto');
+  const regen=multi(f1v(F1.REGEN));
+  const finSrc=multi(f1v(F1.FIN_SRC));
+  const est=multi(f1v(F1.ESTADOS));
+  const tems=[f1v(F1.TEM),f1v(F1.TEM2),f1v(F1.TEM3)].filter(Boolean).map(v=>sel(v)).filter(Boolean);
+  const alianzas=multi(f1v(F1.ALIANZAS));
+  return`${hdr('Acerca del proyecto')}
+    <div class="card"><div class="ct">Proyecto</div>
+      ${fdBig('Nombre del proyecto',f1v(F1.NPROY))}
+      ${fd('Tipo de donativo',sel(f1v(F1.TIPO)))} ${fd('Costo total',cur2s(f1v(F1.COSTO)))}
+      ${fd('# Población apoyada',n2s(f1v(F1.POB)))}
+      ${fd('Duración de la implementación',sel(f1v(F1.DUR)))}
+      ${fd('Fecha inicio',dt(f1v(F1.FINICIO)))} ${fd('Fecha finalización',dt(f1v(F1.FFIN)))}
+      ${fd('Municipio',f1v(F1.MUN))} ${fd('Comunidad',f1v(F1.COMLOC))}
+      <div class="f"><div class="fl">Estado/s de implementación</div><div>${est.length?tgs(est):'<span class="fv em">—</span>'}</div></div>
+      <div class="f"><div class="fl">Temáticas principales del proyecto</div><div>${tems.length?tems.map(t=>`<span class="tag">${esc(t)}</span>`).join(''):'<span class="fv em">—</span>'}</div></div>
+    </div>
+    <div class="card"><div class="ct">Objetivo general</div><div class="fv pre">${esc(f1v(F1.OBJ)||'—')}</div></div>
+    <div class="g2">
+      <div class="card"><div class="ct">Componentes de regeneración</div>
+        <div style="margin-bottom:8px">${regen.length?regen.map(r=>`<span class="tag g">${esc(r)}</span>`).join(''):'<span class="fv em">—</span>'}</div>
+        ${f1v(F1.PORQUE_REGEN)?`<div class="fl">¿Por qué elige estos componentes?</div><div class="fv pre" style="margin-top:3px">${esc(f1v(F1.PORQUE_REGEN))}</div>`:''}
+      </div>
+      <div class="card"><div class="ct">Alianzas y financiamiento</div>
+        <div class="f"><div class="fl">Se prevén alianzas con otros sectores</div><div>${alianzas.length?tgs(alianzas):'<span class="fv em">—</span>'}</div></div>
+        ${fd('¿Otras fuentes de financiamiento?',sel(f1v(F1.OTRA_FIN)))}
+        <div class="f"><div class="fl">Fuentes adicionales</div><div>${finSrc.length?tgs(finSrc):'<span class="fv em">—</span>'}</div></div>
+      </div>
+    </div>`;
+}
+
+function rActividades(){
+  if(!S.d1)return noOrg('Actividades y resultados');
+  const acts=[[F1.A1,'Actividad 1'],[F1.A2,'Actividad 2'],[F1.A3,'Actividad 3'],[F1.A4,'Actividad 4'],[F1.A5,'Actividad 5']];
+  const resCP=[[F1.R1CP,'Resultado 1'],[F1.R2CP,'Resultado 2'],[F1.R3CP,'Resultado 3']];
+  const resMP=[[F1.R1MP,'Resultado 1'],[F1.R2MP,'Resultado 2'],[F1.R3MP,'Resultado 3']];
+  const resLP=[[F1.R1LP,'Resultado 1'],[F1.R2LP,'Resultado 2'],[F1.R3LP,'Resultado 3']];
+  const actHTML=acts.filter(([f])=>f1v(f)).map(([f,l])=>`<div class="csub">${l}</div><div class="fv pre" style="margin-bottom:9px">${esc(f1v(f))}</div>`).join('');
+  const resCPHtml=resCP.filter(([f])=>f1v(f)).map(([f,l])=>`<div class="csub">${l}</div><div class="fv pre" style="margin-bottom:8px">${esc(f1v(f))}</div>`).join('');
+  const resMPHtml=resMP.filter(([f])=>f1v(f)).map(([f,l])=>`<div class="csub">${l}</div><div class="fv pre" style="margin-bottom:8px">${esc(f1v(f))}</div>`).join('');
+  const resLPHtml=resLP.filter(([f])=>f1v(f)).map(([f,l])=>`<div class="csub">${l}</div><div class="fv pre" style="margin-bottom:8px">${esc(f1v(f))}</div>`).join('');
+  return`${hdr('Actividades y resultados esperados')}
+    <div class="card"><div class="ct">Actividades</div>
+      ${actHTML||'<div class="fv em">Sin actividades registradas</div>'}
+    </div>
+    <div class="g3">
+      <div class="card"><div class="ct">Resultados corto plazo</div>${resCPHtml||'<div class="fv em">—</div>'}</div>
+      <div class="card"><div class="ct">Resultados mediano plazo</div>${resMPHtml||'<div class="fv em">—</div>'}</div>
+      <div class="card"><div class="ct">Resultados largo plazo</div>${resLPHtml||'<div class="fv em">—</div>'}</div>
+    </div>`;
+}
+
+function rRubricas(){
+  if(!S.d1)return noOrg('Evaluación – Rúbricas');
+  const r1c=S.r1m.map(r=>{
+    const ev=lkAll(r.fields[R1F.EVAL]).filter(s=>!s.startsWith('rec')).join(', ')||'Evaluador/a';
+    const an=lkAll(r.fields[R1F.ANO]).filter(s=>!s.startsWith('rec')).join(', ')||'';
+    const items=[
+      [R1F.ALIN,'Alineación regenerativa'],[R1F.ESOC,'Enfoque social'],
+      [R1F.EECO,'Enfoque económico'],[R1F.EAMB,'Enfoque ambiental'],
+      [R1F.RALIN,'Resultados alineados'],[R1F.CAP,'Capacidad instalada'],
+      [R1F.INFRA,'Infraestructura instalada']
+    ];
+    const intItems=[
+      [R1F.INTDES,'Tipo intervención: Desarrollo'],[R1F.INTEMP,'Tipo intervención: Emprendimiento']
+    ];
+    const com=r.fields[R1F.COM];
+    return`<div class="card" style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px"><b>${esc(ev)}</b><span class="tag p">R1${an?' · '+esc(an):''}</span></div>
+      <div class="g2">${items.filter(([f])=>r.fields[f]!=null).map(([f,l])=>`<div class="f"><div class="fl">${l}</div><div>${stag(r.fields[f])}</div></div>`).join('')}</div>
+      ${intItems.filter(([f])=>r.fields[f]!=null).length?`<div class="div"></div><div class="fl" style="margin-bottom:5px">Tipo de intervención</div><div class="g2">${intItems.filter(([f])=>r.fields[f]!=null).map(([f,l])=>`<div class="f"><div class="fl">${l}</div><div>${stag(r.fields[f])}</div></div>`).join('')}</div>`:''}
+      ${com?`<div class="div"></div><div class="fl">Comentarios</div><div class="fv pre" style="font-size:11px">${esc(com)}</div>`:''}</div>`;
+  }).join('');
+
+  const r2c=S.r2m.map(r=>{
+    const ev=lkAll(r.fields[R2F.EVAL]).filter(s=>!s.startsWith('rec')).join(', ')||'Evaluador/a';
+    const an=lkAll(r.fields[R2F.ANO]).filter(s=>!s.startsWith('rec')).join(', ')||'';
+    const vp=f=>r.fields[f];
+
+    const pertQ=[
+      [R2F.P1,'1. Relevancia del problema social'],[R2F.P2,'2. Claridad del objetivo general'],
+      [R2F.P3,'3. Coherencia de actividades'],[R2F.P4,'4. Cambio sostenible']
+    ].filter(([f])=>vp(f)!=null);
+    const regeQ=[
+      [R2F.E1,'1. Propuesta integral (eco/soc/amb)'],[R2F.E2,'2. Restauración del entorno natural'],
+      [R2F.E3,'3. Educación ambiental'],[R2F.E4,'4. Procesos de mejora continua'],
+      [R2F.E5,'5. Tejido comunitario'],[R2F.E6,'6. Equidad de género'],
+      [R2F.E7,'7. Sostenibilidad económica'],[R2F.E8,'8. Vinculación con mov. regenerativo']
+    ].filter(([f])=>vp(f)!=null);
+    const sustQ=[
+      [R2F.S1,'1. Capacidades en la población'],[R2F.S2,'2. Infraestructura comunitaria'],
+      [R2F.S3,'3. Alianzas para sostenibilidad'],[R2F.S4,'4. Formación de recursos locales']
+    ].filter(([f])=>vp(f)!=null);
+    const segQ=[
+      [R2F.SEG1,'1. Indicadores FE'],[R2F.SEG2,'2. Metodología de seguimiento']
+    ].filter(([f])=>vp(f)!=null);
+
+    const secScore=(label,questions,comField,tot,avg)=>{
+      if(!questions.length&&tot==null) return '';
+      const qRows=questions.map(([f,l])=>`<div class="sc-wrap"><div class="sc-row"><span class="sc-label" style="font-size:10px">${esc(l)}</span><span class="sc-val">${Number(vp(f)).toFixed(0)}/10</span></div><div class="sc-bar"><div class="sc-fill" style="width:${Math.min(100,Number(vp(f))*10)}%"></div></div></div>`).join('');
+      const com=vp(comField);
+      return`<div style="margin-bottom:10px">
+        <div class="fl" style="margin-bottom:5px">${label}${avg!=null?' — promedio: <b>'+Number(avg).toFixed(1)+'</b>':''}</div>
+        ${qRows}
+        ${com?`<div class="csub">Comentario</div><div class="fv pre" style="font-size:10px;margin-bottom:4px">${esc(com)}</div>`:''}
+      </div>`;
+    };
+
+    return`<div class="card" style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px"><b>${esc(ev)}</b><span class="tag o">R2${an?' · '+esc(an):''}</span></div>
+      ${secScore('Pertinencia',pertQ,R2F.COMP,null,null)}
+      ${secScore('Enfoque regenerativo',regeQ,R2F.COME,vp(R2F.ETOT),vp(R2F.EAVG))}
+      ${secScore('Sustentabilidad',sustQ,R2F.COMS,vp(R2F.STOT),vp(R2F.SAVG))}
+      ${secScore('Seguimiento y evaluación',segQ,R2F.COMSEG,vp(R2F.SEGTOT),vp(R2F.SEGAVG))}
+    </div>`;
+  }).join('');
+
+  return`${hdr('Evaluación – Rúbricas')}
+    <div class="fl" style="margin-bottom:6px">RÚBRICA 1 (${S.r1m.length})</div>
+    ${r1c||'<div class="card"><div class="fv em">Sin registros en R1</div></div>'}
+    <div class="fl" style="margin:8px 0 6px">RÚBRICA 2 (${S.r2m.length})</div>
+    ${r2c||'<div class="card"><div class="fv em">Sin registros en R2</div></div>'}`;
+}
+
+function rRubrica1(){
+  if(!S.d1)return noOrg('Rúbrica 1 – Nota Conceptual');
+  const r1c=S.r1m.map(r=>{
+    const ev=lkAll(r.fields[R1F.EVAL]).filter(s=>!s.startsWith('rec')).join(', ')||'Evaluador/a';
+    const an=lkAll(r.fields[R1F.ANO]).filter(s=>!s.startsWith('rec')).join(', ')||'';
+    const items=[
+      [R1F.ALIN,'Alineación regenerativa'],[R1F.ESOC,'Enfoque social'],
+      [R1F.EECO,'Enfoque económico'],[R1F.EAMB,'Enfoque ambiental'],
+      [R1F.RALIN,'Resultados alineados'],[R1F.CAP,'Capacidad instalada'],
+      [R1F.INFRA,'Infraestructura instalada']
+    ];
+    const intItems=[
+      [R1F.INTDES,'Tipo intervención: Desarrollo'],[R1F.INTEMP,'Tipo intervención: Emprendimiento']
+    ];
+    const com=r.fields[R1F.COM];
+    return`<div class="card" style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px"><b>${esc(ev)}</b><span class="tag p">R1${an?' · '+esc(an):''}</span></div>
+      <div class="g2">${items.filter(([f])=>r.fields[f]!=null).map(([f,l])=>`<div class="f"><div class="fl">${l}</div><div>${stag(r.fields[f])}</div></div>`).join('')}</div>
+      ${intItems.filter(([f])=>r.fields[f]!=null).length?`<div class="div"></div><div class="fl" style="margin-bottom:5px">Tipo de intervención</div><div class="g2">${intItems.filter(([f])=>r.fields[f]!=null).map(([f,l])=>`<div class="f"><div class="fl">${l}</div><div>${stag(r.fields[f])}</div></div>`).join('')}</div>`:''}
+      ${com?`<div class="div"></div><div class="fl">Comentarios</div><div class="fv pre" style="font-size:11px">${esc(com)}</div>`:''}</div>`;
+  }).join('');
+  return`${hdr('Rúbrica 1 – Nota Conceptual')}
+    <div class="fl" style="margin-bottom:6px">EVALUACIONES (${S.r1m.length})</div>
+    ${r1c||'<div class="card"><div class="fv em">Sin registros en Rúbrica 1</div></div>'}`;
+}
+
+function rRubrica2(){
+  if(!S.d1)return noOrg('Rúbrica 2 – Formulario de Proyecto');
+  const r2c=S.r2m.map(r=>{
+    const ev=lkAll(r.fields[R2F.EVAL]).filter(s=>!s.startsWith('rec')).join(', ')||'Evaluador/a';
+    const an=lkAll(r.fields[R2F.ANO]).filter(s=>!s.startsWith('rec')).join(', ')||'';
+    const vp=f=>r.fields[f];
+    const pertQ=[[R2F.P1,'1. Relevancia del problema social'],[R2F.P2,'2. Claridad del objetivo general'],[R2F.P3,'3. Coherencia de actividades'],[R2F.P4,'4. Cambio sostenible']].filter(([f])=>vp(f)!=null);
+    const regeQ=[[R2F.E1,'1. Propuesta integral (eco/soc/amb)'],[R2F.E2,'2. Restauración del entorno natural'],[R2F.E3,'3. Educación ambiental'],[R2F.E4,'4. Procesos de mejora continua'],[R2F.E5,'5. Tejido comunitario'],[R2F.E6,'6. Equidad de género'],[R2F.E7,'7. Sostenibilidad económica'],[R2F.E8,'8. Vinculación con mov. regenerativo']].filter(([f])=>vp(f)!=null);
+    const sustQ=[[R2F.S1,'1. Capacidades en la población'],[R2F.S2,'2. Infraestructura comunitaria'],[R2F.S3,'3. Alianzas para sostenibilidad'],[R2F.S4,'4. Formación de recursos locales']].filter(([f])=>vp(f)!=null);
+    const segQ=[[R2F.SEG1,'1. Indicadores FE'],[R2F.SEG2,'2. Metodología de seguimiento']].filter(([f])=>vp(f)!=null);
+    const secScore=(label,questions,comField,tot,avg)=>{
+      if(!questions.length&&tot==null) return '';
+      const qRows=questions.map(([f,l])=>`<div class="sc-wrap"><div class="sc-row"><span class="sc-label" style="font-size:10px">${esc(l)}</span><span class="sc-val">${Number(vp(f)).toFixed(0)}/10</span></div><div class="sc-bar"><div class="sc-fill" style="width:${Math.min(100,Number(vp(f))*10)}%"></div></div></div>`).join('');
+      const com=vp(comField);
+      return`<div style="margin-bottom:10px"><div class="fl" style="margin-bottom:5px">${label}${avg!=null?' — promedio: <b>'+Number(avg).toFixed(1)+'</b>':''}</div>${qRows}${com?`<div class="csub">Comentario</div><div class="fv pre" style="font-size:10px;margin-bottom:4px">${esc(com)}</div>`:''}</div>`;
+    };
+    return`<div class="card" style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px"><b>${esc(ev)}</b><span class="tag o">R2${an?' · '+esc(an):''}</span></div>
+      ${secScore('Pertinencia',pertQ,R2F.COMP,null,null)}
+      ${secScore('Enfoque regenerativo',regeQ,R2F.COME,vp(R2F.ETOT),vp(R2F.EAVG))}
+      ${secScore('Sustentabilidad',sustQ,R2F.COMS,vp(R2F.STOT),vp(R2F.SAVG))}
+      ${secScore('Seguimiento y evaluación',segQ,R2F.COMSEG,vp(R2F.SEGTOT),vp(R2F.SEGAVG))}
+    </div>`;
+  }).join('');
+  return`${hdr('Rúbrica 2 – Formulario de Proyecto')}
+    <div class="fl" style="margin-bottom:6px">EVALUACIONES (${S.r2m.length})</div>
+    ${r2c||'<div class="card"><div class="fv em">Sin registros en Rúbrica 2</div></div>'}`;
+}
+
+// ─── FP SECTIONS ──────────────────────────────────────────
+function r21(){
+  if(!S.d1)return noOrg('2.1 Información general');
+  if(!S.d3)return noF3('2.1 Información general');
+  return`${hdr('2.1 Información general')}<div class="g2">
+    <div class="card"><div class="ct">Datos de contacto</div>
+      ${fdBig('Organización',S.d1?String(S.d1.fields[F1.NOM]||''):'—')}
+      ${fd('Correo',f3v(F3.EMAIL))} ${fd('Domicilio',f3v(F3.DOM))}
+      <div class="f"><div class="fl">Estado(s) operativo(s)</div><div>${tgs(multi(f3v(F3.EOPS)))}</div></div>
+    </div>
+    <div class="card"><div class="ct">Historial</div>
+      ${fd('Inicio de operaciones',dt(f3v(F3.FOPS)))} ${fd('Donataria desde',dt(f3v(F3.FDONAT)))}
+      ${fd('¿Primer proyecto Estafeta?',sel(f3v(F3.PRIM)))}
+      <div class="f"><div class="fl">Estatus de postulación</div><div>${stag(f1v(F1.EST))}</div></div>
+    </div></div>`;
+}
+
+function r22(){
+  if(!S.d3)return noF3('2.2 Población del proyecto');
+  // Tabla de desglose por grupo etario (proyecto)
+  const ages=[
+    ['0 – 6',   F3.PROY_T06,  F3.PROY_H06,  F3.PROY_M06],
+    ['7 – 15',  F3.PROY_T715, F3.PROY_H715, F3.PROY_M715],
+    ['16 – 23', F3.PROY_T1623,F3.PROY_H1623,F3.PROY_M1623],
+    ['24 – 40', F3.PROY_T2440,F3.PROY_H2440,F3.PROY_M2440],
+    ['41 – 60', F3.PROY_T4160,F3.PROY_H4160,F3.PROY_M4160],
+    ['+60',     F3.PROY_T60P, F3.PROY_H60P, F3.PROY_M60P],
+  ];
+  return`${hdr('2.2 Población objetivo del proyecto')}
+    <div class="card"><div class="ct">Descripción</div>
+      <div class="csub">Población objetivo directa</div><div class="fv pre" style="margin-bottom:10px">${esc(f3v(F3.POBDIR)||'—')}</div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="ct">Características</div>
+        ${fd('Género',sel(f3v(F3.GEN)))}
+        <div class="f"><div class="fl">Características prioritarias</div><div>${tgs(multi(f3v(F3.CARACT)))||'<span class="fv em">—</span>'}</div></div>
+        <div class="f"><div class="fl">Grupo etario</div><div>${tgs(multi(f3v(F3.ETAR)))||'<span class="fv em">—</span>'}</div></div>
+        <div class="f"><div class="fl">Tipo de localidad</div><div>${tgs(multi(f3v(F3.LOC)))||'<span class="fv em">—</span>'}</div></div>
+      </div>
+      <div class="card"><div class="ct">Volumen</div>
+        ${fd('Total población del proyecto',n2s(f3v(F3.PPROY)))}
+        ${fd('Beneficiados indirectos',n2s(f3v(F3.INDIR)))}
+      </div>
+    </div>
+    ${pobTable('Desglose por grupo etario',ages,F3.PPROY)}
+    <div class="card"><div class="ct">Criterios de selección de la PO</div>
+      ${fd('Criterios',sel(f3v(F3.CRIT)))}
+      ${f3v(F3.CRIT_TXT)?`<div class="fl" style="margin-top:6px">Descripción de criterios</div><div class="fv pre">${esc(f3v(F3.CRIT_TXT))}</div>`:''}
+    </div>`;
+}
+function r22b(){ return r22(); }
+
+
+// ─── POPULATION TABLE HELPER ─────────────────────────────────────────────────
+function pobTable(label,rowDefs,fTotal){
+  const rows=rowDefs.map(([l,ft,fh,fm])=>{
+    const t=f3v(ft),h=fh?f3v(fh):null,m=fm?f3v(fm):null;
+    const tot=t!=null?t:(h!=null||m!=null?(h||0)+(m||0):null);
+    return{l,tot,h,m};
+  });
+  const hasData=rows.some(r=>r.tot!=null||r.h!=null||r.m!=null);
+  if(!hasData)return`<div class="card" style="margin-bottom:10px"><div class="ct">${label}</div><div class="fv em">Sin desglose registrado</div></div>`;
+  const sumH=rows.some(r=>r.h!=null)?rows.reduce((s,r)=>r.h!=null?s+r.h:s,0):null;
+  const sumM=rows.some(r=>r.m!=null)?rows.reduce((s,r)=>r.m!=null?s+r.m:s,0):null;
+  const fieldTot=fTotal?f3v(fTotal):null;
+  const displayTot=fieldTot!=null?fieldTot:(sumH!=null||sumM!=null?(sumH||0)+(sumM||0):rows.reduce((s,r)=>r.tot!=null?s+r.tot:s,0)||null);
+  const rHtml=rows.filter(r=>r.tot!=null||r.h!=null||r.m!=null).map(({l,tot,h,m})=>`<tr><td>${l}</td><td style="text-align:right">${tot!=null?n2s(tot):'—'}</td><td style="text-align:right">${h!=null?n2s(h):'—'}</td><td style="text-align:right">${m!=null?n2s(m):'—'}</td></tr>`).join('');
+  return`<div class="card" style="margin-bottom:10px"><div class="ct">${label}</div><div class="tbl-wrap"><table class="tbl" style="width:100%"><thead><tr><th>Grupo etario</th><th style="text-align:right">Total</th><th style="text-align:right">Hombres</th><th style="text-align:right">Mujeres</th></tr></thead><tbody>${rHtml}<tr style="font-weight:600;border-top:2px solid var(--border)"><td>Total</td><td style="text-align:right">${displayTot!=null?n2s(displayTot):'—'}</td><td style="text-align:right">${sumH!=null?n2s(sumH):'—'}</td><td style="text-align:right">${sumM!=null?n2s(sumM):'—'}</td></tr></tbody></table></div></div>`;
+}
+
+function rPobOSC(){
+  if(!S.d3)return noF3('Población de la OSC');
+  const histRows=[['0 – 6',F3.HIST_T06,F3.HIST_H06,F3.HIST_M06],['7 – 15',F3.HIST_T715,F3.HIST_H715,F3.HIST_M715],['16 – 23',F3.HIST_T1623,F3.HIST_H1623,F3.HIST_M1623],['24 – 40',F3.HIST_T2440,F3.HIST_H2440,F3.HIST_M2440],['41 – 60',F3.HIST_T4160,F3.HIST_H4160,F3.HIST_M4160],['+60',F3.HIST_T60P,F3.HIST_H60P,F3.HIST_M60P]];
+  const actlRows=[['0 – 6',F3.ACTL_T06,F3.ACTL_H06,F3.ACTL_M06],['7 – 15',F3.ACTL_T715,F3.ACTL_H715,F3.ACTL_M715],['16 – 23',F3.ACTL_T1623,F3.ACTL_H1623,F3.ACTL_M1623],['24 – 40',F3.ACTL_T2440,F3.ACTL_H2440,F3.ACTL_M2440],['41 – 60',F3.ACTL_T4160,F3.ACTL_H4160,F3.ACTL_M4160],['+60',F3.ACTL_T60P,F3.ACTL_H60P,F3.ACTL_M60P]];
+  return`${hdr('Población de la OSC')}
+    ${pobTable('Población histórica (total de beneficiarios históricos)',histRows,F3.PHIST)}
+    ${pobTable('Población actual (beneficiarios año en curso)',actlRows,F3.PACT)}`;
+}
+
+function r23a(){
+  if(!S.d3)return noF3('2.3/2.4 Objetivos');
+  const objBlock=(objField,actResTriples,num)=>{
+    const obj=f3v(objField);
+    const actsHTML=actResTriples.map(([fa,fr,label])=>{
+      const actVal=f3v(fa),resVal=f3v(fr);
+      return`<div class="actor-block">
+        <div class="actor-title">Actividad ${label}</div>
+        <div class="fv pre" style="margin-bottom:${resVal?'6px':'0'}">${esc(actVal||'—')}</div>
+        <div class="fl" style="margin-bottom:2px">Resultado asociado</div>
+        <div class="fv pre" style="font-size:11px;color:var(--accent2)">${esc(resVal||'—')}</div>
+      </div>`;
+    }).join('');
+    return`<div class="card"><div class="ct">Objetivo específico ${num}</div>
+      <div class="fv pre" style="margin-bottom:10px">${esc(obj||'—')}</div>
+      ${actsHTML}
+    </div>`;
+  };
+  const yearBlock=(label,o1f,o2f,triples1,triples2)=>
+    `<div class="fl" style="margin:12px 0 6px;font-size:11px;letter-spacing:.5px">${label}</div>
+     ${objBlock(o1f,triples1,1)}${objBlock(o2f,triples2,2)}`;
+  return`${hdr('2.3/2.4 Objetivos y actividades')}
+    ${yearBlock('AÑO 1',F3.O1,F3.O2,[[F3.A11,F3.RA11,'1-1'],[F3.A12,F3.RA12,'1-2'],[F3.A13,F3.RA13,'1-3']],[[F3.A21,F3.RA21,'2-1'],[F3.A22,F3.RA22,'2-2'],[F3.A23,F3.RA23,'2-3']])}
+    ${yearBlock('AÑO 2',F3.O1_Y2,F3.O2_Y2,[[F3.A11_Y2,F3.RA11_Y2,'1-1'],[F3.A12_Y2,F3.RA12_Y2,'1-2'],[F3.A13_Y2,F3.RA13_Y2,'1-3']],[[F3.A21_Y2,F3.RA21_Y2,'2-1'],[F3.A22_Y2,F3.RA22_Y2,'2-2'],[F3.A23_Y2,F3.RA23_Y2,'2-3']])}
+    ${yearBlock('AÑO 3',F3.O1_Y3,F3.O2_Y3,[[F3.A11_Y3,F3.RA11_Y3,'1-1'],[F3.A12_Y3,F3.RA12_Y3,'1-2'],[F3.A13_Y3,F3.RA13_Y3,'1-3']],[[F3.A21_Y3,F3.RA21_Y3,'2-1'],[F3.A22_Y3,F3.RA22_Y3,'2-2'],[F3.A23_Y3,F3.RA23_Y3,'2-3']])}`;
+}
+
+function r23b(){
+  if(!S.d3)return noF3('2.3 Indicadores y metas');
+  const indicPairs=[[F3.I1,F3.M1,'1'],[F3.I2,F3.M2,'2'],[F3.I3,F3.M3,'3'],[F3.I4,F3.M4,'4']];
+  const indicHTML=indicPairs.filter(([fi])=>f3v(fi))
+    .map(([fi,fm,n])=>`<div class="actor-block"><div class="actor-title">Indicador ${n}</div><div class="g2">${fd('Indicador',f3v(fi))}${fd('Meta',n2s(f3v(fm)))}</div></div>`).join('');
+  // Flat indicator list — each shown individually with Total (H+M computed if needed)
+  const INDS_FLAT=[
+    {n:'# de personas que participan en las actividades comunitarias que desarrolla el proyecto',t:F3.MTA_COM,h:'fld08VHIuHJzvuJK1',m:'fldUmik5roZCPkfxR'},
+    {n:'# de actividades comunitarias promovidas por el desarrollo del proyecto',t:F3.MTA_COM_PROM},
+    {n:'# de actividades de promoción de la cultura indígena generadas por el proyecto',t:F3.MTA_CULT},
+    {n:'Mejoramiento de ingresos',t:F3.MTA_ING,h:F3.MTA_ING_H,m:F3.MTA_ING_M},
+    {n:'Ingreso mensual promedio',t:F3.MTA_ING_MENS},
+    {n:'Consiguieron empleo',t:F3.MTA_EMP_CON,h:F3.MTA_EMP_CON_H,m:F3.MTA_EMP_CON_M},
+    {n:'# de puestos de empleo generados',t:F3.MTA_EMP_GEN,h:'fldcYGWSN9cus2Nke',m:'fldzqgpf2vn0N3lFA'},
+    {n:'# de personas autoempleadas',t:F3.MTA_AUT,h:F3.MTA_AUT_H,m:F3.MTA_AUT_M},
+    {n:'# de personas capacitadas para el trabajo / autoempleo',t:F3.MTA_CAP_AUT,h:F3.MTA_CAP_AUT_H,m:F3.MTA_CAP_AUT_M},
+    {n:'# de personas que acceden a bienes y servicios básicos',t:F3.MTA_BYS,h:F3.MTA_BYS_H,m:F3.MTA_BYS_M},
+    {n:'Incremento ingresos productores (%)',t:F3.MTA_ING_PROD},
+    {n:'# de productores en pequeña escala con acceso a servicios para incrementar la productividad agrícola',t:F3.MTA_PROD,h:F3.MTA_PROD_H,m:F3.MTA_PROD_M},
+    {n:'Incremento porcentual en ventas comunitarias',t:F3.MTA_VEN},
+    {n:'Incremento porcentual en precios promedio obtenidos por productores',t:F3.MTA_PRC},
+    {n:'# de aliados comerciales activos',t:F3.MTA_ALI_COM},
+    {n:'# de convenios firmados vinculados a cadenas de valor',t:F3.MTA_CONV},
+    {n:'Tiempo promedio de pago por producto (días)',t:F3.MTA_PAG},
+    {n:'# de viviendas construidas o mejoradas',t:F3.MTA_VIV},
+    {n:'# de espacios públicos construidos o mejorados',t:F3.MTA_ESP_PUB},
+    {n:'# de personas alcanzadas a través de obras de mejoramiento de infraestructura',t:F3.MTA_OBR,h:F3.MTA_OBR_H,m:F3.MTA_OBR_M},
+    {n:'KWh de energía renovable producida',t:F3.MTA_KWH},
+    {n:'Personas con uso de energía renovable',t:F3.MTA_ENRG,h:F3.MTA_ENRG_H,m:F3.MTA_ENRG_M},
+    {n:'# de políticas implementadas para proteger especies en amenaza',t:F3.MTA_POL},
+    {n:'# de hectáreas reforestadas',t:F3.MTA_HA_REG},
+    {n:'# de hectáreas bajo manejo regenerativo',t:F3.MTA_HA_MAN},
+    {n:'# de especies protegidas o conservadas',t:F3.MTA_ESP_BIO},
+    {n:'Kgs. de materiales tratados',t:F3.MTA_MAT},
+    {n:'# de prácticas adecuadas de descarga de agua residual',t:F3.MTA_AGUA_RES},
+    {n:'Lts. de agua potabilizada con algún sistema de filtrado de agua',t:F3.MTA_AGUA_POT},
+    {n:'# de personas que hacen uso eficiente de los recursos hídricos',t:F3.MTA_AGUA_EF,h:F3.MTA_AGUA_EF_H,m:F3.MTA_AGUA_EF_M},
+    {n:'# de personas que desarrollan conocimientos adecuados de saneamiento e higiene',t:F3.MTA_SAN,h:F3.MTA_SAN_H,m:F3.MTA_SAN_M},
+    {n:'# de prácticas implementadas para la protección de la calidad del agua',t:F3.MTA_AGUA_PROT},
+    {n:'Kgs. de residuos sólidos y/o tóxicos reducidos',t:F3.MTA_RES_TOX},
+    {n:'Kgs. de alimentos producidos de forma sustentable',t:F3.MTA_ALIM},
+    {n:'# de hectáreas en las que se utilizan fertilizantes orgánicos',t:F3.MTA_FERT},
+    {n:'# de personas que acceden a alimentos orgánicos',t:F3.MTA_ALIM_ORG,h:F3.MTA_ALIM_ORG_H,m:F3.MTA_ALIM_ORG_M},
+    {n:'# de personas capacitadas / sensibilizadas en temas vinculados al cuidado del medioambiente',t:F3.MTA_AMB,h:F3.MTA_AMB_H,m:F3.MTA_AMB_M},
+    {n:'# de talleres y/o actividades educativas realizadas en temas vinculados al cuidado del medioambiente',t:F3.MTA_TALL_AMB},
+    {n:'# de metodologías documentadas',t:F3.MTA_MET},
+    {n:'# de grupos fortalecidos o acompañados',t:F3.MTA_GRUP},
+    {n:'% de mujeres en roles de liderazgo o toma de decisiones',t:F3.MTA_LID_F},
+    {n:'# de jóvenes involucrados en procesos comunitarios o productivos',t:F3.MTA_JOV},
+    {n:'# de estructuras comunitarias fortalecidas (comités, bancos de semillas, viveros, cooperativas u otras)',t:F3.MTA_EST_COM},
+    {n:'% de actividades coordinadas con estructuras comunitarias',t:F3.MTA_COORD},
+    {n:'Proporción de involucramiento de mujeres, adultos mayores y otros grupos tradicionalmente excluidos',t:F3.MTA_PROP},
+    {n:'# de documentos de aprendizaje post-emergencia elaborados',t:F3.MTA_DOC},
+    {n:'Incremento porcentual de humedad del suelo o retención de agua',t:F3.MTA_HUM},
+    {n:'# de soluciones basadas en la naturaleza (SbN) implementadas',t:F3.MTA_SBN},
+    {n:'# de territorios con pilotos/parcelas demostrativas operando',t:F3.MTA_TER},
+  ];
+  const metaHTML=INDS_FLAT.filter(g=>{
+    const tv=f3v(g.t),hv=g.h?f3v(g.h):null,mv=g.m?f3v(g.m):null;
+    return tv!=null||hv!=null||mv!=null;
+  }).map(g=>{
+    const tv=f3v(g.t),hv=g.h?f3v(g.h):null,mv=g.m?f3v(g.m):null;
+    const tot=tv!=null?tv:(hv!=null&&mv!=null?hv+mv:(hv!=null?hv:(mv!=null?mv:null)));
+    return`<div class="actor-block"><div class="actor-title">${g.n}</div>
+      ${tot!=null?`<div class="f"><div class="fl">Total</div><div class="fv">${n2s(tot)}</div></div>`:''}
+      ${hv!=null?`<div class="f"><div class="fl">Hombres</div><div class="fv">${n2s(hv)}</div></div>`:''}
+      ${mv!=null?`<div class="f"><div class="fl">Mujeres</div><div class="fv">${n2s(mv)}</div></div>`:''}
+    </div>`;
+  }).join('');
+  return`${hdr('2.3 Indicadores y metas')}
+    <div class="card"><div class="ct">Indicadores estándar seleccionados</div><div>${tgs(multi(f3v(F3.INDS)))||'<span class="fv em">—</span>'}</div></div>
+    ${metaHTML?`<div class="card"><div class="ct">Metas – indicadores estándar</div>${metaHTML}</div>`:''}
+    <div class="card"><div class="ct">Indicadores propios</div>
+      ${indicHTML||'<div class="fv em">Sin indicadores propios registrados</div>'}
+    </div>`;
+}
+
+
+function r25(){
+  if(!S.d3)return noF3('2.5 Alianzas estratégicas');
+  const actDefs=[
+    {n:'1',fn:F3.ACT1,ft:F3.TACT1,fc:F3.CACT1,fta:F3.TAPORT1,fca:F3.CAPORT1,fco:F3.CONTRIB1,fd2:F3.DESC1},
+    {n:'2',fn:F3.ACT2,ft:F3.TACT2,fc:F3.CACT2,fta:F3.TAPORT2,fca:F3.CAPORT2,fco:F3.CONTRIB2,fd2:F3.DESC2},
+    {n:'3',fn:F3.ACT3,ft:F3.TACT3,fc:F3.CACT3,fta:F3.TAPORT3,fca:F3.CAPORT3,fco:F3.CONTRIB3,fd2:F3.DESC3},
+    {n:'4',fn:F3.ACT4,ft:F3.TACT4,fc:F3.CACT4,fta:F3.TAPORT4,fca:F3.CAPORT4,fco:F3.CONTRIB4,fd2:F3.DESC4},
+    {n:'5',fn:F3.ACT5,ft:F3.TACT5,fc:F3.CACT5,fta:F3.TAPORT5,fca:F3.CAPORT5,fco:F3.CONTRIB5,fd2:F3.DESC5},
+  ].filter(a=>f3v(a.fn));
+  if(!actDefs.length)return`${hdr('2.5 Alianzas estratégicas')}<div class="card"><div class="fv em">Sin alianzas registradas</div></div>`;
+  const actHTML=actDefs.map(a=>{
+    const tiposAport=multi(f3v(a.fta));
+    const cualAport=f3v(a.fca);
+    const contrib=sel(f3v(a.fco));
+    const desc=f3v(a.fd2);
+    return`<div class="actor-block">
+      <div class="actor-title">Actor estratégico ${a.n}</div>
+      <div class="g2">
+        ${fd('Nombre',f3v(a.fn))}
+        ${fd('Tipo de actor',sel(f3v(a.ft)))}
+        ${f3v(a.fc)?fd('Especificación del tipo',f3v(a.fc)):''}
+      </div>
+      <div class="g2" style="margin-top:6px">
+        <div class="f"><div class="fl">Tipo de aportación</div><div>${tiposAport.length?tgs(tiposAport):'<span class="fv em">—</span>'}</div></div>
+        ${cualAport?fd('Descripción de la aportación',cualAport):''}
+      </div>
+      ${contrib?`<div class="f" style="margin-top:6px"><div class="fl">¿Cómo contribuye al proyecto?</div><div>${stag(f3v(a.fco))}</div></div>`:''}
+      ${desc?`<div style="margin-top:6px"><div class="fl">Descripción de la alianza</div><div class="fv pre" style="margin-top:3px">${esc(desc)}</div></div>`:''}
+    </div>`;
+  }).join('');
+  return`${hdr('2.5 Alianzas estratégicas')}
+    <div class="card"><div class="ct">Actores estratégicos (${actDefs.length})</div>${actHTML}</div>`;
+}
+
+function r26(){
+  if(!S.d3)return noF3('2.6 Justificación');
+  const justQ=(title,fMulti,fOtra)=>{
+    const opts=multi(f3v(fMulti));
+    const otra=f3v(fOtra);
+    return`<div class="card"><div class="ct">${title}</div>
+      <div style="margin-bottom:${otra?'8px':'0'}">${opts.length?tgs(opts):'<span class="fv em">—</span>'}</div>
+      ${otra?`<div class="fl">Otra – especificación</div><div class="fv pre" style="margin-top:3px">${esc(otra)}</div>`:''}
+    </div>`;
+  };
+  return`${hdr('2.6 Justificación del proyecto')}
+    <div class="card"><div class="ct">Problema social</div><div class="fv pre">${esc(f3v(F3.PROB)||'—')}</div></div>
+    ${justQ('1. Consecuencias o efectos negativos si no se atiende el problema',F3.CONSEC,F3.CONS_OTR)}
+    ${justQ('2. Riesgos en la ejecución del proyecto',F3.RIESG,F3.RIESG_OTR)}
+    ${justQ('3. Estrategias de prevención de riesgos',F3.ESTRAT,F3.ESTRAT_OTR)}
+    ${justQ('4. ¿Cómo se atenderán los riesgos en caso de que sucedan?',F3.ATEN,F3.ATEN_OTR)}`;
+}
+
+function r27(){
+  if(!S.d3)return noF3('VIII. Financiamiento y costos');
+
+  // Helper: normalize field value to number
+  const fn=f=>{const v=f3v(f);if(v==null)return null;if(typeof v==='number')return v;const n=parseFloat(String(v).replace(/[^0-9.-]/g,''));return isNaN(n)?null:n;};
+
+  // cRow: table row with 4 columns [Concepto | Total | A cargo Estafeta | Especificaciones]
+  const cRow=(label,ftot,fest,fspec)=>{
+    const t=fn(ftot),e=fn(fest),s=f3v(fspec);
+    if(t==null&&e==null) return '';
+    return`<tr>
+      <td>${esc(label)}</td>
+      <td class="ca">${t!=null?cur2s(t):'—'}</td>
+      <td class="ca ce">${e!=null?cur2s(e):'—'}</td>
+      <td class="cs">${s?esc(String(s)):''}</td>
+    </tr>`;
+  };
+
+  // costCard: always renders section; computes column totals from items
+  const costCard=(title,items,fTotT,fTotE)=>{
+    const rows=items.map(([l,ft,fe,fs])=>cRow(l,ft,fe,fs)).join('');
+    const compT=items.reduce((s,[,ft])=>{const v=fn(ft);return v!=null?s+v:s},0);
+    const compE=items.reduce((s,[,,fe])=>{const v=fn(fe);return v!=null?s+v:s},0);
+    const hasT=items.some(([,ft])=>fn(ft)!=null);
+    const hasE=items.some(([,,fe])=>fn(fe)!=null);
+    const tT=fn(fTotT)!=null?fn(fTotT):(hasT?compT:null);
+    const tE=fn(fTotE)!=null?fn(fTotE):(hasE?compE:null);
+    return`<div class="card"><div class="ct">${title}</div>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th>Concepto</th><th class="ca">Total</th><th class="ca ce">A cargo Estafeta</th><th>Especificaciones</th></tr></thead>
+        <tbody>${rows||'<tr><td colspan="4" style="color:var(--muted);font-style:italic;padding:10px 8px">Sin datos registrados</td></tr>'}</tbody>
+        <tfoot><tr><td><strong>Total ${title}</strong></td><td class="ca"><strong>${tT!=null?cur2s(tT):'—'}</strong></td><td class="ca ce"><strong>${tE!=null?cur2s(tE):'—'}</strong></td><td></td></tr></tfoot>
+      </table></div></div>`;
+  };
+
+  // Items: [label, ftot, fest, fspec]
+  const admItems=[
+    ['Salarios personal administrativo',F3.SAL_ADM,F3.SAL_ADM_E,F3.SAL_ADM_S],
+    ['Prestaciones a trabajadores',F3.PRES_ADM,F3.PRES_ADM_E,F3.PRES_ADM_S],
+    ['Equipo de oficina',F3.EQUIP_ADM,F3.EQUIP_ADM_E,F3.EQUIP_ADM_S],
+    ['Servicios (renta, luz, agua, internet)',F3.SERV_ADM,F3.SERV_ADM_E,F3.SERV_ADM_S],
+    ['Material de oficina',F3.MAT_ADM,F3.MAT_ADM_E,F3.MAT_ADM_S],
+    ['Gastos de mantenimiento',F3.MANT_ADM,F3.MANT_ADM_E,F3.MANT_ADM_S],
+    ['Activos fijos',F3.ACT_ADM,F3.ACT_ADM_E,F3.ACT_ADM_S],
+    ...(f3v(F3.PROP_ADM1_N)?[[String(f3v(F3.PROP_ADM1_N)),F3.PROP_ADM1,F3.PROP_ADM1_E,F3.PROP_ADM1_S]]:[]),
+    ...(f3v(F3.PROP_ADM2_N)?[[String(f3v(F3.PROP_ADM2_N)),F3.PROP_ADM2,F3.PROP_ADM2_E,F3.PROP_ADM2_S]]:[]),
+    ...(f3v(F3.PROP_ADM3_N)?[[String(f3v(F3.PROP_ADM3_N)),F3.PROP_ADM3,F3.PROP_ADM3_E,F3.PROP_ADM3_S]]:[]),
+  ];
+  const opItems=[
+    ['Salarios personal operativo',F3.SAL_OP,F3.SAL_OP_E,F3.SAL_OP_S],
+    ['Viáticos',F3.VIAT_OP,F3.VIAT_OP_E,F3.VIAT_OP_S],
+    ['Material de campo directo a beneficiarios',F3.MAT_OP,F3.MAT_OP_E,F3.MAT_OP_S],
+    ['Equipo para trabajo en campo',F3.EQUIP_OP,F3.EQUIP_OP_E,F3.EQUIP_OP_S],
+    ['Eventos dirigidos a población beneficiaria',F3.EVT_OP,F3.EVT_OP_E,F3.EVT_OP_S],
+    ...(f3v(F3.PROP_OP1_N)?[[String(f3v(F3.PROP_OP1_N)),F3.PROP_OP1,F3.PROP_OP1_E,F3.PROP_OP1_S]]:[]),
+    ...(f3v(F3.PROP_OP2_N)?[[String(f3v(F3.PROP_OP2_N)),F3.PROP_OP2,F3.PROP_OP2_E,F3.PROP_OP2_S]]:[]),
+    ...(f3v(F3.PROP_OP3_N)?[[String(f3v(F3.PROP_OP3_N)),F3.PROP_OP3,F3.PROP_OP3_E,F3.PROP_OP3_S]]:[]),
+  ];
+  const finItems=[
+    ['Impuestos (IMSS, SAT, etc.)',F3.IMP_FIN,F3.IMP_FIN_E,F3.IMP_FIN_S],
+    ['Intereses por inversiones',F3.INT_FIN,F3.INT_FIN_E,F3.INT_FIN_S],
+    ['Comisiones bancarias',F3.COM_FIN,F3.COM_FIN_E,F3.COM_FIN_S],
+    ['Inversiones',F3.INV_FIN,F3.INV_FIN_E,F3.INV_FIN_S],
+    ['Fideicomisos',F3.FID_FIN,F3.FID_FIN_E,F3.FID_FIN_S],
+    ...(f3v(F3.PROP_FIN1_N)?[[String(f3v(F3.PROP_FIN1_N)),F3.PROP_FIN1,F3.PROP_FIN1_E,F3.PROP_FIN1_S]]:[]),
+    ...(f3v(F3.PROP_FIN2_N)?[[String(f3v(F3.PROP_FIN2_N)),F3.PROP_FIN2,F3.PROP_FIN2_E,F3.PROP_FIN2_S]]:[]),
+    ...(f3v(F3.PROP_FIN3_N)?[[String(f3v(F3.PROP_FIN3_N)),F3.PROP_FIN3,F3.PROP_FIN3_E,F3.PROP_FIN3_S]]:[]),
+  ];
+
+  // Section 4: grand totals (computed from section subtotals)
+  const admT=fn(F3.CADM)!=null?fn(F3.CADM):admItems.reduce((s,[,ft])=>{const v=fn(ft);return v!=null?s+v:s},0);
+  const admE=fn(F3.CADM_E)!=null?fn(F3.CADM_E):admItems.reduce((s,[,,fe])=>{const v=fn(fe);return v!=null?s+v:s},0);
+  const opT=fn(F3.COP)!=null?fn(F3.COP):opItems.reduce((s,[,ft])=>{const v=fn(ft);return v!=null?s+v:s},0);
+  const opE=fn(F3.COP_E)!=null?fn(F3.COP_E):opItems.reduce((s,[,,fe])=>{const v=fn(fe);return v!=null?s+v:s},0);
+  const finT=fn(F3.CFIN)!=null?fn(F3.CFIN):finItems.reduce((s,[,ft])=>{const v=fn(ft);return v!=null?s+v:s},0);
+  const finE=fn(F3.CFIN_E)!=null?fn(F3.CFIN_E):finItems.reduce((s,[,,fe])=>{const v=fn(fe);return v!=null?s+v:s},0);
+  const tot_t=(admT||0)+(opT||0)+(finT||0);
+  const tot_e=(admE||0)+(opE||0)+(finE||0);
+
+  const donBlock=(num,fnom,fdt,fda,fdmon,fdc,fotro)=>{
+    const nom=f3v(fnom); if(!nom) return '';
+    return`<div class="actor-block"><div class="actor-title">Donante ${num} – ${esc(String(nom))}</div><div class="g2">${fd('Tipo de donativo',sel(f3v(fdt)))}${fd('¿Donativo asegurado?',sel(f3v(fda)))}${fd('Monto (MXN)',cur2s(f3v(fdmon)))}</div>${f3v(fdc)?`<div class="fl" style="margin-top:5px">Comentarios</div><div class="fv pre" style="margin-top:2px">${esc(String(f3v(fdc)))}</div>`:''}${fotro&&f3v(fotro)!=null?`<div style="margin-top:5px">${fd('¿Reportar otro donante?',sel(f3v(fotro)))}</div>`:''}</div>`;
+  };
+
+  return`${hdr('VIII. Financiamiento y costos')}
+    <div class="fl" style="margin:4px 0 8px;font-size:10px;letter-spacing:.5px;color:var(--muted)">A · FUENTES DE FINANCIAMIENTO</div>
+    <div class="card"><div class="ct">1. Principales donantes</div>
+      ${donBlock(1,F3.DON1,F3.DT1,F3.DA1,F3.DN1_MON,F3.DC1,F3.OTRO_DON2)}
+      ${donBlock(2,F3.DON2,F3.DT2,F3.DA2,F3.DN2_MON,F3.DC2,F3.OTRO_DON3)}
+      ${donBlock(3,F3.DON3,F3.DT3,F3.DA3,F3.DN3_MON,F3.DC3,null)}
+      ${!f3v(F3.DON1)&&!f3v(F3.DON2)&&!f3v(F3.DON3)?'<div class="fv em">Sin donantes registrados</div>':''}
+    </div>
+    <div class="fl" style="margin:14px 0 8px;font-size:10px;letter-spacing:.5px;color:var(--muted)">B · PRESUPUESTO DEL PROYECTO</div>
+    ${costCard('1. Costos administrativos',admItems,F3.CADM,F3.CADM_E)}
+    ${costCard('2. Costos operativos',opItems,F3.COP,F3.COP_E)}
+    ${costCard('3. Costos financieros',finItems,F3.CFIN,F3.CFIN_E)}
+    <div class="card"><div class="ct">4. Totales del proyecto</div>
+      <div class="brow"><span>4.1 Costo total del proyecto</span><span class="amt">${cur2s(tot_t)}</span></div>
+      <div class="brow"><span>4.2 Solicitado a Fundación Estafeta</span><span class="amt">${cur2s(tot_e)}</span></div>
+      ${f1v(F1.COSTO)!=null?`<div class="brow"><span>5.1 Costo en Nota Conceptual</span><span class="amt">${cur2s(f1v(F1.COSTO))}</span></div>`:''}
+    </div>`;
+}
+
+function r12(){
+  if(!S.d3)return noF3('1.2 Gobernanza');
+  return`${hdr('II. Gobernanza')}<div class="card"><div class="ct">Órgano de gobierno</div>
+    ${fd('Órgano',sel(f3v(F3.ORG)))}${fd('Tipo',sel(f3v(F3.TORG)))}${fd('Periodicidad de sesiones',sel(f3v(F3.PER)))}${fd('Nº personas',n2s(f3v(F3.NPER)))}
+  </div>`;
+}
+
+function r13a(){
+  if(!S.d3)return noF3('1.3 Presupuesto anterior');
+  return`${hdr('1.3 Presupuesto año anterior')}<div class="card"><div class="ct">Gasto año anterior</div><div class="g3">
+    <div class="kpi"><div class="kn" style="font-size:16px">${cur2s(f3v(F3.GTP))}</div><div class="kl">Total</div></div>
+    <div class="kpi"><div class="kn" style="font-size:16px">${cur2s(f3v(F3.GAP))}</div><div class="kl">Administrativo</div></div>
+    <div class="kpi"><div class="kn" style="font-size:16px">${cur2s(f3v(F3.GOP))}</div><div class="kl">Operativo</div></div>
+  </div></div>`;
+}
+
+function r13b(){
+  if(!S.d3)return noF3('1.3 Presupuesto actual');
+  return`${hdr('1.3 Presupuesto actual')}<div class="card"><div class="ct">Gasto año actual</div><div class="g3">
+    <div class="kpi"><div class="kn" style="font-size:16px">${cur2s(f3v(F3.GTA))}</div><div class="kl">Total</div></div>
+    <div class="kpi"><div class="kn" style="font-size:16px">${cur2s(f3v(F3.GAA))}</div><div class="kl">Administrativo</div></div>
+    <div class="kpi"><div class="kn" style="font-size:16px">${cur2s(f3v(F3.GOA))}</div><div class="kl">Operativo</div></div>
+  </div></div>`;
+}
+
+function r14(){
+  if(!S.d3)return noF3('1.4 Recursos humanos');
+  return`${hdr('IV. Recursos humanos')}<div class="card"><div class="ct">Personal</div><div class="g3">
+    <div class="kpi"><div class="kn">${n2s(f3v(F3.COL))||'—'}</div><div class="kl">Colaboradores TC</div></div>
+    <div class="kpi"><div class="kn">${n2s(f3v(F3.XPR))||'—'}</div><div class="kl">Por proyecto</div></div>
+    <div class="kpi"><div class="kn">${n2s(f3v(F3.VOL))||'—'}</div><div class="kl">Voluntarios</div></div>
+    <div class="kpi"><div class="kn">${n2s(f3v(F3.BEC))||'—'}</div><div class="kl">Becarios</div></div>
+    <div class="kpi"><div class="kn">${n2s(f3v(F3.CONS))||'—'}</div><div class="kl">Consultores</div></div>
+  </div></div>`;
+}
+
+function r15(){
+  if(!S.d3)return noF3('1.5 Resultados e indicadores');
+  const r1=f3v(F3.R1),r2=f3v(F3.R2),r3=f3v(F3.R3);
+  return`${hdr('V. Resultados e indicadores organizacionales')}
+    <div class="card"><div class="ct">Resultados de la organización</div>
+      ${r1?`<div class="csub">Resultado 1</div><div class="fv pre" style="margin-bottom:9px">${esc(r1)}</div>`:''}
+      ${r2?`<div class="csub">Resultado 2</div><div class="fv pre" style="margin-bottom:9px">${esc(r2)}</div>`:''}
+      ${r3?`<div class="csub">Resultado 3</div><div class="fv pre">${esc(r3)}</div>`:''}
+      ${!r1&&!r2&&!r3?'<div class="fv em">Sin resultados registrados</div>':''}
+    </div>`;
+}
+
+// ─── NUEVAS SECCIONES GRUPO A ──────────────────────────────
+
+function rGastos(){
+  if(!S.d3)return noF3('III. Presupuesto y fuentes');
+  const gap=f3v(F3.GAP),gop=f3v(F3.GOP),gaa=f3v(F3.GAA),goa=f3v(F3.GOA);
+  const gtp_r=f3v(F3.GTP),gta_r=f3v(F3.GTA);
+  const gtp=gtp_r!=null?gtp_r:(gap!=null||gop!=null?(gap||0)+(gop||0):null);
+  const gta=gta_r!=null?gta_r:(gaa!=null||goa!=null?(gaa||0)+(goa||0):null);
+
+  function donCard(n,fnom,fmon,fesp,fpct){
+    const nom=f3v(fnom); if(!nom) return '';
+    return`<div class="card"><div class="ct">Donante ${n}</div>
+      ${fdBig('Nombre',nom)}
+      <div class="g2">
+        ${fd('Monto recibido',cur2s(f3v(fmon)))}
+        ${fd('Valor en especie',cur2s(f3v(fesp)))}
+      </div>
+      ${f3v(fpct)!=null?fd('% del presupuesto total',n2s(f3v(fpct))+'%'):''}
+    </div>`;
+  }
+
+  const ftes=multi(f3v(F3.FTES));
+  const cualfte=f3v(F3.CUAL_FTE);
+  const ALL_PCTS=[
+    [F3.PCT_OSC_NAC,'% OSC Nacional'],[F3.PCT_OSC_INT,'% OSC Internacional'],
+    [F3.PCT_MULTI,'% Organismo multilateral'],[F3.PCT_GOB,'% Gobierno'],
+    [F3.PCT_PROP,'% Recursos propios'],[F3.PCT_INT_REN,'% Intereses y rendimientos'],
+    [F3.PCT_DONREC,'% Donativos recurrentes'],[F3.PCT_EMP,'% Empresa / actor privado'],
+    [F3.PCT_OTRA,'% Otra fuente'],
+  ];
+  const ftePcts=ALL_PCTS.filter(([f])=>f3v(f)!=null)
+    .map(([f,l])=>`<div class="brow"><span>${l}</span><span class="amt">${n2s(f3v(f))}%</span></div>`);
+
+  return`${hdr('III. Presupuesto y fuentes de financiamiento')}
+    <div class="g2">
+      <div class="card"><div class="ct">Gasto año anterior</div>
+        <div class="brow"><span>Total</span><span class="amt">${cur2s(gtp)||'—'}</span></div>
+        <div class="brow"><span>Administrativo</span><span class="amt">${cur2s(gap)||'—'}</span></div>
+        <div class="brow"><span>Operativo</span><span class="amt">${cur2s(gop)||'—'}</span></div>
+      </div>
+      <div class="card"><div class="ct">Gasto año actual</div>
+        <div class="brow"><span>Total</span><span class="amt">${cur2s(gta)||'—'}</span></div>
+        <div class="brow"><span>Administrativo</span><span class="amt">${cur2s(gaa)||'—'}</span></div>
+        <div class="brow"><span>Operativo</span><span class="amt">${cur2s(goa)||'—'}</span></div>
+      </div>
+    </div>
+    <div class="card"><div class="ct">Fuentes de financiamiento</div>
+      <div style="margin-bottom:${ftePcts.length?'12px':'0'}">${tgs(ftes)||'<span class="fv em">—</span>'}</div>
+      ${ftePcts.join('')}
+      ${cualfte?`<div class="brow"><span>Otra fuente (detalle)</span><span>${esc(cualfte)}</span></div>`:''}
+    </div>
+    <div style="margin:18px 0 10px;font-weight:600;color:var(--primary)">Principales donantes</div>
+    ${donCard(1,F3.DON1,F3.MON1,F3.ESP1,F3.PDON1)}
+    ${donCard(2,F3.DON2,F3.MON2,F3.ESP2,F3.PDON2)}
+    ${donCard(3,F3.DON3,F3.MON3,F3.ESP3,F3.PDON3)}`;
+}
+
+
+// ─── NUEVAS SECCIONES GRUPO B ──────────────────────────────
+
+function rInfoProy(){
+  if(!S.d1)return noOrg('I. Información general del proyecto');
+  const regen=multi(f1v(F1.REGEN));
+  const finSrc=multi(f1v(F1.FIN_SRC));
+  const est=multi(f1v(F1.ESTADOS));
+  const tems=[f1v(F1.TEM),f1v(F1.TEM2),f1v(F1.TEM3)].filter(Boolean).map(v=>sel(v)).filter(Boolean);
+  const alianzas=multi(f1v(F1.ALIANZAS));
+  return`${hdr('I. Información general del proyecto')}
+    <div class="card"><div class="ct">Proyecto</div>
+      ${fdBig('Nombre del proyecto',f1v(F1.NPROY))}
+      ${fd('Tipo de donativo',sel(f1v(F1.TIPO)))} ${fd('Costo total',cur2s(f1v(F1.COSTO)))}
+      ${fd('# Población apoyada',n2s(f1v(F1.POB)))}
+      ${fd('Duración de la implementación',sel(f1v(F1.DUR)))}
+      ${fd('Fecha inicio',dt(f1v(F1.FINICIO)))} ${fd('Fecha finalización',dt(f1v(F1.FFIN)))}
+      ${fd('Municipio',f1v(F1.MUN))} ${fd('Comunidad',f1v(F1.COMLOC))}
+      <div class="f"><div class="fl">Estado/s de implementación</div><div>${est.length?tgs(est):'<span class="fv em">—</span>'}</div></div>
+      <div class="f"><div class="fl">Temáticas principales del proyecto</div><div>${tems.length?tems.map(t=>`<span class="tag">${esc(t)}</span>`).join(''):'<span class="fv em">—</span>'}</div></div>
+    </div>
+    <div class="card"><div class="ct">Objetivo general</div><div class="fv pre">${esc(f1v(F1.OBJ)||'—')}</div></div>
+    <div class="g2">
+      <div class="card"><div class="ct">Componentes de regeneración</div>
+        <div style="margin-bottom:8px">${regen.length?regen.map(r=>`<span class="tag g">${esc(r)}</span>`).join(''):'<span class="fv em">—</span>'}</div>
+        ${f1v(F1.PORQUE_REGEN)?`<div class="fl">¿Por qué elige estos componentes?</div><div class="fv pre" style="margin-top:3px">${esc(f1v(F1.PORQUE_REGEN))}</div>`:''}
+      </div>
+      <div class="card"><div class="ct">Alianzas y financiamiento</div>
+        <div class="f"><div class="fl">Se prevén alianzas con otros sectores</div><div>${alianzas.length?tgs(alianzas):'<span class="fv em">—</span>'}</div></div>
+        ${fd('¿Otras fuentes de financiamiento?',sel(f1v(F1.OTRA_FIN)))}
+        <div class="f"><div class="fl">Fuentes adicionales</div><div>${finSrc.length?tgs(finSrc):'<span class="fv em">—</span>'}</div></div>
+      </div>
+    </div>`;
+}
+
+function rPobAll(){
+  if(!S.d3)return noF3('II. Población objetivo');
+  // Project population table
+  const ages=[
+    ['0 – 6',  F3.PROY_T06,  F3.PROY_H06,  F3.PROY_M06],
+    ['7 – 15', F3.PROY_T715, F3.PROY_H715, F3.PROY_M715],
+    ['16 – 23',F3.PROY_T1623,F3.PROY_H1623,F3.PROY_M1623],
+    ['24 – 40',F3.PROY_T2440,F3.PROY_H2440,F3.PROY_M2440],
+    ['41 – 60',F3.PROY_T4160,F3.PROY_H4160,F3.PROY_M4160],
+    ['+60',    F3.PROY_T60P, F3.PROY_H60P, F3.PROY_M60P],
+  ];
+  // Population tables use pobTable helper
+  const histRows=[['0 – 6',F3.HIST_T06,F3.HIST_H06,F3.HIST_M06],['7 – 15',F3.HIST_T715,F3.HIST_H715,F3.HIST_M715],['16 – 23',F3.HIST_T1623,F3.HIST_H1623,F3.HIST_M1623],['24 – 40',F3.HIST_T2440,F3.HIST_H2440,F3.HIST_M2440],['41 – 60',F3.HIST_T4160,F3.HIST_H4160,F3.HIST_M4160],['+60',F3.HIST_T60P,F3.HIST_H60P,F3.HIST_M60P]];
+  const actlRows=[['0 – 6',F3.ACTL_T06,F3.ACTL_H06,F3.ACTL_M06],['7 – 15',F3.ACTL_T715,F3.ACTL_H715,F3.ACTL_M715],['16 – 23',F3.ACTL_T1623,F3.ACTL_H1623,F3.ACTL_M1623],['24 – 40',F3.ACTL_T2440,F3.ACTL_H2440,F3.ACTL_M2440],['41 – 60',F3.ACTL_T4160,F3.ACTL_H4160,F3.ACTL_M4160],['+60',F3.ACTL_T60P,F3.ACTL_H60P,F3.ACTL_M60P]];
+  return`${hdr('II. Población objetivo')}
+    <div class="card"><div class="ct">Descripción – Población del proyecto</div>
+      <div class="csub">Población objetivo directa</div><div class="fv pre" style="margin-bottom:10px">${esc(f3v(F3.POBDIR)||'—')}</div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="ct">Características</div>
+        ${fd('Género',sel(f3v(F3.GEN)))}
+        <div class="f"><div class="fl">Características prioritarias</div><div>${tgs(multi(f3v(F3.CARACT)))||'<span class="fv em">—</span>'}</div></div>
+        <div class="f"><div class="fl">Grupo etario</div><div>${tgs(multi(f3v(F3.ETAR)))||'<span class="fv em">—</span>'}</div></div>
+        <div class="f"><div class="fl">Tipo de localidad</div><div>${tgs(multi(f3v(F3.LOC)))||'<span class="fv em">—</span>'}</div></div>
+      </div>
+      <div class="card"><div class="ct">Volumen</div>
+        ${fd('Total población del proyecto',n2s(f3v(F3.PPROY)))}
+        ${fd('Beneficiados indirectos',n2s(f3v(F3.INDIR)))}
+      </div>
+    </div>
+    ${pobTable('Desglose por grupo etario – proyecto',ages,F3.PPROY)}
+    <div class="card"><div class="ct">Criterios de selección de la PO</div>
+      ${fd('Criterios',sel(f3v(F3.CRIT)))}
+      ${f3v(F3.CRIT_TXT)?`<div class="fl" style="margin-top:6px">Descripción</div><div class="fv pre">${esc(f3v(F3.CRIT_TXT))}</div>`:''}
+    </div>
+    <div class="fl" style="margin:12px 0 4px;font-size:10px;letter-spacing:.5px">POBLACIÓN DE LA ORGANIZACIÓN</div>
+    ${pobTable('Población histórica (total beneficiarios históricos)',histRows,F3.PHIST)}
+    ${pobTable('Población actual (beneficiarios año en curso)',actlRows,F3.PACT)}`;
+}
+
+function rObjetivosInd(){
+  if(!S.d3)return noF3('III. Objetivos, actividades e indicadores');
+  const body23a=r23a().replace(/<h2[^>]*>.*?<\/h2>/,'');
+  const body23b=r23b().replace(/<h2[^>]*>.*?<\/h2>/,'');
+  return`${hdr('III. Objetivos, actividades, resultados e indicadores')}
+    <div class="fl" style="margin:8px 0 4px;font-size:10px;letter-spacing:.5px">OBJETIVOS Y ACTIVIDADES</div>
+    ${body23a}
+    <div class="fl" style="margin:14px 0 4px;font-size:10px;letter-spacing:.5px">INDICADORES Y METAS</div>
+    ${body23b}`;
+}
+
+function rGenero(){
+  if(!S.d3)return noF3('IV. Perspectiva de género');
+  return`${hdr('IV. Perspectiva de género')}
+    <div class="card"><div class="ct">Perspectiva de género</div>
+      ${fd('¿El proyecto impulsa la perspectiva de género?',sel(f3v(F3.PGEN)))}
+      ${f3v(F3.ACCIONES_GEN)?`<div class="fl" style="margin-top:6px">1.1 Especifica las actividades para dar seguimiento a la perspectiva de género</div><div class="fv pre">${esc(f3v(F3.ACCIONES_GEN))}</div>`:''}
+      ${fd('1.2 Periodicidad de actividades',sel(f3v(F3.PERIODI_GEN)))}
+      ${f3v(F3.OTRA_PERIODI_GEN)?fd('Otra periodicidad',f3v(F3.OTRA_PERIODI_GEN)):''}
+      ${fd('1.3 ¿Por cuánto tiempo se realizarán?',f3v(F3.TIEMPO_GEN))}
+    </div>`;
+}
+
+
+function rEval(){
+  if(!S.d3)return noF3('VII. Evaluación');
+  return`${hdr('VII. Evaluación')}
+    <div class="card"><div class="ct">Evaluación del proyecto</div>
+      ${fd('1. ¿El proyecto contará con alguna instancia de evaluación?',sel(f3v(F3.EVAL_INST)))}
+      ${f3v(F3.EVAL_COMO)?`<div class="fl" style="margin-top:6px">1.1 ¿Cómo se evaluará el proyecto?</div><div class="fv pre">${esc(f3v(F3.EVAL_COMO))}</div>`:''}
+      ${fd('1.2 ¿En qué momento se evaluará?',f3v(F3.EVAL_MOM))}
+      ${f3v(F3.EVAL_QUIEN)?`<div class="fl" style="margin-top:6px">1.3 ¿Quiénes realizarán la evaluación?</div><div class="fv pre">${esc(f3v(F3.EVAL_QUIEN))}</div>`:''}
+      ${fd('1.4 ¿Se desarrollará algún entregable?',sel(f3v(F3.EVAL_ENT)))}
+      ${f3v(F3.EVAL_QUE_ENT)?`<div class="fl" style="margin-top:6px">1.5 ¿Qué entregable?</div><div class="fv pre">${esc(f3v(F3.EVAL_QUE_ENT))}</div>`:''}
+      ${fd('2. ¿Se tiene considerado realizar una sistematización?',sel(f3v(F3.EVAL_SIST)))}
+    </div>
+    <div class="card"><div class="ct">Seguimiento a la población objetivo</div>
+      ${fd('¿Realiza seguimiento a la PO?',sel(f3v(F3.SEG)))}
+      ${f3v(F3.CSEG)?`<div class="fl" style="margin-top:4px">¿Cómo?</div><div class="fv pre">${esc(f3v(F3.CSEG))}</div>`:''}
+    </div>`;
+}
+
+
+// ─── START ────────────────────────────────────────────────
+renderNav();
+setTimeout(init, 100);
+</script>
+</body>
+</html>
