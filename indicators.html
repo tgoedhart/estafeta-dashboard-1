@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resultados de Indicadores · Fundación Estafeta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Paleta Fundación Estafeta */
+  --primary:#4D6234;--primary-dk:#3A4B26;
+  --accent:#C8CD7F;--accent2:#4F9A9E;--accent2-dk:#2F6E72;
+  --sand:#DBD4CA;--cream:#EDE0C0;--yellow:#EAB733;--black:#000000;
+  --bg:#F6F2E9;--sidebar:#4D6234;--card:#fff;
+  --text:#23261C;--muted:#6B6A5E;--border:#DBD4CA;
+  --red:#A53614;--track:#EDE8DE;
+  --f-head:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --f-label:'Jost','Archivo',sans-serif;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:var(--f-head);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+body{display:flex;flex-direction:column}
+a{color:var(--accent2-dk)}a:hover{color:var(--primary)}
+
+/* Barra superior */
+.topbar{background:var(--primary);color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-shrink:0}
+.logo{display:block;height:44px;width:auto}
+.top-div{width:1px;align-self:stretch;background:rgba(200,205,127,.35)}
+.top-title{font-weight:700;font-size:19px;letter-spacing:-.2px;color:#fff;line-height:1.15}
+.top-sub{font-family:var(--f-label);font-size:11px;letter-spacing:2.2px;text-transform:uppercase;color:var(--accent);margin-top:4px}
+.back-a{font-family:var(--f-label);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--sand);border:1px solid rgba(219,212,202,.45);border-radius:999px;padding:8px 16px;text-decoration:none;margin-left:auto;white-space:nowrap;transition:background .15s,color .15s}
+.back-a:hover{background:var(--accent);border-color:var(--accent);color:var(--primary-dk)}
+
+.layout{display:flex;flex:1;overflow:hidden}
+
+/* Barra lateral */
+.sidebar{width:260px;background:var(--sidebar);color:#fff;display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:6px 0 24px;border-top:1px solid rgba(200,205,127,.2)}
+.org-badge{background:var(--primary-dk);border-radius:var(--radius);margin:16px;padding:18px 16px}
+.org-badge .num{font-size:48px;font-weight:800;color:var(--accent);line-height:1;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}
+.org-badge .lbl{font-family:var(--f-label);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--sand);margin-top:8px;line-height:1.5}
+.flt-head{font-family:var(--f-label);font-size:10px;text-transform:uppercase;letter-spacing:2.4px;color:var(--accent);padding:14px 18px 8px}
+.flt-item{padding:0 16px;margin-bottom:12px}
+.flt-item label{font-size:12px;font-weight:500;color:var(--sand);display:block;margin-bottom:5px}
+.flt-item select{width:100%;font-family:var(--f-head);font-size:12px;background:rgba(255,255,255,.08);border:1px solid rgba(219,212,202,.28);border-radius:8px;color:#fff;padding:8px 28px 8px 10px;cursor:pointer;appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23C8CD7F' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.flt-item select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.flt-item select option{background:var(--primary-dk);color:#fff}
+.flt-reset{margin:4px 16px;font-family:var(--f-label);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;background:var(--accent);border:none;color:var(--primary-dk);border-radius:999px;padding:9px;cursor:pointer;font-weight:500}
+.flt-reset:hover{background:#fff}
+.flt-note{font-size:11px;color:var(--sand);opacity:.8;padding:10px 18px;line-height:1.5}
+
+.main{flex:1;overflow-y:auto;padding:32px 36px 40px}
+.main-in{max-width:1280px;margin:0 auto}
+
+/* Encabezados de sección */
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:10px;margin-top:4px}
+.sec-num{font-size:44px;font-weight:800;color:var(--accent2);line-height:.9;letter-spacing:-2px;font-variant-numeric:tabular-nums;min-width:52px}
+.sec-title{font-size:22px;font-weight:700;color:var(--primary);letter-spacing:-.3px;line-height:1.15}
+.sec-title small{display:block;font-family:var(--f-label);font-size:11px;font-weight:400;letter-spacing:2.2px;text-transform:uppercase;color:var(--accent2-dk);margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6;max-width:760px;text-wrap:pretty}
+.sec-line{border:none;border-bottom:1px solid var(--border);margin:0 0 14px}
+.section-sep{border:none;height:2px;margin:44px 0 36px;background:linear-gradient(90deg,var(--yellow) 0 60px,var(--border) 60px)}
+
+.info-btn{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:transparent;color:var(--accent2-dk);font-family:var(--f-label);font-size:11px;font-weight:600;border:1.5px solid currentColor;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;line-height:1;opacity:.85}
+.info-btn:hover{background:var(--accent2);border-color:var(--accent2);color:#fff;opacity:1}
+
+/* KPI directa */
+.kpi-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.kpi-card{background:var(--card);border-radius:var(--radius);padding:22px 22px 20px;border:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.kpi-card:first-child{background:var(--primary);border-color:var(--primary)}
+.kpi-card:first-child .kpi-lbl{color:var(--sand)}
+.kpi-card:first-child .kpi-num{color:var(--accent)}
+.kpi-card:first-child .kpi-sub{color:#fff;opacity:.85}
+.kpi-card:first-child .info-btn{color:var(--accent)}
+.kpi-card:first-child .info-btn:hover{color:#fff}
+.kpi-hd{display:flex;gap:10px;align-items:flex-start}
+.kpi-lbl{font-size:13px;color:var(--muted);line-height:1.45;flex:1;font-weight:500;text-wrap:pretty}
+.kpi-num{font-size:46px;font-weight:800;color:var(--primary);line-height:1;letter-spacing:-1.5px;font-variant-numeric:tabular-nums;margin-top:auto;padding-top:8px}
+.kpi-num.sm{font-size:34px;letter-spacing:-1px}
+.kpi-sub{font-size:12px;color:var(--accent2-dk);line-height:1.45}
+
+/* Generales */
+.gen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.gen-card{background:var(--card);border-radius:var(--radius);padding:18px 18px 16px;border:1px solid var(--border)!important;display:flex;flex-direction:column}
+.gen-hd{display:flex;align-items:flex-start;gap:8px;margin-bottom:14px}
+.gen-lbl{font-size:13px;font-weight:600;line-height:1.4;flex:1;color:var(--text);text-wrap:pretty}
+.gen-num{font-size:36px;font-weight:800;color:var(--primary);line-height:1;letter-spacing:-1px;font-variant-numeric:tabular-nums;margin-top:auto}
+.gen-unit{font-family:var(--f-label);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.bar{height:6px;background:var(--track);border-radius:3px;overflow:hidden;margin-top:3px}
+.bar>span{display:block;height:100%;border-radius:3px}
+.gen-flag{font-size:10.5px;color:var(--red);background:#F6EFDC;border-radius:999px;padding:3px 9px;margin-top:12px;align-self:flex-start}
+
+/* Tooltip de info */
+.info-btn{cursor:help}
+.info-tip{position:fixed;display:none;z-index:300;pointer-events:auto;overflow-y:auto!important;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.16);padding:16px 18px;width:min(540px,calc(100vw - 16px));max-height:min(80vh,640px);font-family:var(--f-head);text-transform:none;letter-spacing:0;text-align:left}
+.info-tip h3{font-size:14px;color:var(--primary);font-weight:700;margin-bottom:8px;line-height:1.3}
+.info-tip p{font-size:12px;line-height:1.55;margin-bottom:8px;color:var(--text)}
+.info-tip ul{margin:0 0 8px 16px;font-size:12px;line-height:1.6;color:var(--text)}
+.info-tip code{font-size:11px;background:#F1EEE6;border-radius:4px;padding:1px 4px}
+.info-tip .warn{background:#F6EFDC;border-left:3px solid var(--yellow);border-radius:8px;padding:8px 10px;font-size:11.5px;line-height:1.5;margin:8px 0}
+
+/* Panorama */
+.pano-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:16px}
+.chart-card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border)}
+.chart-title{font-size:15px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:8px;letter-spacing:-.1px}
+.chart-sub{font-family:var(--f-label);font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:4px 0 14px;line-height:1.5}
+.chart-card svg{width:100%;height:auto;display:block;overflow:visible}
+.donut-wrap{display:flex;align-items:center;gap:16px}
+.donut-wrap svg{width:130px;flex-shrink:0}
+.donut-leg{list-style:none;font-size:12px;line-height:1.35;flex:1;min-width:0}
+.donut-leg li{display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:start;padding:4px 0;cursor:default}
+.donut-leg i{width:10px;height:10px;border-radius:50%;margin-top:3px}
+.donut-leg .pc{font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);text-align:right}
+.donut-leg .n{color:var(--muted);font-size:10.5px;font-weight:400}
+.hbar{list-style:none}
+.hbar li{display:grid;grid-template-columns:70px 1fr 70px;gap:10px;align-items:center;padding:8px 0;font-size:12px}
+.hbar .track{height:18px;background:var(--track);border-radius:999px;overflow:hidden}
+.hbar .fill{height:100%;background:var(--accent2);border-radius:999px}
+.hbar .pc{font-variant-numeric:tabular-nums;color:var(--text);font-weight:700;text-align:right}
+.hbar .pc small{color:var(--muted);font-weight:400}
+.tm rect{stroke:#fff;stroke-width:3}
+.tm text{pointer-events:none;font-family:var(--f-head)}
+.ch-tip{position:fixed;pointer-events:none;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(35,38,28,.15);padding:10px 12px;font-size:12px;line-height:1.5;max-width:280px;z-index:300;display:none}
+.ch-tip b{color:var(--primary)}
+@media(max-width:1100px){.pano-grid{grid-template-columns:1fr}}
+
+/* Mapa */
+.map-wrap{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,1fr);gap:16px}
+.map-card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border);position:relative}
+.map-card svg{width:100%;height:auto;display:block}
+.map-card path{stroke:#fff;stroke-width:.8;cursor:pointer}
+.map-card path:hover{stroke:var(--primary-dk);stroke-width:1.4}
+.map-card path.sel{stroke:var(--primary-dk);stroke-width:2.2}
+.map-legend{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);margin-top:10px;flex-wrap:wrap}
+.map-legend i{display:inline-block;width:20px;height:10px;border-radius:3px}
+.map-tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(35,38,28,.15);padding:10px 12px;font-size:12px;line-height:1.5;max-width:280px;z-index:5;display:none}
+.map-tip b{color:var(--primary);font-size:13px}
+.map-tip ul{margin:4px 0 0 14px}
+.map-tip .mun{color:var(--muted);font-size:10.5px}
+.st-list{list-style:none;font-size:12px;max-height:380px;overflow-y:auto}
+.st-list li{display:grid;grid-template-columns:1fr 34px;gap:5px 8px;align-items:center;padding:7px 8px;border-radius:8px;cursor:pointer}
+.st-list li:hover,.st-list li.sel{background:var(--bg)}
+.st-list .nm{font-size:12.5px}
+.st-list .v{text-align:right;font-weight:800;color:var(--primary);font-variant-numeric:tabular-nums}
+.st-list .b{grid-column:1/-1;height:4px;background:var(--track);border-radius:2px;overflow:hidden}
+.st-list .b span{display:block;height:100%;background:var(--accent2);border-radius:2px}
+.map-hint{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
+@media(max-width:760px){.map-wrap{grid-template-columns:1fr}}
+
+/* Pills */
+.pill-group{margin-bottom:14px}
+.pill-group-lbl{font-family:var(--f-label);font-size:10.5px;text-transform:uppercase;letter-spacing:2px;color:var(--accent2-dk);margin-bottom:8px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{padding:7px 14px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text);line-height:1.3;font-family:inherit;transition:all .15s}
+.pill:hover{border-color:var(--primary);color:var(--primary)}
+.pill.active{color:#fff;background:var(--primary);border-color:var(--primary)}
+.pill .cnt{font-weight:400;opacity:.65;margin-left:4px}
+.pill.active .cnt{color:var(--accent);opacity:1}
+
+/* Específicos */
+#ind-content{margin-top:18px}
+.ind-block{background:var(--card);border-radius:var(--radius);padding:20px 22px;border:1px solid var(--border);margin-bottom:12px}
+.ind-top{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:8px}
+.ind-fig .lbl{font-family:var(--f-label);font-size:10.5px;text-transform:uppercase;letter-spacing:1.6px;color:var(--muted)}
+.ind-fig .v{font-size:36px;font-weight:800;color:var(--primary);line-height:1.1;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.ind-tname{font-size:14px;color:var(--text);font-weight:600;margin:0 0 12px;line-height:1.45;text-wrap:pretty}
+.ind-tname small{font-weight:400;color:var(--accent2-dk);margin-left:6px;font-size:12px}
+details.ind-det summary{font-size:12px;color:var(--accent2-dk);cursor:pointer;margin:6px 0 8px;font-weight:600}
+details.ind-det summary:hover{color:var(--primary)}
+.ind-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.ind-table th{font-family:var(--f-label);font-size:10.5px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;padding:8px 10px;border-bottom:1px solid var(--border);text-align:left}
+.ind-table th.r,.ind-table td.r{text-align:right}
+.ind-table td{padding:9px 10px;border-bottom:1px solid #F1EDE5;vertical-align:top;line-height:1.4;font-variant-numeric:tabular-nums}
+.ind-table tbody tr:hover td{background:#FAF8F3}
+.ind-table tr:last-child td{border-bottom:none}
+.ind-table .proj{font-size:11px;color:var(--muted);margin-top:2px}
+.src{font-size:10.5px;border-radius:999px;padding:2px 9px;white-space:nowrap;font-weight:500}
+.src.fin{background:#E4EAD9;color:var(--primary-dk)}
+.src.int{background:#DDEDEE;color:var(--accent2-dk)}
+.src.nd{background:#F1EEE6;color:var(--muted)}
+.src.ev{background:#F6EFDC;color:#8A5A00}
+
+
+.empty{font-size:13px;color:var(--muted);padding:28px 0;text-align:center}
+#loader{display:flex;align-items:center;justify-content:center;height:260px;font-family:var(--f-label);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:center;padding:0 20px}
+.err-msg{color:var(--red);font-family:var(--f-head);font-size:13px;letter-spacing:0;text-transform:none;line-height:1.6}
+.foot{font-size:11px;color:var(--muted);margin-top:28px;padding-top:16px;border-top:1px solid var(--border);text-align:right}
+
+@media(max-width:760px){
+  .topbar{padding:12px 16px;gap:14px;flex-wrap:wrap}
+  .logo{height:34px}
+  .top-div{display:none}
+  .layout{flex-direction:column;overflow:visible}
+  .sidebar{width:auto;padding-bottom:12px}
+  .main{overflow:visible;padding:20px 16px}
+  .kpi-row{grid-template-columns:1fr}
+  .gen-grid{grid-template-columns:1fr}
+  html,body{height:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img class="logo" src="data:image/png;base64,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" alt="Fundación Estafeta">
+  <div class="top-div"></div>
+  <div>
+    <div class="top-title">Resultados de Indicadores</div>
+    <div class="top-sub">Contribución directa e indirecta</div>
+  </div>
+  <a href="index.html" class="back-a">← Volver al dashboard</a>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="org-badge">
+      <div class="num" id="sb-orgs">—</div>
+      <div class="lbl">Organizaciones<br>financiadas</div>
+    </div>
+    <div class="flt-head">Filtros</div>
+    <div class="flt-item"><label for="flt-ano">Año de convocatoria</label><select id="flt-ano"><option value="">Todos los años</option></select></div>
+    <div class="flt-item"><label for="flt-org">Organización</label><select id="flt-org"><option value="">Todas</option></select></div>
+    <div class="flt-item"><label for="flt-est">Estado de implementación</label><select id="flt-est"><option value="">Todos</option></select></div>
+    <div class="flt-item"><label for="flt-tipo">Tipo de donativo</label><select id="flt-tipo"><option value="">Todos</option></select></div>
+    <button class="flt-reset" onclick="resetFilters()">Limpiar filtros</button>
+    <div class="flt-note">Los filtros aplican a todas las secciones.</div>
+  </div>
+
+  <div class="main"><div class="main-in">
+    <div id="loader">Cargando datos de Airtable…</div>
+    <div id="content" style="display:none">
+
+      <div class="sec-hd"><div class="sec-num">01</div><div class="sec-title"><small>Perfil y cobertura</small>Panorama general</div><button class="info-btn" data-info="pano" aria-label="Cómo se calcula">i</button></div>
+            <p class="sec-desc">Perfil y cobertura de las organizaciones financiadas por Fundación Estafeta. Pasá el cursor sobre los gráficos para ver el detalle.</p>
+      <div class="pano-grid">
+        <div class="chart-card"><div class="chart-title">Tipo de donativo</div><div class="chart-sub">% de donativos</div><div id="ch-tipo"></div></div>
+        <div class="chart-card"><div class="chart-title">Figura legal de las OSC</div><div class="chart-sub">% de organizaciones</div><div id="ch-fig"></div></div>
+        <div class="chart-card"><div class="chart-title">Alcance de las OSC</div><div class="chart-sub">% de organizaciones</div><div id="ch-alc"></div></div>
+      </div>
+      <div class="map-wrap">
+        <div class="map-card"><div class="chart-title">Estados de implementación <button class="info-btn" data-info="map" aria-label="Cómo se calcula">i</button></div><div class="chart-sub">Clic en un estado para filtrar todo el tablero</div><div id="map-svg"></div><div class="map-legend" id="map-legend"></div><div class="map-tip" id="map-tip"></div></div>
+        <div class="map-card"><div class="chart-title">Organizaciones por estado</div><div class="chart-sub">&nbsp;</div><ul class="st-list" id="st-list"></ul><div class="map-hint" id="map-hint"></div></div>
+      </div>
+      <div class="chart-card" style="margin-top:14px"><div class="chart-title">Temáticas principales</div><div class="chart-sub">Cantidad de organizaciones que señalan cada temática (cada organización puede marcar hasta 3)</div><div id="ch-tem"></div></div>
+
+      <div class="section-sep"></div>
+
+      <div class="sec-hd"><div class="sec-num">02</div><div class="sec-title"><small>Financiamiento</small>Contribución directa</div></div>
+            <p class="sec-desc">Indicadores del financiamiento otorgado por Fundación Estafeta. Fuente: tabla <strong>Organizaciones Financiadas</strong>.</p>
+      <div class="kpi-row" id="kpi-directa"></div>
+
+      <div class="section-sep"></div>
+
+      <div class="sec-hd"><div class="sec-num">03</div><div class="sec-title"><small>Contribución indirecta</small>Indicadores generales</div></div>
+            <p class="sec-desc">Totales agregados a partir de los indicadores específicos que reportan las organizaciones financiadas. Hacé clic en <strong>i</strong> para ver qué campos de Airtable se suman en cada caso.</p>
+      <div class="gen-grid" id="gen-cards"></div>
+
+      <div class="section-sep"></div>
+
+      <div class="sec-hd"><div class="sec-num">04</div><div class="sec-title"><small>Contribución indirecta</small>Indicadores específicos</div></div>
+            <p class="sec-desc">Indicadores tal cual los reporta cada organización en el Reporte intermedio y el Reporte final.</p>
+      <div id="pills"></div>
+      <div id="ind-content"></div>
+
+      <div class="foot" id="foot"></div>
+    </div>
+  </div></div>
+</div>
+
+<div class="info-tip" id="info-tip" role="tooltip"><h3 id="pop-title"></h3><div id="pop-body"></div></div>
+
+<script>
+/* ════════════ CONFIG ════════════ */
+const BASE='appOMWOtj4oueitEf';
+const TOKEN=['patfkx42jqBK5Wodz','6f69d7323180fd9ee177445bb64d807a8b4398f4bde5b94275ad18009eb4ccdd'].join('.');
+
+const TBL={
+  ORGF:'tblTWJNqsV1Y0iMDo', // Organizaciones Financiadas
+  F3:'tblqnwYxeNH0vlfSj',   // Fase 3: Información del proyecto
+  RI:'tblrhtveqAUyiCogg',   // Reporte intermedio
+  RF:'tbliKpa7QnngY9PUh',   // Reporte final
+  IND:'tblhe3rlJfstVVAdK',  // Reporte final - Indicadores (formulario 2026)
+  F1:'tblXqjvwqeIVvyJmn'    // Fase 1: Nota conceptual
+};
+// Nota conceptual: estados y municipios de implementación del proyecto
+const NC={EST:'fldqea1u2xZjb5fs8',MUN:'fldcRBYp0AvYdo6Y2',FIG:'fld01pxIMiJ7DIYGf',ALC:'flde6lK1LSibKlWkk',TEM1:'fld0FAA8n5Y1KXKRL',TEM2:'fldMxQ5ZuTjXSnVyr',TEM3:'fldBuwJ4coM6bikuR'};
+
+// Organizaciones Financiadas
+const OF={NOM:'fldPYCMvdMhEDWEf7',RFC:'fldlzDaINadegwEAH',ANO:'fld6OwHf7WUcssTPq',TIPO:'fldKgbX2qNMp53S01',
+  AUT:'fld9963hvWlT62lfR',OTORG:'fldk8eJ2yRCdKVpPp',F3:'fldSG0aELBkK4ka0i',ORG:'fldUIq1Vigwaj0pAc'};
+// Fase 3
+const P={NOM:'fldPMHp87UsY3KLfB',PROY:'flda0BjV3PneaPgXw',RFC:'fld3GQTnPheow9DCT',ANO:'fldmaoh8wxpCSOaFC',
+  NOTA:'fldYptuOrsGB9ybgJ',COSTO:'fldEFsCFkWReytUOQ',POB:'fldvqX52DBGHbxPR7',STATUS:'fldl1JLaw1rnBnJj1'};
+// Reportes
+const RIF={P:'fldC3qqO8L9bIwsZr',TIPO:'fldRhxiaUfmNtIBjQ'};
+const RFF={P:'flddoVSNPUM0Lzgkt'};
+// Indicadores 2026
+const INF={NAME:'fld6gLUPT7Z59MQKy',META:'fld7ObmRHU0qUg3yE',REAL:'fldkgh5WTFnGaAeIG',P:'fldBwQE4FjVq2gQ0a'};
+
+// Registros de prueba (RFC normalizado o nombre)
+const TEST_RFC=new Set(['AATEST123','ZIGLA1234567']);
+const TEST_NAME=/\btest\b|zigla/i;
+
+/* ════════════ CATÁLOGO DE INDICADORES ESPECÍFICOS ════════════
+   meta: campo en Fase 3 · ri: campo en Reporte intermedio · rf: campo en Reporte final
+   muj: desagregación de mujeres (mismo esquema) · ind: nombre en la tabla de indicadores 2026 */
+const T=(meta,ri,rf)=>({meta,ri,rf});
+const DIMS=[
+ {id:'soc',label:'Impacto socio-económico'},
+ {id:'amb',label:'Impacto socio-ambiental'},
+ {id:'pob',label:'Población'}
+];
+const SUBS=[
+ {id:'part',dim:'soc',label:'Participación comunitaria'},
+ {id:'cult',dim:'soc',label:'Cultura indígena'},
+ {id:'emp',dim:'soc',label:'Empleo'},
+ {id:'com',dim:'soc',label:'Comercialización y cadenas de valor'},
+ {id:'infra',dim:'soc',label:'Infraestructura y servicios'},
+ {id:'gen',dim:'soc',label:'Género'},
+ {id:'ener',dim:'amb',label:'Energía renovable'},
+ {id:'bio',dim:'amb',label:'Biodiversidad'},
+ {id:'circ',dim:'amb',label:'Economía circular'},
+ {id:'agua',dim:'amb',label:'Agua y saneamiento'},
+ {id:'agro',dim:'amb',label:'Agricultura sustentable'},
+ {id:'edu',dim:'amb',label:'Educación ambiental'},
+ {id:'pob',dim:'pob',label:'Población alcanzada'}
+];
+const AGE_RI=['fldAJZu1P6FMz9K6P','fldve0kCGKLg4zVaF','fld9pYLf5gvp65xlc','fldfDy1wMTyqEcEut','fldHVb55tITtov9y0','fld7UOW41TwtKwO3S'];
+const AGE_RF=['fldSRMlZDHhAcdGBQ','fldxrGx8HA6nxdZfF','fld8uNxhTBStmwUga','fldk2KwUGj6qNa0Sr','fldaIEGQBpD0IpxHz','fldUMjpXClujBjTA4'];
+const AGE_RI_M=['fldgpEQuH4947E0n7','flduHFe1iKo45CjJo','fldTGIVHT2u930sOw','fldiex14Zu1uTeRLk','flddOzahA5BBS7nRt','fldTDnlAcha9wt8v3'];
+const AGE_RF_M=['flde62EERcLGJNEic','fldAK2NvyzKzWFYny','fldFbqTwY5NdPJZp5','fld2FPMSJ14x2Jszk','fldjQirT7p3l9txjP','flddWMlnUhIHCMU8l'];
+
+const IND=[
+ // Participación comunitaria
+ {id:'act_com',sub:'part',name:'# de actividades comunitarias promovidas',...T('fldJH1Gy4l3roFFtq','fldsx0ltEnN8gultl','fldtlqLl1XN4RuO9O'),
+   ind:'# de actividades comunitarias promovidas por el desarrollo del proyecto'},
+ {id:'pers_com',sub:'part',name:'# de personas que participan de actividades comunitarias',...T('fldTbERlujbyJongb','fldU8jvx4Fa8YNvid','fldhFIGPfOLnhi9cx'),
+   muj:T('fldUmik5roZCPkfxR','fldhER7MBspQX0Ky4','fldy9ZgVmK9JYCp0q')},
+ {id:'grupos',sub:'part',name:'# de grupos fortalecidos o acompañados',...T('fldGmUWrfA7Vlvbs0',null,null),ind:'# de grupos fortalecidos o acompañados'},
+ {id:'estruct',sub:'part',name:'# de estructuras comunitarias fortalecidas (comités, bancos de semillas, viveros, cooperativas u otras)',...T('fld9lEerxYi4Ivk4w',null,null),
+   ind:'# de estructuras comunitarias fortalecidas (comités, bancos de semillas, viveros, cooperativas u otras)'},
+ {id:'coord_pct',sub:'part',name:'% de actividades coordinadas con estructuras comunitarias',pct:true,...T('fldrrJjCcqLzaTHLl',null,null),ind:'% de actividades coordinadas con estructuras comunitarias'},
+ {id:'jovenes',sub:'part',name:'# de jóvenes involucrados en procesos comunitarios o productivos',...T('fldbooJGLhdUjXW4j',null,null),ind:'# de jóvenes involucrados en procesos comunitarios o productivos'},
+ // Cultura indígena
+ {id:'cultura',sub:'cult',name:'# de actividades de promoción de la cultura indígena',...T('fldYK7AK1eGPAD3jh','fldORQTmuNCtrlNBN','fldq894D2uUvHWwWa')},
+ // Empleo
+ {id:'empleo',sub:'emp',name:'# de puestos de empleo generados',...T('fldTrRzOkrYLyAbHT','fldlKyO1EYnb2T3EY','fldWLbWOSYUS25UkC'),
+   muj:T('fldzqgpf2vn0N3lFA','fldNcY2p2EPVe7Zci','fldCNTkGmo6U4cx1J')},
+ {id:'autoemp',sub:'emp',name:'# de personas autoempleadas',...T('fld32SGDvLsnuIfAa','flddaGFtySpzg0GJF','fldYmE9uVw080447B'),
+   muj:T('fldCPvGVlzLpG3TLc','fldDv9FS2WCnpB9y6','fldYfZniUKfqkMoYu')},
+ {id:'cap_emp',sub:'emp',name:'# de personas capacitadas para el trabajo / autoempleo',...T('fldCKGOBdocLiblP7','fldNkXx0xnfqyC4hS','fldwAz0pA4DoHNI4g'),
+   muj:T('fldgFDTAcZC34RwiM','fldY1AijU2A54QJM9','fldVohC4Hsqz2R1iE')},
+ // Comercialización y cadenas de valor
+ {id:'ventas_pct',sub:'com',name:'Incremento porcentual en ventas comunitarias',pct:true,...T('fldMxp5XBpOok6Sjl',null,null),ind:'Incremento porcentual en ventas comunitarias'},
+ {id:'precios_pct',sub:'com',name:'Incremento porcentual en precios promedio obtenidos por productores',pct:true,...T('fldioXePz3etivqYh',null,null),ind:'Incremento porcentual en precios promedio obtenidos por productores'},
+ {id:'aliados',sub:'com',name:'# de aliados comerciales activos',...T('fldgzaDnqMC2ZP2zV',null,null),ind:'# de aliados comerciales activos'},
+ {id:'convenios',sub:'com',name:'# de convenios firmados vinculados a cadenas de valor',...T('fldw1rWGOPKnrLvO0',null,null),ind:'# de convenios firmados vinculados a cadenas de valor'},
+ {id:'tiempo_pago',sub:'com',name:'Tiempo promedio de pago por producto',avg:true,...T('fldEh5RACfFu7OguR',null,null),ind:'Tiempo promedio de pago por producto',
+   note:'En días entre la entrega del producto y el pago efectivo a la persona productora.'},
+ // Infraestructura y servicios
+ {id:'bys',sub:'infra',name:'# de personas que acceden a bienes y servicios básicos',...T('fldQstCfaLj4qghvT','fldq37ePjyXbYtk6V','fld6qNcIbG6fxrZDS'),
+   muj:T('fldO4uCmqUop44Xap','fldzBVlCewUcRerEb','fldLHSwZZ9fWj6ZhV')},
+ {id:'viviendas',sub:'infra',name:'# de viviendas construidas o mejoradas',...T('fldylBeYqNqFHsYYj','fldc5KCERPNp4Uiqp','fldUZHyTJeSUXuXKU'),ind:'# de viviendas construidas o mejoradas'},
+ {id:'espacios',sub:'infra',name:'# de espacios públicos construidos o mejorados',...T('fldnO2IwyVfUk82Gl','fldpFwAO2sNWu2Asq','fld8Ib86PrpnRmZeB'),ind:'# de espacios públicos construidos o mejorados'},
+ {id:'obras',sub:'infra',name:'# de personas alcanzadas a través de obras de mejoramiento y construcción de infraestructura',...T('fldxlNRQRcnHlBFj0','fldrmLcXi5XoWfr3l','fldtUH6KgeHc6GTd9'),
+   muj:T('fldhqntOPFkDuIsYU','fldHh6hTtccDT3aMH','fldfPqnnp2PPUe8DO')},
+ {id:'productores',sub:'infra',name:'# de productores en pequeña escala con acceso a servicios para incrementar la productividad agrícola y sus ingresos',...T('fldk92Nd3s6BA9hVc','fldUHO446hn5Jqv4N','fld1sciVLOMwZNam8'),
+   muj:T('fldRLDz0zXyGtHO74','fldjIvVm7ScQyxgLR','fldloqCYaHGJs4DDG')},
+ // Género
+ {id:'muj_fort',sub:'gen',name:'# de mujeres que participan en actividades de fortalecimiento',...T(null,'fldqQM9obsHPGo3ef','fldJ2UMB022HfcdHM')},
+ {id:'lider_pct',sub:'gen',name:'% de mujeres en roles de liderazgo o toma de decisiones',pct:true,...T('fldy0TblZPGma3rto',null,null),ind:'% de mujeres en roles de liderazgo o toma de decisiones'},
+ {id:'invol_pct',sub:'gen',name:'Proporción de involucramiento de mujeres, adultos mayores y otros grupos tradicionalmente excluidos',pct:true,...T('fld6iyh9zRjeZPGTI',null,null),
+   ind:'Proporción de involucramiento de mujeres, adultos mayores y otros grupos tradicionalmente excluidos'},
+ // Energía
+ {id:'kwh',sub:'ener',name:'KWh de energía renovable producida',...T('fldwmlVAUddhV3y4i','fldoe1cne1soUoMAM','fldNgyjYtiBrpfeKB')},
+ // Biodiversidad
+ {id:'politicas',sub:'bio',name:'# de políticas implementadas para proteger especies en amenaza',...T('fldTCf1Yrb9I9Elt3','fldPFmxNMQlQrFQX1','fldcdioOxBZfmFfgT')},
+ {id:'ha_ref',sub:'bio',name:'# de hectáreas reforestadas',...T('fldQF7o8eO8JonvlA','fldSteZtuHVTaRCix','fldCduvlp9H9A6f2W'),ind:'# de hectáreas reforestadas'},
+ {id:'especies',sub:'bio',name:'# de especies protegidas o conservadas',...T('fldAFf2TugPsn8TBp','fldpB2hutLrHaOMUS','fldHSmAofrO0xkBG3')},
+ {id:'ha_prot',sub:'bio',name:'# de hectáreas protegidas',...T('fld1l1ucdkf7VXCx5','fldQp16hTnKvKwVKd','fldZv8ctPCe5lp8ci'),ind:'# hectáreas protegidas'},
+ {id:'ha_cons',sub:'bio',name:'# de hectáreas conservadas',...T('fldQAA8QMHSn6yDSl','fldYucEMX7qOzkmO4','fldBXbaPWQb7yrd1c'),ind:'# hectáreas conservadas'},
+ {id:'sbn',sub:'bio',name:'# de soluciones basadas en la naturaleza (SbN) implementadas',...T('fldGFxZ8AJVFLnXSy',null,null),ind:'# de soluciones basadas en la naturaleza (SbN) implementadas'},
+ {id:'territorios',sub:'bio',name:'# de territorios con pilotos/parcelas demostrativas operando',...T('fldh1jOgb7DqAW5mB',null,null),ind:'# de territorios con pilotos/parcelas demostrativas operando'},
+ // Economía circular
+ {id:'residuos',sub:'circ',name:'Kgs. de residuos reducidos',...T('fld00ogKmSkviQlQI','fldgswfzpWBPChmdD','fldwJ5OJ6UjHdi8CJ')},
+ {id:'materiales',sub:'circ',name:'Kgs. de materiales tratados',...T('fldpjeEku7XZOdGOU','fld0w3uXdvKLQnozO','fld3g5xwuKwuotcUA'),ind:'Kgs. de materiales tratados'},
+ // Agua y saneamiento
+ {id:'agua_res',sub:'agua',name:'# de prácticas adecuadas de descarga de agua residual implementadas',...T('fld4EdWxR2lf3BL7B','fldIXeQXy0hR3C10E','fldT4aRl9roIZ0MB1'),ind:'# de prácticas adecuadas de descarga de agua residual'},
+ {id:'agua_pot',sub:'agua',name:'L. de agua potable producida',...T('fldPqRMWu2eiN762b','fldIVXyT35deiGgr7','fldEkm9iIko0K8ERU')},
+ {id:'saneam',sub:'agua',name:'# de personas que desarrollan conocimientos adecuados de saneamiento e higiene',...T('fldCe2BfeRkMjNWjF','fldr75xXKLtGCXNQO','fldpT6yQDrfupJxwn'),
+   muj:T('fldRio0glnfPm3CN4',null,'fldMB7aFEMpCCdRQU')},
+ {id:'prot_agua',sub:'agua',name:'# de prácticas implementadas para la protección de la calidad del agua',...T('fldc1PnuRoRWmYqFx','fldL2G7v7WwspdaZP','fldOE7pA28QaLojVR')},
+ {id:'uso_agua',sub:'agua',name:'# de personas con uso eficiente de agua',...T('fldqhCT1OWivnrOtV','fldgskSjsfHkSmf5F','fldtE4HpBOAVjaFH7'),
+   muj:T('fld9CmCSFesKrw2aa','fldYoDP5JfwgPajmW','fldvLfI8OOMcRBmnk')},
+ // Agricultura
+ {id:'ha_regen',sub:'agro',name:'# de hectáreas bajo manejo regenerativo',...T('fldTvFWegrJoPjVk2','fldlczUlIdlL5X8il','fldFGJ1GDMP8YyXaI'),ind:'# de hectáreas bajo manejo regenerativo'},
+ {id:'kg_alim',sub:'agro',name:'Kgs. de alimentos producidos de forma sostenible',...T('fldXfseKgQHx5x8X5','fldnMD4NLJZw86Xej','fldv3HuZHQKUt2qt3'),ind:'Kgs. de alimentos producidos de forma sustentable'},
+ {id:'ha_fert',sub:'agro',name:'# de hectáreas en las que se utilizan fertilizantes/pesticidas orgánicos',...T('fld4boMPIh0n6wkOO','fld2IIM3M9Te28QE3','fldYHqQRBra4YcyoL'),ind:'# de hectáreas en las que se utilizan fertilizantes orgánicos'},
+ {id:'alim_sal',sub:'agro',name:'# de personas que acceden a alimentación saludable',...T('fldDCxXLvbGdDr3qX','fldkPoYSzB018QECA','fldd3SHvW9k2J5CCc'),
+   muj:T('fldoRMNbUswqAr7eW',null,'fldVuagJHuKqQl0Xw')},
+ {id:'suelos',sub:'agro',name:'# de prácticas para conservar/regenerar suelos',...T('flduszpTvzzQnCWH0','fldedWkVOHtE5X52c','fld0ASWEMkRYVTpt5'),ind:'# de prácticas para conservar/regenerar suelos'},
+ {id:'humedad_pct',sub:'agro',name:'Incremento porcentual de humedad del suelo o retención de agua',pct:true,...T('fldZlY5HH1neCmQAt',null,null),ind:'Incremento porcentual de humedad del suelo o retención de agua'},
+ // Educación ambiental
+ {id:'cap_amb',sub:'edu',name:'# de personas capacitadas/sensibilizadas en temas vinculados al cuidado del medioambiente',...T('fld5kwNyXryg6efZ6','fldCTstoXEtbprj8Q','fldrrOjMcBOruYM49'),
+   muj:T('fldOMzDrgJCDGFCNl','fldK0uZ4vUqB2fiL4','fld2zHz6ie8K5JzET')},
+ {id:'talleres',sub:'edu',name:'# de talleres y actividades educativas realizadas en temas vinculados al cuidado del medioambiente',...T('fldxEunVA1idVYA6r','fldlC5ckkCAPjD5AW','fldg6RWPQCV7AeIc9'),
+   ind:'# de talleres y/o actividades educativas realizadas en temas vinculados al cuidado del medioambiente'},
+ {id:'metodologias',sub:'edu',name:'# de metodologías documentadas',...T('fldjzz4qH5hH0hWB7',null,null),ind:'# de metodologías documentadas'},
+ {id:'post_emerg',sub:'edu',name:'# de documentos de aprendizaje post-emergencia elaborados',...T('fldukP4vrU60ZAFXX',null,null),ind:'# de documentos de aprendizaje post-emergencia elaborados'},
+ // Población alcanzada
+ {id:'pers_dir',sub:'pob',name:'# de personas alcanzadas directamente por el proyecto',...T(P.POB,AGE_RI,AGE_RF),
+   note:'Suma de los rangos de edad 0-6, 7-15, 16-23, 24-40, 41-60 y más de 60.'},
+ {id:'muj_dir',sub:'pob',name:'# de mujeres alcanzadas directamente por el proyecto',...T(null,AGE_RI_M,AGE_RF_M),
+   note:'Suma de mujeres en los rangos de edad. No se incluye en "mujeres fortalecidas" para no mezclar población con participación.'}
+];
+const IND_BY_ID=Object.fromEntries(IND.map(i=>[i.id,i]));
+
+/* ════════════ INDICADORES GENERALES ════════════
+   comp: lista de referencias "id" (valor total) o "id.muj" (desagregación de mujeres) */
+const GENERALES=[
+ {id:'g_pers',nombre:'# de personas alcanzadas directamente',color:'#4D6234',unidad:'personas',comp:['pers_dir'],
+   desc:'Personas reportadas por rango de edad en la sección de población del reporte.'},
+ {id:'g_muj',nombre:'# de mujeres fortalecidas',color:'#A53614',unidad:'mujeres',dup:true,
+   comp:['pers_com.muj','empleo.muj','autoemp.muj','cap_emp.muj','bys.muj','obras.muj','productores.muj','saneam.muj','alim_sal.muj','cap_amb.muj','uso_agua.muj','muj_fort'],
+   desc:'Suma de todas las mujeres reportadas en los distintos indicadores específicos.'},
+ {id:'g_cap',nombre:'# de personas capacitadas / sensibilizadas',color:'#4F9A9E',unidad:'personas',dup:true,
+   comp:['cap_amb','cap_emp','saneam'],desc:'Suma de personas capacitadas en temas ambientales, para el trabajo y en saneamiento.'},
+ {id:'g_vida',nombre:'# de personas con medios de vida sostenibles',color:'#4D6234',unidad:'personas',dup:true,
+   comp:['autoemp','empleo','productores'],desc:'Suma de personas autoempleadas, empleos generados y productores con acceso a servicios productivos.'},
+ {id:'g_praccom',nombre:'# de prácticas comunitarias desarrolladas',color:'#4F9A9E',unidad:'prácticas y actividades',
+   comp:['act_com','cultura','grupos','estruct'],desc:'Suma de actividades comunitarias, de promoción cultural, grupos y estructuras comunitarias fortalecidas.'},
+ {id:'g_pracamb',nombre:'# de prácticas ambientales desarrolladas / impulsadas',color:'#4D6234',unidad:'prácticas y actividades',
+   comp:['talleres','prot_agua','agua_res','politicas','suelos','sbn','territorios'],desc:'Suma de prácticas, soluciones y actividades orientadas al cuidado y la restauración del medio ambiente.'},
+ {id:'g_infra',nombre:'# de infraestructura desarrollada / mejorada',color:'#A53614',unidad:'unidades',
+   comp:['viviendas','espacios'],desc:'Suma de viviendas y espacios públicos construidos o mejorados.'},
+ {id:'g_ha',nombre:'# de hectáreas bajo manejo sostenible',color:'#4D6234',unidad:'hectáreas',
+   comp:['ha_regen','ha_ref','ha_fert','ha_prot','ha_cons'],desc:'Suma de hectáreas bajo distintas modalidades de manejo sostenible o regenerativo.'}
+];
+
+/* ════════════ STATE ════════════ */
+let DATA=null;
+const F={ano:'',org:'',est:'',tipo:''};
+let activeSub='part';
+
+/* ════════════ HELPERS ════════════ */
+async function fetchAll(tbl,fids){
+  let recs=[],off=null;
+  const qs=fids.map(f=>'fields%5B%5D='+f).join('&');
+  do{
+    const url=`https://api.airtable.com/v0/${BASE}/${tbl}?pageSize=100&returnFieldsByFieldId=true&${qs}`+(off?`&offset=${off}`:'');
+    const r=await fetch(url,{headers:{Authorization:'Bearer '+TOKEN}});
+    const j=await r.json();
+    if(!r.ok) throw new Error(`${tbl}: ${j.error?.message||j.error?.type||r.statusText}`);
+    recs.push(...(j.records||[]));
+    off=j.offset;
+  }while(off);
+  return recs;
+}
+const first=v=>Array.isArray(v)?v.find(x=>x!=null&&x!==''):v;
+function num(v){
+  v=first(v);
+  if(v==null||v==='') return null;
+  const n=typeof v==='number'?v:parseFloat(String(v).replace(/[^0-9.\-]/g,''));
+  return isFinite(n)?n:null;
+}
+const str=v=>{v=first(v);return v==null?'':String(v).trim();};
+const normRFC=s=>str(s).toUpperCase().replace(/\*+$/,'').trim();
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const normName=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
+  .replace(/%/g,' porcentaje ').replace(/incremento porcentual/g,'incremento porcentaje').replace(/[^a-z0-9 ]/g,' ')
+  .split(/\s+/).filter(w=>w&&!['de','del','la','el','los','las','y','o','u','numero','n'].includes(w)).join(' ');
+function fmt(n,pct){
+  if(n==null||!isFinite(n)) return '—';
+  if(pct) return n.toLocaleString('es-MX',{maximumFractionDigits:1})+'%';
+  return n.toLocaleString('es-MX',{maximumFractionDigits:Number.isInteger(n)?0:1});
+}
+const cur=n=>n==null?'—':'$'+Math.round(n).toLocaleString('es-MX');
+// Texto visible sin "# de" / "% de" al inicio (no altera los nombres usados para leer Airtable)
+const clean=s=>{s=String(s??'').replace(/^\s*[#%]\s*(de\s+)?/i,'').trim();return s.charAt(0).toUpperCase()+s.slice(1);};
+const isTest=(rfc,name)=>TEST_RFC.has(rfc)||TEST_NAME.test(name||'');
+
+/* ════════════ MODELO ════════════ */
+const normEst=s=>{s=String(s||'').replace(/\(.*?\)/g,'').replace(/\s+/g,' ').trim();return {'México':'Estado de México','Distrito Federal':'Ciudad de México','CDMX':'Ciudad de México'}[s]||s;};
+function buildModel(raw){
+  const f3=Object.fromEntries(raw.F3.map(r=>[r.id,r]));
+  const f1=Object.fromEntries(raw.F1.map(r=>[r.id,r.fields]));
+  const impl=id=>{const n=f1[id];return n?{est:[...new Set((n[NC.EST]||[]).map(x=>normEst(typeof x==='string'?x:x.name)).filter(Boolean))],mun:str(n[NC.MUN])}:{est:[],mun:''};};
+  const perfil=id=>{const n=f1[id]||{};const s=v=>str(typeof v==='object'&&v?v.name:v);
+    return {fig:s(n[NC.FIG]),alc:s(n[NC.ALC]),tem:[...new Set([n[NC.TEM1],n[NC.TEM2],n[NC.TEM3]].map(s).filter(Boolean))]};};
+  const projects={};
+  const proj=id=>{
+    if(projects[id]) return projects[id];
+    const r=f3[id]; if(!r) return null;
+    const g=r.fields;
+    const rfc=normRFC(g[P.RFC]);
+    const name=str(g[P.NOM]);
+    projects[id]={id,f:g,rfc,name:name||'(sin nombre)',proy:str(g[P.PROY]),
+      ano:str(g[P.ANO]),...impl(first(g[P.NOTA])),
+      status:str(g[P.STATUS]),tipo:'',funded:false,ri:[],rf:[],ind:[],
+      test:isTest(rfc,name)||(!rfc&&!name)};
+    return projects[id];
+  };
+  // Organizaciones financiadas
+  const orgf=raw.ORGF.map(r=>{
+    const g=r.fields;const rfc=normRFC(g[OF.RFC]);const name=str(g[OF.NOM]);
+    const p=proj(first(g[OF.F3]));
+    let loc=impl(first(g[OF.ORG]));if(!loc.est.length&&p) loc={est:p.est,mun:p.mun};
+    const o={id:r.id,rfc,name,ano:str(g[OF.ANO]),tipo:str(g[OF.TIPO]),otorg:num(g[OF.OTORG]),aut:num(g[OF.AUT]),
+      costo:p?num(p.f[P.COSTO]):null,est:loc.est,mun:loc.mun,proj:p,test:isTest(rfc,name),...perfil(first(g[OF.ORG]))};
+    if(p){p.funded=true;if(o.tipo) p.tipo=o.tipo;}
+    return o;
+  }).filter(o=>!o.test);
+  // Reportes (ordenados por fecha de creación: el último pisa al anterior)
+  const byDate=(a,b)=>a.createdTime.localeCompare(b.createdTime);
+  [...raw.RI].sort(byDate).forEach(r=>{const p=proj(first(r.fields[RIF.P]));if(p){p.ri.push(r.fields);if(!p.tipo)p.tipo=str(r.fields[RIF.TIPO]);}});
+  [...raw.RF].sort(byDate).forEach(r=>{const p=proj(first(r.fields[RFF.P]));if(p)p.rf.push(r.fields);});
+  const indRows=[];
+  raw.IND.forEach(r=>{
+    const p=proj(first(r.fields[INF.P]));if(!p) return;
+    const row={p,name:str(r.fields[INF.NAME]).replace(/\s+/g,' '),meta:num(r.fields[INF.META]),real:num(r.fields[INF.REAL])};
+    p.ind.push(row);indRows.push(row);
+  });
+  // Universo de contribución indirecta: proyectos financiados o con reportes, sin pruebas
+  const universe=Object.values(projects).filter(p=>!p.test&&(p.funded||p.ri.length||p.rf.length));
+  return {projects,orgf,universe,indRows:indRows.filter(r=>!r.p.test)};
+}
+
+// Valor de un campo (o suma de varios) en la lista de reportes; toma el último reporte con dato
+function fromReports(list,field){
+  if(!field) return null;
+  const fields=Array.isArray(field)?field:[field];
+  for(let i=list.length-1;i>=0;i--){
+    let s=null;
+    fields.forEach(fid=>{const v=num(list[i][fid]);if(v!=null) s=(s||0)+v;});
+    if(s!=null) return s;
+  }
+  return null;
+}
+// Real: Reporte final > Reporte intermedio > Real alcanzado (tabla Reporte final - Indicadores). Se prioriza el primer valor > 0.
+function getReal(p,spec,indName){
+  const cands=[
+    {v:fromReports(p.rf,spec.rf),src:'fin'},
+    {v:fromReports(p.ri,spec.ri),src:'int'}
+  ];
+  if(indName){const row=p.ind.find(x=>normName(x.name)===normName(indName));if(row) cands.push({v:row.real,src:'n26'});}
+  return cands.find(c=>c.v!=null&&c.v>0)||cands.find(c=>c.v!=null)||{v:null,src:null};
+}
+function resolveRef(p,ref){
+  const [id,part]=ref.split('.');
+  const ind=IND_BY_ID[id];
+  if(part==='muj') return ind.muj?getReal(p,ind.muj).v:null;
+  return getReal(p,ind,ind.ind).v;
+}
+function refLabel(ref){
+  const [id,part]=ref.split('.');const ind=IND_BY_ID[id];
+  return part==='muj'?`Mujeres — ${clean(ind.name).replace(/^./,c=>c.toLowerCase())}`:ind.name;
+}
+function refFields(ref){
+  const [id,part]=ref.split('.');const ind=IND_BY_ID[id];const s=part==='muj'?ind.muj:ind;
+  const fn=f=>f?(Array.isArray(f)?f.map(x=>FIELD_NAMES[x]||x).join(' + '):(FIELD_NAMES[f]||f)):'—';
+  return `Reporte final: <code>${esc(fn(s.rf))}</code> · Reporte intermedio: <code>${esc(fn(s.ri))}</code>`+(!part&&ind.ind?` · Reporte final - Indicadores: <code>${esc(ind.ind)}</code>`:'');
+}
+
+/* ════════════ FILTROS ════════════ */
+const passP=p=>(!F.ano||p.ano===F.ano)&&(!F.org||p.rfc===F.org)&&(!F.est||p.est.includes(F.est))&&(!F.tipo||p.tipo===F.tipo);
+const passO=o=>(!F.ano||o.ano===F.ano)&&(!F.org||o.rfc===F.org)&&(!F.est||o.est.includes(F.est))&&(!F.tipo||o.tipo===F.tipo);
+const fProjects=()=>DATA.universe.filter(passP);
+const fOrgf=()=>DATA.orgf.filter(passO);
+
+/* ════════════ RENDER: DIRECTA ════════════ */
+function renderDirecta(){
+  const recs=fOrgf();
+  const orgs=new Set(recs.map(o=>o.rfc));
+  const conMonto=recs.filter(o=>o.otorg!=null&&o.otorg>0);
+  const sinMonto=recs.length-conMonto.length;
+  const total=conMonto.reduce((s,o)=>s+o.otorg,0);
+  const evaluables=conMonto.filter(o=>o.costo&&o.costo>0);
+  const sup=new Set(evaluables.filter(o=>o.otorg/o.costo>0.5).map(o=>o.rfc));
+  const eq=evaluables.filter(o=>Math.abs(o.otorg/o.costo-0.5)<1e-9).length;
+  const evalOrgs=new Set(evaluables.map(o=>o.rfc));
+  document.getElementById('sb-orgs').textContent=orgs.size;
+  document.getElementById('kpi-directa').innerHTML=`
+    <div class="kpi-card">
+      <div class="kpi-hd"><div class="kpi-lbl">Organizaciones que reciben financiamiento</div>${ib('k1')}</div>
+      <div class="kpi-num">${orgs.size}</div>
+      <div class="kpi-sub">${recs.length} donativo(s) registrados${F.ano?' en '+F.ano:''}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-hd"><div class="kpi-lbl">Monto total otorgado a organizaciones</div>${ib('k2')}</div>
+      <div class="kpi-num sm">${cur(total)}</div>
+      <div class="kpi-sub">${conMonto.length} donativo(s) con monto${sinMonto?` · ${sinMonto} sin monto cargado`:''}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-hd"><div class="kpi-lbl">Organizaciones para las que la donación de FE supera el 50% del presupuesto total</div>${ib('k3')}</div>
+      <div class="kpi-num">${evalOrgs.size?sup.size:'—'}</div>
+      <div class="kpi-sub">De ${evalOrgs.size} org(s) con monto otorgado y costo total${eq?` · ${eq} en exactamente 50%`:''}</div>
+    </div>`;
+}
+const INFO={
+  k1:{t:'Organizaciones que reciben financiamiento',b:`<p>Cantidad de organizaciones distintas registradas en la tabla <strong>Organizaciones Financiadas</strong>.</p>
+    <ul><li>Se identifica a cada organización por su <strong>RFC</strong> (campo <code>RFC</code>). El RFC es único por organización; los RFC con <code>*</code> o <code>**</code> al final se consideran la misma organización.</li>
+    <li>Una organización con donativos en varios años cuenta una sola vez.</li><li>Se excluyen registros de prueba.</li></ul>`},
+  k2:{t:'Monto total otorgado a organizaciones',b:`<p><strong>Fórmula:</strong> suma del campo <code>Monto Otorgado</code> de la tabla <strong>Organizaciones Financiadas</strong>.</p>
+    <p>Se suman todos los donativos (una organización financiada en dos años suma ambos montos). Los registros sin monto cargado no se suman y se informan aparte.</p>`},
+  k3:{t:'Organizaciones donde la donación de FE supera el 50% del presupuesto total',b:`<p><strong>Fórmula:</strong> <code>Monto Otorgado</code> ÷ <code>Costo total</code> &gt; 50%</p>
+    <ul><li><code>Monto Otorgado</code>: tabla <strong>Organizaciones Financiadas</strong>.</li>
+    <li><code>Costo total</code>: tabla <strong>Fase 3: Información del proyecto</strong> (tomado del campo <em>Costo total del proyecto en pesos mexicanos</em> de la Nota conceptual), vinculado a través del proyecto.</li></ul>
+    <div class="warn">Los proyectos con monto otorgado de $600.000 pueden ser anuales y los de $1.800.000 de 3 años. Si el costo total corresponde a un período distinto que el monto otorgado, el porcentaje puede quedar subestimado o sobreestimado.</div>
+    <p>Solo se evalúan donativos que tienen ambos valores cargados.</p>`}
+};
+const ib=k=>`<button class="info-btn" data-info="${k}" aria-label="Cómo se calcula">i</button>`;
+
+/* ════════════ RENDER: GENERALES ════════════ */
+function aggRefs(refs,projs){
+  let real=0,nReal=0;
+  projs.forEach(p=>refs.forEach(ref=>{
+    const v=resolveRef(p,ref);
+    if(v!=null){real+=v;nReal++;}
+  }));
+  return {real:nReal?real:null};
+}
+function renderGenerales(){
+  const projs=fProjects();
+  document.getElementById('gen-cards').innerHTML=GENERALES.map(g=>{
+    const a=aggRefs(g.comp,projs);
+    return `<div class="gen-card">
+      <div class="gen-hd"><div class="gen-lbl">${esc(clean(g.nombre))}</div>${ib(g.id)}</div>
+      <div class="gen-num">${fmt(a.real)}</div>
+          </div>`;
+  }).join('');
+}
+GENERALES.forEach(g=>{
+  INFO[g.id]={t:clean(g.nombre),dyn:()=>`<p>${esc(g.desc)}</p>
+    <p><strong>Indicadores específicos que se suman:</strong></p>
+    <ul>${g.comp.map(r=>`<li>${esc(clean(refLabel(r)))}<br><span style="font-size:10px;line-height:1.45;color:var(--muted);display:block">${refFields(r)}</span></li>`).join('')}</ul>
+    <p style="font-size:11px;color:var(--muted)">Por proyecto se toma el valor del Reporte final; si no está cargado, el del Reporte intermedio (no se suman ambos).</p>
+    ${g.id==='g_muj'?`<div class="warn"><strong>Riesgo de duplicación:</strong> una misma mujer puede estar contada en varios indicadores (por ejemplo, capacitada en cuidado del ambiente y participante de actividades comunitarias). Por eso este número debe leerse como <strong>instancias u oportunidades de fortalecimiento</strong> para mujeres, no como mujeres únicas.</div>`:''}
+    ${g.dup&&g.id!=='g_muj'?`<div class="warn">Una misma persona puede estar contada en más de un indicador; el total expresa <strong>instancias u oportunidades</strong>, no personas únicas.</div>`:''}`};
+});
+
+/* ════════════ RENDER: ESPECÍFICOS ════════════ */
+function indRowsFor(ind,projs){
+  const rows=[];
+  projs.forEach(p=>{
+    const r=getReal(p,ind,ind.ind);
+    if(r.v!=null&&r.v>0) rows.push({p,real:r.v,src:r.src});
+  });
+  return rows;
+}
+function aggRows(rows,pct){
+  const reals=rows.map(r=>r.real).filter(v=>v!=null);
+  const f=a=>a.length?(pct?a.reduce((s,v)=>s+v,0)/a.length:a.reduce((s,v)=>s+v,0)):null;
+  return {real:f(reals),nReal:reals.length};
+}
+function renderPills(){
+  const projs=fProjects();
+  const count=sub=>{const inds=IND.filter(i=>i.sub===sub);return `${inds.filter(i=>indRowsFor(i,projs).length).length}/${inds.length}`;};
+  document.getElementById('pills').innerHTML=DIMS.map(d=>`
+    <div class="pill-group"><div class="pill-group-lbl">${d.label}</div><div class="pills">
+    ${SUBS.filter(s=>s.dim===d.id).map(s=>`<button class="pill${activeSub===s.id?' active':''}" onclick="selectSub('${s.id}')">${s.label}<span class="cnt">(${count(s.id)})</span></button>`).join('')}
+    </div></div>`).join('');
+}
+function selectSub(id){activeSub=id;renderPills();renderEspecificos();}
+const SRC={fin:['fin','Final'],int:['int','Intermedio'],n26:['fin','Final']};
+function renderEspecificos(){
+  const el=document.getElementById('ind-content');
+  const projs=fProjects();
+  const blocks=IND.filter(i=>i.sub===activeSub).map(ind=>{
+    const rows=indRowsFor(ind,projs);
+    const avg=ind.pct||ind.avg;
+    const head=`<div class="ind-tname">${esc(clean(ind.name))}${avg?'<small>(promedio entre proyectos)</small>':''}${ind.note?`<small>${esc(ind.note)}</small>`:''}</div>`;
+    if(!rows.length) return `<div class="ind-block">
+      ${head}
+      <div class="ind-top">
+        <div class="ind-fig"><div class="lbl">Real alcanzado</div><span class="src nd">No reportado</span></div>
+      </div>
+    </div>`;
+    const a=aggRows(rows,avg);
+    rows.sort((x,y)=>(y.real||0)-(x.real||0));
+    return `<div class="ind-block">
+      ${head}
+      <div class="ind-top">
+        <div class="ind-fig"><div class="lbl">Real alcanzado</div><div class="v">${fmt(a.real,ind.pct)}</div></div>
+      </div>
+      <details class="ind-det"><summary>Ver detalle por organización (${rows.length})</summary>
+      <table class="ind-table"><thead><tr><th>Organización / Proyecto</th><th class="r">Real alcanzado</th><th>Fuente</th></tr></thead><tbody>
+      ${rows.map(r=>{const s=SRC[r.src];
+        return `<tr><td>${esc(r.p.name)}<div class="proj">${esc(r.p.proy)}${r.p.ano?' · '+r.p.ano:''}</div></td>
+        <td class="r"><strong>${fmt(r.real,ind.pct)}</strong></td>
+        <td>${s?`<span class="src ${s[0]}">${s[1]}</span>`:'<span class="src nd">Sin reporte</span>'}</td></tr>`;}).join('')}
+      </tbody></table></details>
+    </div>`;
+  }).join('');
+  el.innerHTML=blocks||'<div class="empty">No hay indicadores con valores reportados para los filtros seleccionados.</div>';
+}
+/* ════════════ TOOLTIP DE INFO ════════════ */
+function showInfo(k,btn){
+  const i=INFO[k];if(!i) return;
+  const tip=document.getElementById('info-tip');
+  document.getElementById('pop-title').textContent=i.t;
+  document.getElementById('pop-body').innerHTML=i.dyn?i.dyn():i.b;
+  tip.style.display='block';
+  const r=btn.getBoundingClientRect(),w=tip.offsetWidth,hh=tip.offsetHeight;
+  let x=r.left+r.width/2-w/2;x=Math.max(8,Math.min(x,window.innerWidth-w-8));
+  let y=r.bottom+10;if(y+hh>window.innerHeight-8) y=Math.max(8,r.top-hh-10);
+  tip.style.left=x+'px';tip.style.top=y+'px';
+}
+let infoT=null;
+function hideInfo(){clearTimeout(infoT);document.getElementById('info-tip').style.display='none';}
+const hideInfoSoon=()=>{clearTimeout(infoT);infoT=setTimeout(hideInfo,220);};
+// El tooltip se mantiene abierto mientras el cursor está sobre el botón o sobre el propio tooltip (para poder leerlo y desplazarlo)
+document.addEventListener('mouseover',e=>{
+  if(e.target.closest('#info-tip')){clearTimeout(infoT);return;}
+  const b=e.target.closest('.info-btn');if(b){clearTimeout(infoT);showInfo(b.dataset.info,b);}
+});
+document.addEventListener('mouseout',e=>{
+  const from=e.target.closest('.info-btn,#info-tip');const to=e.relatedTarget&&e.relatedTarget.closest&&e.relatedTarget.closest('.info-btn,#info-tip');
+  if(from&&!to) hideInfoSoon();
+});
+document.addEventListener('focusin',e=>{const b=e.target.closest('.info-btn');if(b) showInfo(b.dataset.info,b);});
+document.addEventListener('focusout',e=>{if(e.target.closest('.info-btn')) hideInfo();});
+document.addEventListener('scroll',e=>{if(!(e.target.closest&&e.target.closest('#info-tip'))) hideInfo();},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideInfo();});
+
+const MX_W=800,MX_H=501;
+const MX_PATHS={"Zacatecas":"M443.3,225.1L441.9,225.9L439.7,230.5L437.1,230.9L435.3,234.7L431.4,236.7L430.5,240.2L431.5,241.4L429.2,246.0L424.4,247.6L420.9,252.8L415.0,255.8L413.6,258.3L410.7,258.9L408.3,258.0L406.8,259.9L407.9,265.5L406.7,269.6L406.7,272.4L413.0,277.3L416.4,278.3L418.8,282.4L423.4,281.7L429.4,276.3L430.1,276.2L432.1,278.8L428.6,288.0L429.9,292.0L429.6,293.7L426.6,300.2L422.8,298.6L418.0,295.0L414.4,294.1L412.7,289.5L408.2,286.8L406.0,284.0L405.3,284.1L403.7,286.4L397.3,289.5L396.4,292.9L391.7,300.5L391.8,301.8L394.2,304.1L394.8,308.3L397.6,310.1L396.1,314.2L390.2,318.7L388.6,318.2L387.2,318.7L386.3,321.3L384.7,322.3L383.0,321.8L379.5,323.1L376.6,321.4L374.3,321.6L371.8,318.5L369.3,317.9L369.3,317.0L374.4,314.3L374.1,312.7L371.5,312.5L370.6,309.9L372.4,309.5L374.1,307.5L374.2,303.1L379.0,299.2L383.6,297.3L385.1,294.8L386.2,290.0L383.0,289.0L383.8,287.5L383.4,286.6L381.2,286.4L379.3,287.2L379.0,288.5L380.2,290.2L376.9,293.9L376.0,294.3L374.0,293.6L373.3,294.4L371.3,294.4L370.8,293.2L374.6,286.9L374.5,284.9L372.7,282.4L371.2,281.9L367.8,282.6L367.1,283.1L367.1,290.4L366.7,291.6L365.6,291.4L364.3,289.6L364.4,286.1L366.1,281.8L368.8,278.1L366.0,277.1L362.1,279.1L363.9,285.3L362.9,286.5L361.1,287.7L360.8,287.1L361.9,283.8L361.3,283.4L358.2,284.6L357.9,287.7L356.5,287.4L355.4,288.6L354.2,287.2L354.0,284.4L355.2,281.3L356.7,279.3L359.7,277.6L359.9,271.9L359.1,267.5L361.1,264.3L362.5,256.5L367.7,251.1L366.8,246.8L367.2,242.0L366.0,239.8L366.2,238.5L368.7,237.7L377.7,228.1L383.9,229.1L387.2,228.4L391.0,230.0L391.7,229.1L399.5,228.7L399.2,227.3L400.2,226.7L399.1,222.7L397.9,222.2L398.7,217.3L395.1,213.9L394.9,210.4L401.0,208.8L410.5,209.4L415.6,212.1L419.7,216.9L422.4,216.8L423.0,220.3L425.9,220.4L429.1,219.0L432.1,219.3L436.7,225.3L438.8,226.1L441.2,224.6L443.3,225.1Z","Yucatán":"M779.4,309.7L779.7,315.1L778.2,320.1L779.5,324.4L776.7,331.8L767.8,338.6L764.7,338.9L763.6,337.9L762.4,338.5L760.9,341.3L761.1,343.6L759.8,341.9L758.8,341.9L757.5,344.8L749.7,348.4L747.8,350.1L748.0,350.8L746.2,350.5L744.7,352.0L741.0,352.5L737.2,355.1L733.6,355.2L731.9,360.2L730.7,356.2L727.5,352.5L726.3,349.9L721.9,346.8L721.2,344.5L718.6,341.8L717.1,338.0L715.0,339.6L714.0,338.6L712.4,338.7L711.5,336.7L707.3,336.1L707.5,328.6L706.7,328.3L708.0,323.9L713.2,319.7L721.6,316.1L746.5,312.1L751.5,310.1L752.1,308.7L757.7,307.5L760.9,307.7L764.6,305.8L768.2,307.4L771.9,307.7L773.4,309.1L779.4,309.7Z","Veracruz":"M520.1,288.6L520.8,294.1L522.4,298.8L521.9,300.1L523.0,304.8L525.8,310.3L527.3,309.9L527.8,310.7L528.0,313.8L529.5,316.0L535.7,332.3L554.2,354.9L556.0,362.7L557.5,364.9L558.0,369.5L562.2,372.6L563.8,376.3L566.2,376.7L566.5,379.3L568.0,382.2L571.6,383.9L571.6,384.7L569.6,383.3L569.0,383.7L569.7,384.7L569.1,386.1L571.8,385.3L572.0,384.0L576.5,386.0L586.2,386.3L589.8,390.0L595.4,390.9L597.4,394.8L600.2,397.8L600.8,400.3L603.5,401.6L614.6,399.3L612.8,400.0L614.1,409.5L616.6,410.9L618.1,413.1L622.7,415.2L623.8,418.5L624.0,423.2L625.9,424.0L619.2,429.2L590.4,427.3L590.1,424.2L585.6,420.1L583.2,416.6L583.4,415.4L585.1,414.0L583.7,413.1L578.4,415.1L575.3,417.4L571.2,418.2L569.2,417.6L567.0,412.9L566.8,411.0L569.4,406.3L568.6,401.0L562.8,399.7L560.9,400.5L560.1,399.0L559.3,399.1L558.3,397.1L556.9,396.3L555.6,396.7L553.6,395.1L552.4,391.2L552.9,389.9L550.8,388.3L549.1,393.9L547.2,391.7L544.6,390.8L542.2,392.7L540.8,392.6L539.1,388.5L534.4,386.6L534.0,382.3L536.0,378.6L535.6,371.9L541.0,372.0L541.2,371.2L540.6,369.3L532.5,366.1L532.8,364.2L531.4,361.1L533.8,356.4L534.1,353.6L535.7,349.1L537.8,345.5L530.7,342.9L527.0,347.0L525.5,345.0L522.8,344.6L522.3,338.0L523.5,337.2L525.1,338.2L526.6,335.6L526.1,334.5L523.0,332.3L523.2,330.6L521.4,329.8L522.6,329.1L522.7,327.2L519.4,327.1L516.5,333.5L515.0,332.5L514.2,332.8L504.6,341.1L503.2,340.2L502.1,337.6L503.2,330.3L506.6,326.6L508.4,328.0L509.9,327.8L510.2,323.7L512.1,321.5L509.6,317.7L507.5,317.0L506.7,317.9L505.3,317.9L502.2,315.4L502.5,312.7L501.3,311.7L501.2,308.3L499.9,308.1L499.0,304.6L499.2,303.8L500.4,303.8L500.4,303.0L501.5,303.1L503.5,301.4L501.2,299.2L500.4,297.1L502.9,296.3L502.9,293.0L506.5,292.2L504.6,287.8L500.1,286.4L497.7,286.4L496.9,285.2L498.7,284.2L502.9,283.9L505.3,285.2L507.3,284.7L507.5,283.3L510.1,283.0L510.8,284.3L514.9,286.1L518.1,290.0L520.1,288.6ZM524.6,300.0L531.8,307.8L529.5,315.0L529.1,315.4L528.8,313.3L530.6,309.8L530.5,308.4L524.5,301.4L524.0,300.3L524.6,300.0Z","Tlaxcala":"M500.1,365.3L498.8,364.9L497.8,363.0L502.9,361.2L506.0,361.2L508.3,358.4L512.8,359.3L515.0,357.2L520.3,361.9L520.1,363.5L523.2,363.8L524.7,366.3L526.4,367.1L526.1,368.3L521.7,369.1L519.0,372.4L516.2,371.5L512.2,374.4L508.1,372.1L505.1,367.8L502.0,365.4L500.1,365.3Z","Tamaulipas":"M528.9,206.2L526.5,213.3L526.4,211.0L528.9,206.2ZM520.1,288.6L518.1,290.0L514.9,286.1L510.8,284.3L510.1,283.0L507.5,283.3L507.3,284.7L505.3,285.2L502.9,283.9L493.8,285.5L491.9,284.3L491.2,285.1L485.0,285.0L481.1,278.3L478.0,276.6L477.1,275.3L475.5,275.5L474.9,277.0L469.4,276.0L464.0,273.7L464.0,266.2L462.4,264.3L461.3,258.9L462.7,258.1L465.2,258.6L465.0,253.9L466.8,251.2L467.5,248.3L469.8,247.1L473.1,247.6L474.9,246.6L475.6,245.0L477.9,245.4L477.1,243.1L475.7,242.3L474.3,238.6L472.5,236.5L473.4,229.6L472.1,227.0L470.1,226.8L470.5,225.2L475.7,222.1L477.0,219.9L478.8,220.0L481.4,216.9L482.2,218.3L483.3,217.8L483.8,216.2L485.6,215.4L486.0,213.8L484.7,211.1L487.7,208.4L488.9,209.6L491.7,209.8L493.4,206.6L497.9,205.8L499.7,204.6L502.3,202.5L504.4,199.0L501.0,197.3L501.1,187.3L500.2,184.8L495.0,184.9L492.3,186.4L491.3,185.9L489.5,182.9L486.2,182.5L484.9,181.4L485.9,181.1L485.3,178.4L483.2,179.0L482.1,176.4L480.6,176.5L478.8,174.0L477.5,169.9L475.6,169.7L474.8,167.8L472.4,167.0L473.1,162.5L471.3,161.1L469.9,161.2L469.7,160.1L470.5,157.7L472.2,156.3L471.8,153.2L470.6,152.1L470.6,148.3L469.3,147.4L470.5,146.0L470.2,145.0L465.8,144.5L466.5,142.0L469.3,141.3L471.3,139.2L472.7,139.5L472.8,140.2L474.5,140.0L476.6,142.1L476.2,143.8L477.4,144.4L476.1,149.2L477.1,149.3L477.0,150.2L478.4,150.9L478.4,157.1L482.4,161.6L485.2,168.0L485.3,170.3L487.2,172.0L486.8,173.3L487.7,174.3L488.6,173.9L490.7,174.3L490.8,174.9L494.6,175.1L497.8,178.3L503.7,179.1L505.1,180.9L509.9,183.7L510.4,183.2L513.9,184.1L515.3,183.4L519.8,183.5L520.0,184.2L523.3,184.6L529.3,189.6L530.9,189.3L530.7,187.7L531.5,187.1L536.5,186.5L535.2,195.2L529.5,206.3L528.7,206.0L530.5,202.9L529.8,202.3L530.3,201.7L526.7,199.7L525.7,200.8L527.1,201.7L526.1,203.4L526.8,204.8L526.0,205.1L525.7,203.7L524.8,204.3L524.5,202.6L522.7,202.8L521.8,203.6L522.3,204.4L521.0,205.5L523.2,208.0L521.1,213.3L523.6,214.6L521.4,216.8L522.1,218.7L521.5,221.7L522.3,222.6L521.4,226.9L520.6,226.4L520.7,224.9L518.4,225.9L520.2,230.5L521.1,228.1L520.7,237.9L519.7,238.1L520.6,238.5L520.6,245.7L521.5,246.2L520.8,249.0L521.3,249.8L521.6,246.7L520.7,271.4L517.5,278.9L518.5,279.7L518.1,283.6L520.1,288.6Z","Tabasco":"M654.8,387.9L656.6,392.7L659.0,393.8L659.7,394.9L660.7,394.5L664.4,403.1L667.9,405.6L668.8,407.1L673.9,408.8L676.9,408.0L677.1,403.9L680.0,403.8L683.6,404.6L687.7,407.9L688.3,407.5L692.4,409.1L692.1,426.2L681.5,426.4L682.8,425.0L681.7,423.1L680.3,422.7L680.1,421.8L675.8,420.6L676.5,417.8L675.2,414.3L672.6,412.9L672.1,410.0L671.5,409.4L668.5,410.0L668.1,409.0L666.6,408.6L665.9,410.6L662.1,410.1L661.6,413.5L658.3,414.8L648.1,423.4L646.7,423.1L644.2,419.3L642.1,419.3L642.4,417.4L640.0,414.1L641.9,410.0L641.5,409.3L638.3,409.2L636.9,407.4L634.7,406.5L632.5,407.4L631.7,414.9L628.5,418.9L628.5,420.6L625.9,424.0L624.3,423.5L622.7,415.2L618.1,413.1L616.6,410.9L614.1,409.5L612.8,400.0L619.1,397.7L619.3,399.0L622.0,398.5L623.0,396.7L626.3,396.8L626.8,394.9L630.1,394.0L630.4,394.8L631.2,393.8L636.7,393.6L637.6,394.0L637.0,395.5L639.3,395.4L639.7,394.8L637.9,394.0L644.1,393.5L647.2,391.8L649.5,388.9L654.8,387.9Z","Sonora":"M153.8,96.1L154.0,98.7L156.0,102.0L153.9,108.9L153.1,109.5L149.3,108.0L146.3,106.0L148.5,103.9L148.2,100.8L148.9,97.9L149.5,97.1L150.8,97.3L153.8,96.1ZM242.6,38.2L243.6,39.2L242.7,40.4L245.1,46.4L244.6,49.3L243.0,49.4L243.0,50.0L245.8,52.5L245.8,54.8L246.9,55.7L246.3,58.0L247.4,59.4L249.3,66.4L248.4,69.6L249.8,70.9L247.9,79.1L249.4,80.5L250.3,87.0L250.3,89.5L249.3,91.3L249.6,96.8L247.9,97.9L247.8,100.5L246.3,101.7L246.4,107.7L245.0,111.6L245.9,113.4L245.4,116.3L247.0,118.0L249.3,118.9L248.7,120.0L244.2,122.5L241.1,121.1L237.1,122.4L236.0,123.7L237.8,125.4L237.2,128.1L239.4,129.5L241.5,132.4L241.9,134.0L241.2,136.4L244.6,138.7L247.8,146.1L246.6,150.9L247.1,154.3L246.3,155.2L249.9,157.0L253.7,156.8L253.4,158.5L250.3,162.4L250.6,164.8L248.7,165.4L246.6,169.2L242.5,170.2L241.9,173.5L235.6,176.9L234.7,175.1L233.0,174.9L232.5,173.3L232.6,174.8L232.0,175.4L229.4,170.2L224.6,164.7L223.5,164.3L222.6,166.2L219.5,166.6L216.2,164.7L215.3,163.4L213.5,155.8L211.8,154.4L210.0,155.3L203.9,153.4L199.4,149.8L199.4,147.4L197.5,146.8L196.6,144.8L196.5,141.2L195.6,140.4L197.1,138.7L196.4,138.6L197.0,137.5L196.0,136.3L196.3,135.2L197.9,134.1L191.0,132.2L190.7,131.4L189.0,132.5L189.4,134.2L187.2,132.8L187.0,131.4L184.3,131.8L181.8,130.2L179.2,127.8L177.9,124.9L174.7,121.5L174.6,120.1L168.2,117.4L166.9,113.8L162.4,109.0L163.5,108.4L164.0,109.5L164.6,108.3L160.2,106.4L158.5,103.8L156.6,103.3L157.1,102.6L156.3,100.3L156.8,99.4L155.1,97.5L155.7,95.8L155.1,94.0L150.8,93.3L150.4,92.0L151.4,89.2L146.3,82.9L144.1,78.0L142.0,77.3L142.4,74.9L141.4,68.8L139.4,67.0L139.3,64.1L138.2,62.3L135.9,60.2L133.6,56.4L132.4,52.5L134.2,46.6L133.3,42.3L130.5,41.0L130.2,40.2L129.0,40.7L119.9,38.4L119.1,33.8L113.4,30.6L111.6,30.3L111.0,30.9L111.4,31.9L109.5,33.9L106.7,33.8L103.5,32.4L95.5,26.5L92.0,25.9L85.4,22.0L84.4,21.2L85.6,14.0L84.2,11.7L86.0,9.9L87.2,6.2L89.8,6.1L184.4,38.3L242.6,38.2ZM90.5,24.8L93.6,27.5L93.8,29.2L93.0,28.5L90.4,27.3L90.5,24.8Z","Sinaloa":"M258.6,211.4L260.5,212.9L260.8,217.6L258.6,214.3L258.6,211.4ZM253.7,209.3L259.5,216.0L259.5,217.4L258.9,216.8L253.7,209.3ZM231.3,176.3L232.8,176.8L232.3,178.1L233.4,178.7L234.5,177.8L232.7,175.5L232.5,173.3L233.0,174.9L234.7,175.1L235.6,176.9L241.9,173.5L242.5,170.2L246.6,169.2L248.7,165.4L250.6,164.8L250.3,162.4L253.4,158.5L253.7,156.8L259.4,156.9L259.5,159.8L261.3,159.8L262.4,162.1L262.3,168.2L263.4,168.7L263.8,171.0L267.0,175.9L268.2,180.6L277.7,182.7L280.6,187.6L281.2,190.8L283.4,194.2L284.1,194.1L284.3,194.8L281.3,197.8L282.5,199.1L281.1,202.3L280.6,209.4L281.6,210.0L284.0,214.9L283.7,216.4L284.6,217.2L287.8,217.1L288.7,219.7L290.0,220.0L291.2,224.5L292.6,224.6L295.0,232.1L296.5,232.4L298.6,231.7L302.1,228.5L306.1,229.7L309.6,232.3L311.5,235.7L311.6,237.9L312.6,238.8L314.5,246.4L318.3,251.3L319.5,258.1L321.1,260.6L322.2,264.8L325.7,264.4L327.9,266.7L324.4,274.0L326.8,278.4L326.4,281.4L321.1,279.5L321.3,278.5L319.9,276.8L320.8,275.8L320.1,275.3L319.5,276.0L320.6,278.4L320.1,280.2L320.6,281.9L320.2,282.4L319.7,281.9L317.9,278.6L302.7,262.9L302.9,262.0L301.8,262.4L299.3,257.1L292.2,249.9L292.6,249.4L290.1,244.7L282.5,237.7L283.4,236.4L282.1,237.0L267.1,226.7L267.3,226.2L274.5,231.3L274.5,229.9L275.2,229.6L274.2,226.8L273.0,225.8L272.2,226.1L272.3,227.5L271.1,227.7L270.0,226.3L268.4,226.6L266.5,224.2L262.5,222.7L260.4,218.9L261.0,218.6L262.2,219.8L262.9,218.6L261.9,216.5L262.4,216.0L261.7,215.7L262.2,213.8L261.2,213.1L260.4,210.5L257.9,209.8L255.7,207.3L254.0,207.3L254.2,206.2L252.9,205.6L252.3,207.7L250.4,205.5L244.9,202.8L245.1,201.7L243.8,202.0L242.2,199.7L242.9,198.4L241.3,198.2L240.9,197.2L239.2,197.4L239.7,198.9L238.5,200.2L237.4,198.8L235.7,200.0L233.8,197.9L236.0,196.6L236.4,197.3L237.4,196.9L237.6,195.9L238.7,195.6L238.4,194.3L236.3,194.9L235.4,196.7L233.0,196.6L230.9,193.9L230.4,194.4L231.0,195.1L228.4,195.0L228.5,194.4L229.5,194.7L229.5,192.7L226.0,191.0L226.4,188.2L225.6,187.0L225.8,185.3L230.5,176.5L229.1,180.6L229.9,180.9L231.3,176.3Z","San Luis Potosí":"M461.4,261.1L464.0,266.2L463.9,273.0L465.1,274.6L474.9,277.0L476.5,275.0L481.1,278.3L485.0,285.0L491.2,285.1L491.9,284.3L493.8,285.5L496.9,285.2L497.7,286.4L503.8,287.4L505.3,288.5L506.5,292.2L502.9,293.0L502.9,296.3L500.4,297.1L501.2,299.2L503.5,301.4L501.5,303.1L500.4,303.0L500.4,303.8L499.2,303.8L499.0,304.6L499.9,308.1L501.2,308.3L501.3,311.7L499.7,311.7L496.7,316.7L495.6,316.0L494.4,317.8L492.0,316.7L490.8,314.2L487.7,314.7L483.6,309.7L482.8,307.7L480.7,307.9L479.6,310.7L477.1,310.9L474.6,310.6L473.4,308.0L471.8,307.0L470.7,306.9L470.8,307.9L469.3,308.3L469.9,308.9L467.2,310.2L465.6,310.2L464.9,309.3L462.7,310.1L460.9,307.9L457.0,305.2L453.1,303.9L451.4,306.5L451.5,307.7L447.2,308.3L439.4,303.0L427.0,299.4L429.9,292.0L428.6,288.0L432.1,278.8L430.1,276.2L429.4,276.3L423.4,281.7L418.8,282.4L416.4,278.3L413.0,277.3L406.7,272.4L406.7,269.6L407.9,265.5L406.8,259.9L408.3,258.0L410.7,258.9L413.6,258.3L415.0,255.8L420.9,252.8L424.4,247.6L429.2,246.0L431.5,241.4L430.5,240.2L431.4,236.7L435.3,234.7L437.1,230.9L439.7,230.5L442.7,225.5L444.5,227.8L447.0,228.1L446.5,229.7L447.1,230.3L445.9,231.9L448.0,234.4L447.9,235.9L451.3,241.3L451.1,245.8L452.1,248.1L451.0,253.8L452.3,260.9L455.1,263.2L457.4,260.3L461.4,261.1Z","Quintana Roo":"M799.9,334.3L798.8,337.0L794.7,342.0L793.3,343.1L792.5,341.3L792.6,339.3L794.9,335.4L797.1,335.8L799.9,334.3ZM738.8,407.4L738.5,404.8L741.5,400.5L740.8,394.1L741.4,392.3L740.5,391.8L741.0,390.4L739.7,387.0L740.3,379.0L741.8,377.8L742.1,371.8L738.7,366.6L731.9,360.2L733.0,355.7L737.2,355.1L741.0,352.5L744.7,352.0L746.2,350.5L748.0,350.8L747.8,350.1L749.7,348.4L757.5,344.8L758.8,341.9L759.8,341.9L761.1,343.6L760.9,341.3L762.4,338.5L763.6,337.9L764.7,338.9L767.8,338.6L775.6,333.2L779.5,324.4L778.2,320.1L779.7,315.1L779.4,309.7L784.4,311.1L788.2,310.9L790.2,310.1L790.4,308.0L789.8,307.8L790.9,306.8L794.2,308.9L795.9,311.9L796.8,316.1L798.3,313.7L797.5,311.9L798.2,311.9L797.9,317.9L799.3,319.6L798.6,322.2L797.8,322.2L796.2,327.2L791.7,332.8L786.0,338.2L782.4,344.3L780.9,348.5L781.5,354.1L780.4,355.9L778.4,356.4L776.8,359.2L774.3,360.5L774.1,361.7L775.3,363.0L776.0,362.6L776.6,364.3L777.5,363.0L779.1,362.6L779.7,363.3L780.3,362.0L782.0,361.8L782.5,362.6L781.8,365.3L779.8,367.3L779.4,366.4L776.9,367.9L776.3,369.7L775.9,372.7L777.3,372.7L779.4,369.7L781.6,369.7L779.4,372.5L779.1,375.8L775.0,386.2L773.7,394.3L772.2,396.7L771.7,400.2L770.3,399.7L770.8,396.1L769.3,394.9L769.5,393.8L766.8,393.0L765.8,391.7L766.9,390.1L767.7,385.4L766.5,383.3L766.8,382.3L766.0,382.0L760.3,392.2L755.6,392.2L754.6,393.1L750.0,404.0L746.3,407.7L746.4,409.4L741.9,405.7L738.8,407.4Z","Querétaro":"M488.6,315.0L487.3,318.2L483.1,319.5L481.9,318.8L480.2,320.3L480.5,321.4L479.2,325.3L477.2,327.0L476.0,329.7L476.7,331.7L474.3,333.4L468.8,335.4L467.8,342.2L466.7,343.0L466.6,344.4L464.8,344.2L465.7,347.0L463.3,349.3L460.5,348.9L457.8,346.3L457.7,344.8L455.2,342.5L454.5,340.7L452.4,339.3L451.3,337.3L450.7,332.7L449.6,331.2L451.0,325.8L457.1,324.8L459.8,325.2L460.7,323.6L461.6,324.1L462.1,320.9L464.4,317.5L466.0,316.9L467.7,318.7L470.8,316.8L471.6,314.1L469.1,313.5L470.3,311.5L470.4,309.4L469.3,308.3L470.8,307.9L470.7,306.9L473.0,307.5L474.0,310.0L475.4,310.8L479.6,310.7L480.7,307.9L482.8,307.7L483.6,309.7L488.6,315.0Z","Puebla":"M549.1,393.9L546.3,398.4L543.9,399.0L540.3,401.8L535.2,401.2L530.8,406.8L528.1,401.4L526.0,399.2L527.4,397.4L526.7,396.0L523.5,396.9L521.4,401.5L524.3,404.0L522.5,406.2L520.6,406.0L518.4,404.3L513.5,405.0L511.9,405.3L508.6,408.2L505.3,405.3L501.0,406.4L500.9,405.3L496.6,403.4L497.5,401.8L494.2,401.7L493.0,399.4L490.7,398.0L490.3,396.2L495.7,391.2L499.0,393.8L499.6,393.1L498.3,385.9L501.1,377.4L501.0,372.8L499.9,369.0L500.1,365.3L502.0,365.4L505.1,367.8L508.1,372.1L512.2,374.4L516.2,371.5L519.0,372.4L521.7,369.1L526.1,368.3L526.4,367.1L524.7,366.3L523.2,363.8L522.0,363.4L520.1,363.5L520.3,361.9L515.5,357.2L512.8,359.3L510.7,358.9L510.0,354.0L511.6,350.8L512.4,345.8L511.9,343.5L509.8,344.0L509.1,342.5L512.7,340.6L516.5,336.6L516.8,331.7L519.4,327.1L522.7,327.2L522.6,329.1L521.4,329.8L523.2,330.6L523.0,332.3L526.1,334.5L526.6,335.6L525.1,338.2L523.5,337.2L522.3,338.0L522.8,344.6L525.5,345.0L527.0,347.0L530.7,342.9L537.8,345.5L535.7,349.1L534.1,353.6L533.8,356.4L531.4,361.1L532.8,364.2L532.5,366.1L540.6,369.3L541.2,371.2L541.0,372.0L535.6,371.9L536.0,378.6L534.0,382.3L534.4,386.6L539.1,388.5L540.8,392.6L542.2,392.7L544.6,390.8L547.2,391.7L549.1,393.9Z","Oaxaca":"M619.2,429.2L617.3,437.1L614.5,439.6L612.2,446.5L613.3,450.5L612.9,454.8L611.0,455.7L609.2,455.3L607.5,454.4L606.6,452.8L604.9,454.3L606.0,456.0L610.4,456.3L613.5,458.8L613.3,459.4L605.6,456.3L598.3,455.1L597.9,454.4L600.2,453.6L601.4,451.7L599.0,450.8L596.0,453.3L595.4,452.7L596.5,451.7L594.2,449.0L592.6,449.5L591.2,451.8L590.0,451.8L588.2,454.5L595.3,455.0L587.1,455.7L586.9,456.3L583.8,457.0L583.6,458.0L581.6,459.0L581.4,460.4L579.9,461.4L576.2,461.9L574.0,463.3L566.4,465.7L559.4,469.6L554.9,469.3L551.4,470.3L547.8,468.7L543.8,468.1L534.9,463.0L520.7,461.5L509.4,454.5L504.7,453.6L500.9,452.1L505.5,448.3L506.0,446.2L510.2,442.4L510.3,440.9L513.4,439.0L514.4,436.0L514.0,434.3L512.1,432.9L511.8,429.6L508.9,428.2L509.1,426.0L510.0,425.2L509.4,420.3L506.6,413.9L508.6,408.2L511.9,405.3L513.5,405.0L518.4,404.3L520.6,406.0L522.5,406.2L524.3,404.0L521.4,401.5L523.5,396.9L526.7,396.0L527.4,397.4L526.0,399.2L528.1,401.4L530.8,406.8L535.2,401.2L540.3,401.8L543.9,399.0L546.3,398.4L550.3,391.6L550.1,388.9L550.8,388.3L552.9,389.9L552.4,391.2L553.6,395.1L555.6,396.7L556.9,396.3L558.3,397.1L559.3,399.1L560.7,399.2L560.1,399.8L560.9,400.5L562.8,399.7L568.6,401.0L569.4,406.3L566.8,411.0L567.0,412.9L569.2,417.6L571.2,418.2L575.3,417.4L578.4,415.1L583.7,413.1L585.1,414.0L583.4,415.4L583.2,416.6L585.6,420.1L590.1,424.2L590.4,427.3L619.2,429.2Z","Nuevo León":"M471.3,139.2L469.3,141.3L466.5,142.0L465.8,144.5L470.2,145.0L470.5,146.0L469.3,147.4L470.6,148.3L470.6,152.1L471.8,153.2L472.2,156.3L470.5,157.7L469.7,160.1L469.9,161.2L471.3,161.1L473.1,162.5L472.4,167.0L474.8,167.8L475.6,169.7L477.5,169.9L478.8,174.0L480.6,176.5L482.1,176.4L483.2,179.0L485.3,178.4L485.9,181.1L484.9,181.4L486.2,182.5L489.5,182.9L491.3,185.9L492.3,186.4L495.0,184.9L500.2,184.8L501.1,187.3L501.0,197.3L504.4,199.0L502.3,202.5L499.7,204.6L497.9,205.8L493.4,206.6L491.7,209.8L488.9,209.6L487.7,208.4L484.7,211.1L486.0,213.8L485.6,215.4L483.8,216.2L483.3,217.8L482.2,218.3L481.4,216.9L478.8,220.0L477.0,219.9L475.7,222.1L470.8,224.7L470.1,226.8L472.1,227.0L473.4,229.6L472.5,236.5L474.3,238.6L475.7,242.3L477.1,243.1L477.9,245.4L475.6,245.0L474.9,246.6L473.1,247.6L469.8,247.1L467.5,248.3L466.8,251.2L465.0,253.9L465.2,258.6L462.1,258.2L461.3,258.9L461.4,261.1L457.4,260.3L455.1,263.2L452.3,260.9L451.0,253.8L452.1,248.1L451.1,245.8L451.3,241.3L447.9,235.9L448.0,234.4L445.9,231.9L447.1,230.3L446.5,229.7L447.0,228.1L444.5,227.8L442.7,225.5L444.3,221.8L443.5,219.1L442.1,217.6L442.2,215.5L445.0,214.7L444.0,209.6L445.7,206.4L447.5,205.8L447.2,205.0L449.9,204.9L451.2,206.4L456.7,207.3L457.9,205.1L456.1,203.0L452.5,202.4L453.0,201.3L448.9,198.6L447.9,194.8L443.8,193.9L442.7,189.7L443.3,186.2L441.0,184.9L440.0,181.8L432.5,174.7L437.0,167.8L440.6,167.5L443.2,165.9L446.4,165.9L448.7,163.0L449.5,160.8L449.1,155.7L446.4,154.2L445.7,157.2L445.1,157.3L442.2,155.2L442.0,152.0L445.0,148.0L446.2,148.4L451.2,147.1L451.1,144.9L453.6,139.2L458.5,138.4L464.0,139.3L469.1,136.4L471.3,139.2Z","Nayarit":"M320.6,279.7L322.2,288.9L322.3,290.3L321.7,290.3L319.1,281.5L320.2,282.6L321.0,282.3L320.6,279.7ZM296.1,303.8L298.7,304.6L299.7,307.3L299.0,307.7L296.6,306.4L296.1,303.8ZM354.0,284.4L354.2,287.2L355.6,289.1L354.3,294.1L354.8,297.3L356.5,296.7L359.3,298.5L360.3,303.0L364.8,303.6L368.2,310.8L367.4,316.0L361.5,319.0L357.4,319.3L355.9,328.1L354.6,328.9L356.7,334.3L348.8,326.0L345.7,325.2L343.0,323.0L338.5,325.7L336.1,325.2L334.4,326.0L330.4,331.5L329.2,329.7L327.8,330.4L324.8,329.4L330.0,322.1L331.0,322.4L331.8,321.7L332.5,317.6L331.8,313.6L333.2,310.8L332.9,309.5L326.6,305.7L321.5,295.1L321.6,290.8L322.4,290.4L323.8,292.6L325.8,293.6L326.1,292.0L323.8,290.8L323.5,289.5L322.4,289.6L320.7,279.7L326.4,281.4L327.0,280.4L326.8,278.4L324.4,274.0L326.5,270.8L327.0,267.3L327.9,266.7L330.1,269.4L333.3,267.7L334.8,269.5L337.9,270.1L338.8,272.8L340.5,273.1L340.1,275.3L336.6,278.0L338.8,282.7L340.4,281.8L341.7,279.2L343.1,281.0L344.9,281.4L347.4,283.9L348.3,286.0L350.2,287.2L351.1,285.7L354.0,284.4ZM301.6,309.3L303.5,310.3L302.9,311.5L300.2,310.1L301.6,309.3Z","Morelos":"M493.0,376.2L495.0,378.8L497.5,379.7L501.1,377.4L498.3,384.8L499.6,393.1L499.0,393.8L495.7,391.2L490.3,396.2L488.0,393.7L482.4,393.0L480.4,390.2L478.2,390.0L478.1,386.5L484.1,376.4L485.5,376.2L486.7,377.4L488.8,376.2L489.7,377.0L493.0,376.2Z","Michoacán":"M455.2,342.5L456.8,343.5L457.8,346.3L461.1,349.4L461.1,352.0L462.0,353.4L460.6,355.2L460.1,357.9L457.4,358.2L458.6,360.8L459.1,366.2L457.6,367.6L457.1,370.5L454.3,376.1L451.5,378.0L450.4,380.6L447.0,384.2L445.9,382.5L444.4,384.5L445.9,392.2L448.8,396.2L448.0,397.3L442.2,393.7L440.1,394.8L438.8,392.1L431.8,391.0L426.0,392.5L424.1,391.5L423.1,389.7L420.2,390.1L419.8,389.5L418.7,390.8L418.0,390.2L416.5,390.9L416.7,398.3L409.3,401.3L409.1,404.4L410.2,407.6L408.9,408.1L401.9,405.3L393.9,403.5L388.7,401.0L379.3,398.5L376.1,396.7L373.7,391.8L370.8,389.4L371.2,388.5L369.6,386.6L370.3,384.8L372.2,383.5L372.5,381.4L373.5,381.7L377.0,378.9L379.3,379.2L381.5,377.4L383.6,379.3L391.5,372.5L392.9,371.7L395.2,372.3L396.1,369.9L398.5,367.3L397.8,364.9L394.4,365.0L395.0,362.3L393.1,357.9L394.4,356.3L393.8,354.0L389.9,352.4L386.6,352.6L386.1,351.7L387.0,350.2L387.0,347.7L388.3,347.6L388.6,346.4L391.1,346.9L392.6,348.2L392.9,347.4L396.1,346.4L396.1,345.1L401.3,342.1L407.1,341.6L409.3,340.5L413.9,341.0L414.8,344.9L416.0,345.5L417.2,344.7L420.8,345.3L422.9,342.4L427.1,341.9L429.5,344.5L427.8,344.3L428.8,349.9L433.2,351.0L434.4,350.4L434.2,349.3L438.4,348.8L438.9,351.8L447.3,352.7L450.3,351.2L451.1,352.9L452.3,350.6L454.4,350.3L455.6,349.1L455.0,347.7L455.2,342.5Z","Estado de México":"M497.8,363.0L498.8,364.9L500.1,365.3L499.9,369.0L501.0,372.8L501.1,377.4L497.5,379.7L495.0,378.8L493.0,376.2L492.7,371.5L490.1,368.9L487.7,363.7L487.0,363.6L485.2,365.9L484.6,368.0L481.4,370.8L484.1,376.4L477.9,387.5L476.2,387.9L472.5,386.1L472.9,388.0L471.1,388.3L470.6,389.9L463.2,391.0L463.6,393.1L461.2,393.6L459.1,396.0L457.6,396.2L456.1,393.2L453.0,393.1L452.5,392.5L454.5,389.8L454.4,388.5L452.6,387.7L452.2,386.1L454.1,378.8L453.7,376.5L457.1,370.5L457.6,367.6L459.1,366.2L458.6,360.8L457.4,358.2L460.1,357.9L460.6,355.2L462.0,353.4L461.1,352.0L461.1,349.4L463.7,349.1L465.7,347.0L464.8,344.2L466.6,344.4L466.7,343.0L467.8,342.2L471.7,345.2L476.4,345.9L477.1,346.7L478.7,350.0L478.0,351.0L480.6,355.7L480.4,358.1L481.8,357.3L481.9,354.9L484.1,356.0L484.8,355.2L485.3,351.3L492.6,348.8L493.1,350.2L491.9,354.7L490.0,355.8L490.8,358.6L491.7,358.7L493.5,356.1L499.3,355.4L499.5,357.2L497.7,361.6L497.8,363.0Z","Jalisco":"M394.2,304.1L396.3,303.0L400.5,303.3L404.5,305.8L408.8,304.7L412.1,300.5L416.4,298.5L414.4,296.3L414.4,294.1L418.0,295.0L425.2,299.8L424.0,301.1L424.7,301.9L423.5,303.3L422.1,309.8L422.8,309.9L422.2,312.1L423.0,312.6L422.4,314.0L420.5,314.5L418.9,318.7L416.4,320.7L415.0,323.9L410.5,329.2L411.0,330.6L412.7,331.1L414.3,334.0L412.5,337.6L412.1,340.5L401.3,342.1L396.1,345.1L396.1,346.4L392.9,347.4L392.6,348.2L391.1,346.9L388.6,346.4L388.3,347.6L387.0,347.7L387.0,350.2L386.1,351.7L386.6,352.6L389.9,352.4L393.8,354.0L394.4,356.3L393.1,357.9L395.0,362.3L394.4,365.0L397.8,364.9L398.7,366.6L396.1,369.9L395.2,372.3L392.9,371.7L391.5,372.5L383.6,379.3L381.5,377.4L379.3,379.2L376.0,379.3L375.2,375.7L376.2,369.1L373.9,367.0L373.6,362.9L367.2,367.0L362.5,366.9L359.3,369.3L352.5,369.7L351.2,371.2L349.5,370.8L348.3,372.5L347.0,372.8L344.7,371.6L342.7,371.7L343.1,370.0L341.0,370.4L339.0,369.3L337.1,367.5L337.5,366.7L336.3,365.4L335.7,362.8L331.2,359.4L325.2,350.3L324.0,347.9L323.9,344.4L321.3,341.8L320.4,339.3L322.4,337.6L329.9,336.4L332.0,333.6L330.4,331.5L334.4,326.0L336.1,325.2L338.5,325.7L343.0,323.0L345.7,325.2L348.8,326.0L356.7,334.3L354.6,328.9L355.9,328.1L357.4,319.3L361.5,319.0L366.9,316.4L367.8,315.1L368.0,309.3L366.6,308.0L364.8,303.6L360.3,303.0L359.3,298.5L356.5,296.7L354.8,297.3L354.5,296.3L355.4,288.6L356.5,287.4L357.9,287.7L358.2,284.6L361.9,283.8L361.1,287.7L363.9,285.3L362.0,279.9L364.3,277.5L367.0,277.1L368.8,278.1L366.1,281.8L364.4,286.1L364.3,289.6L365.6,291.4L366.7,291.6L367.1,290.4L367.1,283.1L371.2,281.9L374.1,283.8L374.7,285.7L370.8,293.2L371.3,294.4L373.3,294.4L374.0,293.6L376.0,294.3L376.9,293.9L380.2,290.2L379.0,288.5L379.3,287.2L381.2,286.4L383.4,286.6L383.8,287.5L383.0,289.0L386.2,290.0L384.3,296.6L379.0,299.2L374.2,303.1L374.1,307.5L372.4,309.5L370.6,309.9L371.5,312.5L374.1,312.7L374.4,314.3L369.3,317.0L369.3,317.9L371.8,318.5L374.3,321.6L376.6,321.4L379.5,323.1L381.6,322.1L385.8,321.7L387.2,318.7L388.6,318.2L390.2,318.7L397.1,312.9L397.6,310.1L394.8,308.3L394.2,304.1Z","Hidalgo":"M501.3,311.7L502.5,312.7L502.2,315.4L504.0,317.2L505.3,317.9L506.7,317.9L507.5,317.0L509.6,317.7L512.1,321.5L510.2,323.7L509.9,327.8L508.4,328.0L506.6,326.6L503.2,330.3L502.1,337.6L503.2,340.2L504.6,341.1L515.0,332.5L516.5,333.5L516.5,336.6L512.7,340.6L509.1,342.5L509.8,344.0L511.9,343.5L512.4,345.8L511.6,350.8L510.0,354.0L510.7,358.9L508.3,358.4L506.0,361.2L502.9,361.2L497.8,363.0L497.7,361.6L499.5,357.2L499.3,355.4L493.5,356.1L491.7,358.7L490.8,358.6L490.8,357.7L490.0,355.8L491.9,354.7L493.1,350.2L492.0,348.7L485.3,351.3L484.8,355.2L484.1,356.0L481.9,354.9L481.8,357.3L480.4,358.1L480.6,355.7L478.0,351.0L478.7,350.0L477.1,346.7L476.4,345.9L471.7,345.2L467.8,342.2L468.8,335.4L474.3,333.4L476.7,331.7L476.0,329.7L477.2,327.0L479.2,325.3L480.5,321.4L480.2,320.3L481.9,318.8L483.1,319.5L487.3,318.2L488.6,315.0L490.8,314.2L492.0,316.7L494.4,317.8L495.6,316.0L496.7,316.7L499.7,311.7L501.3,311.7Z","Guerrero":"M477.9,387.5L478.2,390.0L480.4,390.2L482.4,393.0L488.0,393.7L490.3,396.2L490.3,397.5L493.0,399.4L494.2,401.7L497.5,401.8L496.6,403.4L500.9,405.3L501.0,406.4L505.3,405.3L508.6,408.2L506.6,413.9L509.4,420.3L510.0,425.2L509.1,426.0L508.9,428.2L511.8,429.6L512.1,432.9L514.0,434.3L514.4,436.0L513.4,439.0L510.3,440.9L510.2,442.4L506.0,446.2L505.5,448.3L500.9,452.1L495.3,445.6L492.0,446.2L481.2,442.8L472.4,441.5L467.5,438.5L467.9,437.3L466.5,438.1L464.5,435.8L437.6,425.7L437.3,424.5L434.0,421.6L427.7,418.8L427.9,417.9L427.0,416.7L422.8,414.9L422.0,412.9L419.6,410.5L418.8,409.0L414.9,406.8L412.7,406.1L410.6,407.1L409.3,406.0L409.1,404.4L409.1,401.8L410.1,400.6L413.6,400.0L416.7,398.3L416.2,394.6L416.8,393.5L416.2,392.2L417.6,390.2L418.7,390.8L419.8,389.5L420.2,390.1L423.1,389.7L424.1,391.5L426.0,392.5L431.8,391.0L437.7,391.9L438.8,392.1L440.1,394.8L442.2,393.7L448.0,397.3L448.8,396.2L445.9,392.2L444.4,384.5L445.9,382.5L447.0,384.2L450.4,380.6L451.5,378.0L453.7,376.5L454.0,379.6L452.2,386.1L452.6,387.7L454.4,388.5L454.5,389.8L452.5,392.5L453.0,393.1L456.1,393.2L457.6,396.2L459.1,396.0L461.2,393.6L463.6,393.1L462.9,391.6L464.3,390.5L468.6,390.7L469.8,389.6L470.6,389.9L471.1,388.3L472.9,388.0L472.5,386.1L476.2,387.9L477.9,387.5Z","Guanajuato":"M469.9,308.9L470.3,311.5L469.1,313.5L471.6,314.1L470.8,316.8L467.7,318.7L466.0,316.9L464.4,317.5L462.1,320.9L461.6,324.1L460.7,323.6L459.8,325.2L457.1,324.8L451.0,325.8L450.2,327.2L449.7,332.0L451.3,334.5L451.3,337.3L455.2,342.5L455.0,347.7L455.8,348.4L454.4,350.3L452.3,350.6L451.1,352.9L450.3,351.2L447.3,352.7L438.9,351.8L438.4,348.8L434.2,349.3L434.4,350.4L433.2,351.0L428.8,349.9L427.8,344.3L429.5,344.5L427.1,341.9L422.9,342.4L420.8,345.3L418.6,345.0L415.2,345.4L414.4,341.5L412.1,340.5L412.5,337.6L414.3,334.0L412.7,331.1L411.0,330.6L410.4,329.6L415.0,323.9L416.4,320.7L418.9,318.7L420.5,314.5L422.4,314.0L423.0,312.6L422.2,312.1L422.8,309.9L422.1,309.8L423.5,303.3L424.7,301.9L424.0,301.1L424.9,300.0L426.2,300.4L427.0,299.4L439.4,303.0L447.2,308.3L451.5,307.7L452.0,304.6L453.1,303.9L457.0,305.2L460.9,307.9L462.7,310.1L464.9,309.3L465.6,310.2L467.2,310.2L469.9,308.9Z","Durango":"M366.5,164.7L371.5,167.2L374.7,170.5L376.1,174.5L375.8,178.8L377.5,182.7L377.2,186.9L378.5,191.4L377.2,194.5L374.8,197.4L375.3,199.1L376.7,199.4L377.5,200.6L375.2,201.1L373.9,202.4L374.5,205.6L376.9,209.4L379.3,211.4L380.5,215.4L385.3,218.2L390.9,219.5L391.2,215.1L394.9,212.0L396.4,215.7L398.7,217.3L397.9,222.2L399.1,222.7L400.2,226.7L399.2,227.3L399.5,228.7L391.7,229.1L391.0,230.0L387.2,228.4L383.9,229.1L377.7,228.1L368.7,237.7L366.2,238.5L366.0,239.8L367.2,242.0L366.8,246.8L367.7,251.1L362.5,256.5L361.1,264.3L359.1,267.5L359.9,271.9L359.7,277.6L356.2,279.7L354.0,284.4L351.1,285.7L350.7,287.1L348.3,286.0L347.4,283.9L341.7,279.2L340.4,281.8L338.8,282.7L336.6,278.0L340.1,275.3L340.5,273.1L338.8,272.8L337.9,270.1L334.8,269.5L333.3,267.7L330.1,269.4L325.7,264.4L322.2,264.8L321.1,260.6L319.5,258.1L318.3,251.3L314.5,246.4L312.6,238.8L311.6,237.9L311.5,235.7L309.6,232.3L306.1,229.7L302.1,228.5L298.6,231.7L296.5,232.4L295.0,232.1L292.6,224.6L291.2,224.5L290.0,220.0L288.7,219.7L287.8,217.1L284.6,217.2L283.7,216.4L284.0,214.9L281.6,210.0L280.6,209.4L281.1,202.3L282.5,199.1L281.3,197.8L284.3,194.8L284.1,194.1L283.4,194.2L283.7,192.9L286.0,192.2L286.3,193.5L287.4,194.1L289.0,193.9L293.2,196.4L297.7,192.3L299.8,188.9L298.2,185.4L300.0,181.4L300.9,181.2L300.5,179.1L302.0,178.9L302.0,177.5L305.2,175.2L305.2,174.1L303.9,173.2L306.3,166.3L306.3,164.4L308.1,163.9L309.1,162.1L314.0,164.5L316.5,167.7L318.5,167.9L321.9,170.3L323.8,170.3L324.6,171.9L325.9,171.6L328.1,172.7L329.4,171.8L330.4,172.2L333.1,169.9L335.1,170.9L337.6,170.7L342.3,173.9L346.3,173.0L346.3,170.9L348.2,167.8L350.9,165.8L353.4,165.4L353.5,164.4L351.4,163.7L352.5,162.6L357.5,165.0L358.3,164.2L359.9,164.7L363.1,163.7L365.4,164.9L366.5,164.7Z","Ciudad de México":"M493.0,376.2L489.7,377.0L488.8,376.2L486.7,377.4L485.5,376.2L484.1,376.4L483.7,375.8L481.4,370.8L484.6,368.0L485.2,365.9L487.0,363.6L487.7,363.7L489.8,368.4L493.0,372.0L493.0,376.2Z","Colima":"M376.0,379.3L373.5,381.7L372.1,381.7L372.2,383.5L370.3,384.8L369.6,386.6L364.0,382.0L354.7,377.7L355.5,376.1L353.9,374.9L352.1,375.9L350.0,374.4L345.5,373.2L348.3,372.5L349.5,370.8L350.6,371.3L352.5,369.7L359.3,369.3L362.5,366.9L367.2,367.0L373.6,362.9L373.9,367.0L376.2,369.1L375.2,375.7L376.0,379.3Z","Coahuila":"M468.3,136.6L464.0,139.3L458.5,138.4L454.8,138.6L453.6,139.2L451.4,144.1L451.2,147.1L446.2,148.4L445.0,148.0L443.8,149.0L442.0,152.0L442.2,155.2L445.1,157.3L445.7,157.2L446.4,154.2L449.1,155.7L449.5,160.8L448.7,163.0L446.4,165.9L443.2,165.9L440.6,167.5L437.0,167.8L435.1,171.4L432.6,173.8L432.5,174.7L440.0,181.8L441.0,184.9L443.7,186.8L442.7,189.7L443.8,193.9L447.9,194.8L448.9,198.6L453.0,201.3L452.5,202.4L456.1,203.0L457.9,205.1L456.7,207.3L451.2,206.4L449.9,204.9L448.2,204.7L447.2,205.0L447.5,205.8L445.7,206.4L444.0,209.6L445.0,214.7L442.2,215.5L442.1,217.6L443.5,219.1L444.3,221.8L443.3,225.1L441.2,224.6L438.8,226.1L436.7,225.3L432.1,219.3L429.1,219.0L425.9,220.4L423.0,220.3L422.4,216.8L419.7,216.9L415.6,212.1L409.7,209.3L401.9,208.7L395.5,209.9L394.9,212.0L391.2,215.1L390.7,217.2L391.2,219.0L390.2,219.7L388.1,218.3L385.3,218.2L381.8,216.6L379.9,214.5L379.3,211.4L376.9,209.4L374.5,205.6L373.9,202.4L375.2,201.1L377.5,200.6L376.7,199.4L375.3,199.1L374.8,197.4L377.2,194.5L378.5,190.6L377.2,186.9L377.5,182.7L375.8,178.8L376.1,174.5L375.3,171.8L370.3,166.1L367.3,165.3L363.3,161.0L363.1,158.7L367.1,157.0L367.5,155.4L365.1,154.0L364.2,145.6L364.7,144.5L364.4,142.7L363.2,142.2L362.4,137.7L363.5,136.6L362.7,135.1L363.3,133.5L362.5,132.1L364.8,131.3L364.3,129.8L363.2,129.7L363.2,128.1L365.6,128.5L369.2,120.5L368.3,119.1L368.9,118.0L371.2,114.3L374.3,112.7L376.0,108.8L377.6,108.7L378.4,107.2L376.5,105.9L378.7,101.8L382.1,103.0L385.5,103.0L386.6,100.0L387.4,99.8L388.6,97.6L391.8,96.4L390.8,95.3L391.4,92.8L392.5,92.6L393.1,91.4L393.3,88.1L396.4,82.6L401.6,81.1L403.4,81.4L405.7,78.3L409.2,79.3L410.9,80.7L418.2,80.2L422.6,81.7L424.6,80.6L425.5,80.5L425.5,81.6L427.5,80.8L429.8,84.5L431.4,84.9L431.1,86.3L431.7,86.8L432.0,85.5L432.8,85.3L432.7,88.2L437.4,89.8L438.8,92.3L444.2,95.7L444.7,97.8L447.5,100.4L447.8,104.0L450.7,107.9L451.7,111.8L454.3,114.0L453.9,115.1L454.5,115.9L455.8,116.2L455.0,116.8L457.0,122.5L458.7,123.6L459.0,124.7L462.2,126.0L464.9,130.4L465.8,130.5L467.3,135.6L468.3,136.6Z","Chihuahua":"M378.7,101.8L376.5,105.9L378.4,107.2L377.6,108.7L376.0,108.8L374.3,112.7L371.2,114.3L368.9,118.0L368.3,119.1L369.2,120.5L365.6,128.5L363.2,128.1L363.2,129.7L364.3,129.8L364.8,131.3L362.5,132.1L363.3,133.5L362.7,135.1L363.5,136.6L362.4,137.7L363.2,142.2L364.4,142.7L364.7,144.5L364.2,145.6L365.1,154.0L367.5,155.4L367.1,157.0L363.1,158.7L363.3,161.0L366.5,164.7L365.4,164.9L363.1,163.7L359.9,164.7L358.3,164.2L357.5,165.0L352.5,162.6L351.4,163.7L353.5,164.4L353.4,165.4L350.9,165.8L348.2,167.8L346.3,170.9L346.3,173.0L342.3,173.9L337.6,170.7L335.1,170.9L333.1,169.9L330.4,172.2L329.4,171.8L328.1,172.7L325.9,171.6L324.6,171.9L323.8,170.3L321.9,170.3L318.5,167.9L316.5,167.7L314.0,164.5L309.1,162.1L308.1,163.9L306.3,164.4L306.3,166.3L303.9,173.2L305.2,174.1L305.2,175.2L302.0,177.5L302.0,178.9L300.5,179.1L300.9,181.2L300.0,181.4L298.2,185.4L299.7,189.5L293.2,196.4L289.0,193.9L287.4,194.1L286.3,193.5L286.0,192.2L283.3,193.6L281.2,190.8L280.6,187.6L277.2,182.4L268.2,180.6L267.0,175.9L263.8,171.0L263.4,168.7L262.3,168.2L262.4,162.1L261.3,159.8L259.5,159.8L259.4,156.9L252.0,156.4L249.9,157.0L246.3,155.2L247.1,154.3L246.6,150.9L247.8,146.1L244.6,138.7L241.2,136.4L241.9,134.0L241.5,132.4L239.4,129.5L237.2,128.1L237.8,125.4L236.0,123.7L237.1,122.4L241.1,121.1L244.2,122.5L248.7,120.0L249.3,118.9L247.0,118.0L245.4,116.3L245.9,113.4L245.0,111.6L246.4,107.7L246.3,101.7L247.8,100.5L247.9,97.9L249.6,96.8L249.3,91.3L250.3,89.5L250.3,87.0L249.4,80.5L247.9,79.1L249.8,70.9L248.4,69.6L249.3,66.4L247.4,59.4L246.3,58.0L246.9,55.7L245.8,54.8L245.8,52.5L243.0,50.0L243.0,49.4L244.6,49.3L245.1,46.4L242.7,40.4L243.6,39.2L242.6,38.2L256.8,38.2L256.8,25.7L299.3,25.7L300.3,26.8L302.9,27.2L307.5,34.5L313.8,37.3L318.3,42.7L322.7,45.1L323.9,47.7L327.4,50.1L327.8,51.4L335.0,54.4L335.9,55.6L337.6,56.0L338.5,57.9L340.5,59.3L341.5,64.3L345.3,68.4L346.1,77.6L348.3,80.3L349.6,84.1L353.5,87.5L356.5,88.3L359.0,91.6L361.9,93.4L368.9,95.6L370.3,97.5L372.1,98.2L374.5,98.1L378.7,101.8Z","Chiapas":"M612.9,454.8L613.3,450.5L612.1,447.4L614.0,440.7L617.3,437.1L619.7,428.4L625.4,424.5L628.5,420.6L628.5,418.9L631.7,414.9L632.5,407.4L634.7,406.5L636.9,407.4L639.1,409.5L641.5,409.3L641.5,411.2L640.0,414.1L642.4,417.4L642.1,419.3L644.2,419.3L645.2,420.0L646.0,422.2L647.5,423.5L649.4,422.6L658.3,414.8L661.6,413.5L662.1,410.1L665.9,410.6L666.6,408.6L668.1,409.0L668.5,410.0L671.5,409.4L672.6,410.8L672.6,412.9L675.2,414.3L676.5,417.8L675.8,420.6L680.1,421.8L680.3,422.7L681.7,423.1L682.8,425.0L680.8,426.4L683.1,428.6L684.9,428.6L685.4,430.3L687.5,432.8L688.6,433.0L690.4,436.2L693.7,437.5L693.9,438.4L697.0,439.1L699.2,441.0L700.6,443.3L700.9,446.7L701.8,446.6L702.6,448.0L704.6,448.1L705.0,449.3L706.7,449.3L707.2,451.5L705.7,455.2L706.5,456.4L705.9,456.8L706.0,459.0L673.6,458.7L661.2,481.2L665.1,486.5L662.9,488.9L663.0,491.6L661.9,493.0L662.9,497.6L660.9,501.3L645.3,484.6L645.2,483.6L627.6,467.6L617.6,461.2L619.6,461.0L619.3,459.6L618.6,458.6L613.9,457.5L612.9,454.8Z","Campeche":"M678.5,384.3L679.0,385.1L678.3,385.8L676.7,385.4L675.5,387.2L674.4,386.8L673.0,387.9L670.9,388.4L670.6,387.5L673.1,387.1L678.5,384.3ZM707.5,328.6L707.3,336.1L711.5,336.7L712.4,338.7L714.0,338.6L715.0,339.6L717.1,338.0L718.6,341.8L720.4,343.0L722.4,347.7L726.3,349.9L727.5,352.5L730.7,356.2L732.4,361.1L738.7,366.6L741.7,370.6L741.8,377.8L740.3,379.0L739.7,387.0L741.0,390.4L740.5,391.8L741.4,392.3L740.8,394.1L741.6,399.5L741.0,401.8L738.5,404.8L738.7,410.9L692.3,410.9L692.4,409.1L688.3,407.5L687.7,407.9L683.6,404.6L680.0,403.8L677.1,403.9L676.9,408.0L673.9,408.8L668.8,407.1L667.9,405.6L664.4,403.1L660.7,394.5L659.7,394.9L655.9,391.8L654.8,387.9L656.6,387.4L667.9,386.6L670.3,388.9L669.6,390.2L668.1,388.8L667.4,389.7L666.7,389.2L666.2,390.8L666.8,391.6L667.9,391.3L667.5,390.1L668.3,390.2L670.4,391.8L677.2,393.6L684.1,390.4L685.9,385.6L684.5,383.8L683.6,384.6L682.5,383.9L682.2,382.9L683.7,380.7L682.9,380.7L679.9,384.2L679.3,384.0L681.8,381.3L693.5,373.8L698.5,369.1L699.8,360.8L699.3,359.6L700.4,357.3L704.3,354.3L705.7,351.7L704.7,348.9L704.5,336.8L706.3,330.0L707.5,328.6Z","Baja California Sur":"M157.6,205.3L156.8,213.2L156.1,213.9L156.8,215.2L155.5,216.9L157.6,220.1L157.5,223.0L159.5,225.1L158.4,225.0L156.5,222.4L157.5,221.4L156.6,219.3L153.3,218.5L157.6,205.3ZM106.6,131.4L140.9,131.7L141.5,133.9L144.3,138.1L152.6,143.4L153.3,147.0L155.9,151.0L155.5,151.7L158.1,153.8L162.1,155.0L160.6,158.3L164.1,162.2L164.5,163.6L163.3,165.4L166.5,169.6L167.5,170.4L169.1,169.0L165.6,165.5L164.7,161.0L166.1,160.8L172.0,166.0L171.8,169.5L174.9,170.9L174.4,173.7L176.5,176.4L176.2,178.1L178.0,182.5L177.2,186.3L178.5,191.5L180.9,193.5L181.3,195.9L183.2,198.3L185.8,198.6L185.6,200.2L187.6,204.2L188.6,208.7L191.1,211.9L192.3,212.4L194.9,218.1L192.8,223.1L194.3,230.4L197.6,234.6L203.2,235.5L202.0,236.3L200.7,235.9L201.0,237.3L202.7,237.2L203.9,235.4L203.0,232.2L204.0,230.6L205.6,230.8L207.1,233.4L211.3,236.0L211.8,239.1L213.3,239.6L215.9,238.7L216.5,239.7L215.8,242.7L219.1,245.9L219.1,249.6L225.0,252.7L224.6,253.5L226.1,255.6L225.8,261.3L223.3,264.9L218.8,267.0L218.8,267.8L215.2,270.8L212.4,271.5L209.4,268.2L207.3,259.4L204.0,253.4L201.8,251.4L196.7,248.9L188.5,240.5L185.0,237.2L174.1,230.6L173.0,229.1L171.8,229.2L169.6,224.7L169.0,224.3L168.5,225.5L166.1,225.3L165.4,226.1L164.9,222.5L162.4,219.4L161.8,220.1L158.3,218.8L158.6,217.4L157.8,216.2L158.6,214.3L158.0,213.3L157.4,218.0L156.7,218.0L156.2,216.8L156.9,215.3L156.3,213.9L157.8,211.7L157.9,210.8L157.0,210.9L157.2,209.0L158.3,205.2L159.0,205.1L158.6,199.5L159.4,196.1L156.1,185.5L153.1,183.2L152.3,180.4L150.6,178.5L149.0,178.1L148.4,178.8L145.1,176.5L143.8,176.5L134.0,168.5L133.9,167.1L131.4,163.3L131.1,164.3L129.5,163.6L131.9,161.9L132.4,160.6L131.5,157.9L130.5,161.7L129.3,161.9L128.5,164.5L124.8,163.0L125.1,162.3L123.7,162.5L121.8,165.4L120.3,165.5L118.7,163.6L117.1,163.2L115.5,159.6L113.7,158.2L111.4,157.7L110.4,158.4L106.9,154.3L103.6,153.5L102.8,154.1L100.4,152.6L99.4,152.7L99.4,152.0L98.0,151.3L98.0,147.9L97.1,145.9L91.8,143.3L88.2,138.4L87.6,139.3L86.5,138.1L84.9,137.8L83.0,134.3L83.8,133.9L84.9,134.8L97.6,136.3L100.1,135.0L101.5,135.2L101.0,134.6L102.1,133.4L103.0,133.7L102.4,136.1L103.2,137.4L108.1,140.7L109.2,138.8L111.3,139.5L112.9,142.4L113.8,142.6L114.4,141.4L112.8,139.8L113.2,135.4L111.5,134.0L110.6,137.0L107.4,138.2L105.7,137.0L105.8,135.0L107.0,133.3L106.6,131.4ZM202.4,225.6L204.2,227.2L202.7,229.3L201.7,227.1L201.6,226.0L202.4,225.6ZM161.3,225.9L164.4,226.0L168.4,229.8L168.3,231.5L161.3,225.9ZM213.3,230.0L216.1,234.7L216.1,236.4L215.0,236.3L214.2,235.2L213.3,230.0ZM184.7,183.3L184.2,186.0L183.7,185.3L183.2,185.8L181.1,190.1L180.3,189.4L182.0,185.5L181.8,184.1L184.7,183.3ZM193.7,209.9L194.3,211.1L197.0,212.5L198.1,215.9L197.6,216.3L194.9,214.2L193.3,211.3L193.7,209.9ZM186.5,381.8L188.3,383.7L188.3,385.5L187.4,386.0L186.2,384.9L185.0,383.7L186.5,381.8Z","Baja California":"M121.6,87.3L123.6,87.9L125.7,89.8L126.8,92.0L126.3,93.9L131.1,94.5L131.3,99.0L131.9,100.7L133.1,101.0L132.8,102.9L125.4,96.7L124.5,94.9L123.1,94.7L120.8,91.2L121.6,87.3ZM79.6,119.7L81.0,122.9L81.1,126.3L80.4,129.2L78.6,129.0L78.4,128.2L77.4,127.4L76.0,127.9L76.1,127.1L78.9,124.2L78.4,121.9L79.6,119.7ZM107.3,131.4L105.8,131.5L103.7,133.2L103.6,131.7L107.3,127.9L106.6,130.1L107.3,131.4ZM89.8,6.1L87.2,6.2L86.0,9.9L84.2,11.7L85.6,14.0L84.4,21.2L90.2,24.8L89.7,26.4L90.6,30.2L88.8,33.8L87.9,42.8L88.5,44.9L89.9,46.1L89.3,47.4L92.2,49.1L92.7,57.4L94.4,61.3L93.5,69.7L96.9,75.8L100.1,78.3L100.5,80.9L101.8,81.9L102.9,82.0L103.3,81.2L105.1,82.0L119.6,94.7L119.4,97.5L122.0,100.9L121.6,103.8L122.4,105.5L123.2,105.6L123.8,103.9L124.7,103.8L126.2,105.0L126.7,107.9L129.1,106.9L130.2,107.5L132.4,112.7L133.0,116.1L135.6,117.5L138.1,117.0L139.6,118.5L138.9,122.1L140.9,124.8L140.6,129.4L141.8,131.0L141.5,133.4L140.9,131.7L140.0,131.5L108.0,131.4L107.8,129.1L108.7,130.3L109.3,129.5L107.9,128.5L107.5,126.8L109.0,123.9L108.6,123.0L107.2,123.0L109.2,117.1L107.9,115.0L106.3,114.4L106.2,112.4L103.6,111.9L103.6,111.1L101.6,109.8L99.8,105.8L95.2,103.2L94.3,99.8L92.6,99.7L91.6,97.5L89.8,96.6L86.3,92.5L83.4,91.1L80.3,90.7L78.7,88.3L75.5,87.1L73.5,85.3L72.3,85.5L67.5,81.4L67.4,77.9L66.3,76.4L64.7,75.8L65.3,72.4L64.8,67.2L63.3,64.8L61.3,63.6L61.2,62.6L60.4,63.2L58.6,61.9L59.2,56.8L58.5,53.5L53.1,48.3L51.2,48.1L52.0,43.1L46.6,35.5L44.6,34.6L42.3,31.7L43.4,31.2L43.4,29.2L41.0,26.8L43.1,27.6L44.2,26.7L44.4,24.2L41.0,22.5L40.5,20.8L37.6,19.3L36.6,13.8L33.5,11.9L31.4,6.4L31.4,5.2L92.2,0.0L89.9,2.8L90.4,4.5L89.8,6.1ZM2.6,97.2L2.1,99.5L3.4,100.7L3.7,103.5L3.0,105.5L2.2,105.7L1.7,104.3L1.2,101.5L0.0,100.3L0.1,98.4L2.6,97.2Z","Aguascalientes":"M394.2,304.1L391.8,301.8L391.7,300.5L396.4,292.9L397.3,289.5L403.7,286.4L405.3,284.1L406.0,284.0L408.2,286.8L412.7,289.5L413.3,292.0L414.7,294.7L414.4,296.3L416.4,298.5L412.1,300.5L408.8,304.7L404.5,305.8L400.5,303.3L396.3,303.0L394.2,304.1Z"};
+/* ════════════ RENDER: PANORAMA ════════════ */
+// Paleta categórica validada (CVD y visión normal); el color sigue a la categoría, no a su posición
+const CAT=['#4F9A9E','#4D6234','#C8CD7F','#EAB733','#A53614','#EDE0C0'];
+const OTHER='#DBD4CA';
+const TIPO_COLOR={'Convocatoria':CAT[0],'Donativo directo':CAT[1],'Alianzas':CAT[2]};
+const FIG_SHORT=s=>/asociaci[oó]n civil/i.test(s)?'Asociación Civil (A.C.)':/I\.A\.P|asistencia privada/i.test(s)?'Institución de Asistencia Privada (I.A.P.) / A.B.P.':s||'Sin dato';
+const FIG_COLOR={'Asociación Civil (A.C.)':CAT[0],'Institución de Asistencia Privada (I.A.P.) / A.B.P.':CAT[1],'Otra':CAT[2]};
+const ALC_ORDER=['Nacional','Estatal','Municipal'];
+const ALC_SHORT=s=>(ALC_ORDER.find(a=>s.startsWith(a)))||s||'Sin dato';
+let TEM_COLOR=null;
+// Registro más reciente por organización (RFC): el perfil es de la organización, no del donativo
+function orgProfiles(recs){
+  const by={};recs.forEach(o=>{const prev=by[o.rfc];if(!prev||o.ano>prev.ano) by[o.rfc]=o;});
+  return Object.values(by);
+}
+const tipOf=()=>document.getElementById('ch-tip')||(()=>{const d=document.createElement('div');d.id='ch-tip';d.className='ch-tip';document.body.appendChild(d);return d;})();
+function bindTip(root){
+  const tip=tipOf();
+  root.querySelectorAll('[data-tip]').forEach(el=>{
+    el.onmousemove=e=>{tip.innerHTML=el.dataset.tip;tip.style.display='block';
+      tip.style.left=Math.min(e.clientX+14,window.innerWidth-tip.offsetWidth-8)+'px';
+      tip.style.top=Math.min(e.clientY+14,window.innerHeight-tip.offsetHeight-8)+'px';};
+    el.onmouseleave=()=>{tip.style.display='none';};
+  });
+}
+function countBy(items,key){const c={};items.forEach(x=>{const k=key(x);c[k]=(c[k]||0)+1;});return c;}
+function donut(elId,counts,colorOf,unit){
+  const el=document.getElementById(elId);
+  const tot=Object.values(counts).reduce((s,v)=>s+v,0);
+  if(!tot){el.innerHTML='<div class="empty">Sin datos</div>';return;}
+  const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const R=60,r=38,cx=65,cy=65;let a0=-Math.PI/2;
+  const arcs=entries.map(([k,v])=>{
+    const a1=a0+v/tot*2*Math.PI;const large=a1-a0>Math.PI?1:0;
+    const p=(ang,rad)=>`${(cx+rad*Math.cos(ang)).toFixed(2)},${(cy+rad*Math.sin(ang)).toFixed(2)}`;
+    const d=v===tot?`M${cx},${cy-R}A${R},${R} 0 1 1 ${cx-0.01},${cy-R}L${cx-0.01},${cy-r}A${r},${r} 0 1 0 ${cx},${cy-r}Z`
+      :`M${p(a0,R)}A${R},${R} 0 ${large} 1 ${p(a1,R)}L${p(a1,r)}A${r},${r} 0 ${large} 0 ${p(a0,r)}Z`;
+    a0=a1;
+    return `<path d="${d}" fill="${colorOf(k)}" stroke="#fff" stroke-width="2" data-tip="<b>${esc(k)}</b><br>${v} ${unit} · ${fmt(v/tot*100,true)}"/>`;
+  }).join('');
+  el.innerHTML=`<div class="donut-wrap"><svg viewBox="0 0 130 130" role="img" aria-label="Distribución">${arcs}
+    <text x="65" y="63" text-anchor="middle" font-size="22" font-weight="800" fill="#4D6234">${tot}</text>
+    <text x="65" y="78" text-anchor="middle" font-size="9" fill="#6B6660">${unit}</text></svg>
+    <ul class="donut-leg">${entries.map(([k,v])=>`<li data-tip="<b>${esc(k)}</b><br>${v} ${unit}"><i style="background:${colorOf(k)}"></i><span>${esc(k)}</span><span class="pc">${fmt(v/tot*100,true)}<div class="n">${v}</div></span></li>`).join('')}</ul></div>`;
+  bindTip(el);
+}
+function hbars(elId,counts,order,descOf){
+  const el=document.getElementById(elId);
+  const tot=Object.values(counts).reduce((s,v)=>s+v,0);
+  if(!tot){el.innerHTML='<div class="empty">Sin datos</div>';return;}
+  const keys=[...order.filter(k=>counts[k]),...Object.keys(counts).filter(k=>!order.includes(k))];
+  const max=Math.max(...Object.values(counts));
+  el.innerHTML=`<ul class="hbar">${keys.map(k=>`<li data-tip="<b>${esc(k)}</b><br>${esc(descOf(k))}<br>${counts[k]} organización(es)"><span>${esc(k)}</span>
+    <span class="track"><span class="fill" style="display:block;width:${counts[k]/max*100}%"></span></span>
+    <span class="pc">${fmt(counts[k]/tot*100,true)} <small>(${counts[k]})</small></span></li>`).join('')}</ul>`;
+  bindTip(el);
+}
+// Treemap "squarified" (Bruls et al.)
+function squarify(items,x,y,w,h){
+  const out=[];const total=items.reduce((s,i)=>s+i.v,0);if(!total) return out;
+  const scale=w*h/total;let rest=items.map(i=>({...i,a:i.v*scale}));
+  const worst=(row,side)=>{const s=row.reduce((t,r)=>t+r.a,0);const mx=Math.max(...row.map(r=>r.a)),mn=Math.min(...row.map(r=>r.a));return Math.max(side*side*mx/(s*s),(s*s)/(side*side*mn));};
+  while(rest.length){
+    const side=Math.min(w,h);let row=[rest[0]];let i=1;
+    while(i<rest.length&&worst([...row,rest[i]],side)<=worst(row,side)){row.push(rest[i]);i++;}
+    const s=row.reduce((t,r)=>t+r.a,0);
+    if(w>=h){const cw=s/h;let cy=y;row.forEach(r=>{const ch=r.a/cw;out.push({...r,x,y:cy,w:cw,h:ch});cy+=ch;});x+=cw;w-=cw;}
+    else{const ch=s/w;let cx=x;row.forEach(r=>{const cw=r.a/ch;out.push({...r,x:cx,y,w:cw,h:ch});cx+=cw;});y+=ch;h-=ch;}
+    rest=rest.slice(i);
+  }
+  return out;
+}
+const lum=hex=>{const n=parseInt(hex.slice(1),16);const c=[n>>16,(n>>8)&255,n&255].map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*c[0]+.7152*c[1]+.0722*c[2];};
+function treemap(elId,counts,nOrgs){
+  const el=document.getElementById(elId);
+  const items=Object.entries(counts).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v);
+  if(!items.length){el.innerHTML='<div class="empty">Sin datos</div>';return;}
+  const W=900,H=300;
+  const cells=squarify(items,0,0,W,H);
+  el.innerHTML=`<svg class="tm" viewBox="0 0 ${W} ${H}" role="img" aria-label="Temáticas principales">${cells.map(c=>{
+    const col=TEM_COLOR[c.k]||OTHER;const ink=lum(col)>.35?'#1a1a1a':'#fff';
+    const fits=c.w>70&&c.h>34;const maxCh=Math.floor((c.w-14)/6.6);
+    const lbl=c.k.length>maxCh?c.k.slice(0,Math.max(0,maxCh-1))+'…':c.k;
+    return `<g><rect x="${c.x.toFixed(1)}" y="${c.y.toFixed(1)}" width="${c.w.toFixed(1)}" height="${c.h.toFixed(1)}" rx="4" fill="${col}"
+      data-tip="<b>${esc(c.k)}</b><br>${c.v} de ${nOrgs} organizaciones (${fmt(c.v/nOrgs*100,true)})"/>
+      ${fits?`<text x="${(c.x+8).toFixed(1)}" y="${(c.y+18).toFixed(1)}" font-size="12" font-weight="600" fill="${ink}">${esc(lbl)}</text>
+      <text x="${(c.x+8).toFixed(1)}" y="${(c.y+c.h-9).toFixed(1)}" font-size="16" font-weight="700" fill="${ink}">${c.v}</text>`:
+      (c.w>22&&c.h>20?`<text x="${(c.x+c.w/2).toFixed(1)}" y="${(c.y+c.h/2+5).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="700" fill="${ink}">${c.v}</text>`:'')}</g>`;
+  }).join('')}</svg>`;
+  bindTip(el);
+}
+function renderPanorama(){
+  const recs=fOrgf();
+  const orgs=orgProfiles(recs);
+  if(!TEM_COLOR){ // colores fijos por temática según su frecuencia en toda la base (no cambian con los filtros)
+    const all=countBy(orgProfiles(DATA.orgf).flatMap(o=>o.tem.map(t=>({t}))),x=>x.t);
+    TEM_COLOR={};Object.entries(all).sort((a,b)=>b[1]-a[1]).slice(0,CAT.length).forEach(([k],i)=>TEM_COLOR[k]=CAT[i]);
+  }
+  donut('ch-tipo',countBy(recs,o=>o.tipo.replace(/\s+$/,'')||'Sin dato'),k=>TIPO_COLOR[k]||OTHER,'donativos');
+  donut('ch-fig',countBy(orgs,o=>FIG_SHORT(o.fig)),k=>FIG_COLOR[k]||OTHER,'organizaciones');
+  const alcDesc={};orgs.forEach(o=>{if(o.alc) alcDesc[ALC_SHORT(o.alc)]=o.alc;});
+  hbars('ch-alc',countBy(orgs,o=>ALC_SHORT(o.alc)),ALC_ORDER,k=>alcDesc[k]||'');
+  treemap('ch-tem',countBy(orgs.flatMap(o=>o.tem.map(t=>({t}))),x=>x.t),orgs.length);
+}
+INFO.pano={t:'Panorama general',b:`<p>Todos los gráficos se basan en la tabla <strong>Organizaciones Financiadas</strong> (sin registros de prueba) y respetan los filtros.</p>
+  <ul><li><strong>Tipo de donativo:</strong> campo <code>Tipo de donativo</code> (desde la Nota conceptual). Se cuentan <em>donativos</em>: una organización financiada en dos años cuenta dos veces.</li>
+  <li><strong>Figura legal:</strong> campo <code>Figura legal de la organización</code> de la Nota conceptual. Se cuentan <em>organizaciones</em> (por RFC).</li>
+  <li><strong>Alcance:</strong> campo <code>Alcance de la organización</code> de la Nota conceptual: Nacional (más de 18 estados), Estatal (uno o más estados), Municipal (uno o más municipios de un solo estado).</li>
+  <li><strong>Temáticas:</strong> campos <code>Temáticas principales 1, 2 y 3</code> de la Nota conceptual. Cada organización puede marcar hasta 3, por eso la suma supera la cantidad de organizaciones.</li></ul>
+  <p>Si una organización tiene donativos en varios años, se usa el perfil de su postulación más reciente.</p>`};
+
+/* ════════════ RENDER: MAPA ════════════ */
+const MAP_COLORS=['#EDE0C0','#C8CD7F','#8FA662','#4D6234','#2E3B1F'];
+const MAP_ZERO='#F1EDE5';
+function mapData(){
+  // Todos los filtros menos el de estado: el mapa muestra la distribución y resalta el estado elegido
+  const recs=DATA.orgf.filter(o=>(!F.ano||o.ano===F.ano)&&(!F.org||o.rfc===F.org)&&(!F.tipo||o.tipo===F.tipo));
+  const by={};
+  recs.forEach(o=>o.est.forEach(e=>{
+    const s=by[e]=by[e]||{orgs:{}};
+    if(!s.orgs[o.rfc]) s.orgs[o.rfc]={name:o.name,mun:new Set()};
+    if(o.mun) s.orgs[o.rfc].mun.add(o.mun);
+  }));
+  Object.values(by).forEach(s=>s.n=Object.keys(s.orgs).length);
+  const sinEst=new Set(recs.filter(o=>!o.est.length).map(o=>o.name));
+  return {by,sinEst};
+}
+// Clases: si el máximo es chico, un color por valor; si no, 5 tramos iguales
+function mapBins(max){
+  if(!max) return [];
+  if(max<=MAP_COLORS.length) return Array.from({length:max},(_,i)=>({lo:i+1,hi:i+1,c:MAP_COLORS[MAP_COLORS.length-max+i]}));
+  const w=max/MAP_COLORS.length;
+  return MAP_COLORS.map((c,i)=>({lo:Math.floor(i*w)+1,hi:Math.floor((i+1)*w),c})).filter(b=>b.hi>=b.lo);
+}
+const binColor=(n,bins)=>!n?MAP_ZERO:(bins.find(b=>n>=b.lo&&n<=b.hi)||bins[bins.length-1]).c;
+let MAP=null;
+function renderMap(){
+  MAP=mapData();
+  const max=Math.max(0,...Object.values(MAP.by).map(s=>s.n));
+  const bins=mapBins(max);
+  document.getElementById('map-svg').innerHTML=`<svg viewBox="0 0 ${MX_W} ${MX_H}" role="img" aria-label="Mapa de organizaciones financiadas por estado de implementación">
+    ${Object.entries(MX_PATHS).map(([st,d])=>{const n=MAP.by[st]?.n||0;
+      return `<path d="${d}" data-st="${esc(st)}" fill="${binColor(n,bins)}" class="${F.est===st?'sel':''}"><title>${esc(st)}: ${n} org.</title></path>`;}).join('')}
+  </svg>`;
+  document.getElementById('map-legend').innerHTML=`<span>Organizaciones:</span><i style="background:${MAP_ZERO}"></i><span>0</span>`+
+    bins.map(b=>`<i style="background:${b.c}"></i><span>${b.lo===b.hi?b.lo:b.lo+'–'+b.hi}</span>`).join('');
+  const rows=Object.entries(MAP.by).sort((a,b)=>b[1].n-a[1].n||a[0].localeCompare(b[0],'es'));
+  document.getElementById('st-list').innerHTML=rows.length?rows.map(([st,s])=>`<li data-st="${esc(st)}" class="${F.est===st?'sel':''}"><span class="nm">${esc(st)}</span><span class="v">${s.n}</span><span class="b"><span style="width:${s.n/max*100}%"></span></span></li>`).join(''):'<li>Sin datos para los filtros seleccionados</li>';
+  document.getElementById('map-hint').innerHTML=(MAP.sinEst.size?`${MAP.sinEst.size} organización(es) sin estado de implementación cargado. `:'')+(F.est?`Filtrando por <strong>${esc(F.est)}</strong> · <a href="#" onclick="setEst('');return false" style="color:var(--accent2)">quitar filtro</a>`:'');
+  const tip=document.getElementById('map-tip'),card=tip.parentElement;
+  document.querySelectorAll('#map-svg path, #st-list li[data-st]').forEach(el=>{
+    const st=el.dataset.st;
+    el.onclick=()=>setEst(F.est===st?'':st);
+    if(el.tagName.toLowerCase()!=='path') return;
+    el.onmousemove=e=>{
+      const s=MAP.by[st];const r=card.getBoundingClientRect();
+      tip.innerHTML=`<b>${esc(st)}</b><br>${s?s.n+' organización(es) financiada(s)':'Sin organizaciones financiadas'}`+
+        (s?`<ul>${Object.values(s.orgs).map(o=>`<li>${esc(o.name)}${o.mun.size?`<div class="mun">${esc([...o.mun].join(' · '))}</div>`:''}</li>`).join('')}</ul>`:'');
+      tip.style.display='block';
+      const x=e.clientX-r.left+14,y=e.clientY-r.top+14;
+      tip.style.left=Math.max(4,Math.min(x,r.width-tip.offsetWidth-6))+'px';
+      tip.style.top=Math.max(4,Math.min(y,r.height-tip.offsetHeight-6))+'px';
+    };
+    el.onmouseleave=()=>{tip.style.display='none';};
+  });
+}
+function setEst(st){F.est=st;document.getElementById('flt-est').value=st;renderAll();}
+INFO.map={t:'Cobertura territorial',b:`<p>Cantidad de <strong>organizaciones financiadas</strong> (tabla <em>Organizaciones Financiadas</em>, sin registros de prueba) que implementan su proyecto en cada estado.</p>
+  <ul><li><strong>Estado:</strong> campo <code>Estado/s de implementación</code> de la <em>Nota conceptual</em> (Fase 1), vinculada a través del campo <code>Organización</code>.</li>
+  <li><strong>Municipios:</strong> campo <code>Municipio</code> de la Nota conceptual (texto libre, tal cual lo escribió la organización).</li>
+  <li>Una organización que implementa en varios estados cuenta en cada uno; por eso la suma por estado puede ser mayor al total de organizaciones.</li>
+  <li>Cada organización se identifica por RFC: si tuvo donativos en varios años, cuenta una vez por estado.</li></ul>
+  <p>El mapa respeta los filtros de año, organización y tipo de donativo. El filtro de estado resalta el estado seleccionado y filtra el resto del tablero.</p>`};
+
+/* ════════════ FILTROS UI ════════════ */
+function fillSelect(id,opts){
+  const s=document.getElementById(id);
+  opts.forEach(([v,l])=>{const o=document.createElement('option');o.value=v;o.textContent=l.length>40?l.slice(0,40)+'…':l;o.title=l;s.appendChild(o);});
+}
+function initFilters(){
+  const projs=DATA.universe,orgf=DATA.orgf;
+  const anos=[...new Set([...projs.map(p=>p.ano),...orgf.map(o=>o.ano)].filter(Boolean))].sort().reverse();
+  fillSelect('flt-ano',anos.map(a=>[a,a]));
+  const orgs={};
+  orgf.forEach(o=>{if(o.rfc&&!orgs[o.rfc])orgs[o.rfc]=o.name;});
+  projs.forEach(p=>{if(p.rfc&&!orgs[p.rfc])orgs[p.rfc]=p.name;});
+  fillSelect('flt-org',Object.entries(orgs).sort((a,b)=>a[1].localeCompare(b[1],'es')).map(([r,n])=>[r,n]));
+  const ests=[...new Set([...projs.flatMap(p=>p.est),...orgf.flatMap(o=>o.est)])].filter(Boolean).sort((a,b)=>a.localeCompare(b,'es'));
+  fillSelect('flt-est',ests.map(e=>[e,e]));
+  const tipos=[...new Set([...projs.map(p=>p.tipo),...orgf.map(o=>o.tipo)].filter(Boolean))].sort();
+  fillSelect('flt-tipo',tipos.map(t=>[t,t]));
+  [['flt-ano','ano'],['flt-org','org'],['flt-est','est'],['flt-tipo','tipo']].forEach(([id,k])=>{
+    document.getElementById(id).onchange=e=>{F[k]=e.target.value;renderAll();};
+  });
+}
+function resetFilters(){
+  Object.keys(F).forEach(k=>F[k]='');
+  ['flt-ano','flt-org','flt-est','flt-tipo'].forEach(id=>document.getElementById(id).value='');
+  renderAll();
+}
+
+function renderAll(){renderPanorama();renderDirecta();renderMap();renderGenerales();renderPills();renderEspecificos();}
+
+/* ════════════ INIT ════════════ */
+const FIELD_NAMES={"fld00ogKmSkviQlQI": "Meta residuos tóxicos reducidos", "fld0ASWEMkRYVTpt5": "Final prácticas para conservar suelos", "fld0w3uXdvKLQnozO": "Actual materiales tratados", "fld1l1ucdkf7VXCx5": "# hectáreas protegidas", "fld1sciVLOMwZNam8": "Meta final productores con acceso a productividad", "fld2FPMSJ14x2Jszk": "Mujeres final 24-40", "fld2IIM3M9Te28QE3": "Actual hectareas con uso de fertalizante", "fld2zHz6ie8K5JzET": "meta final mujeres capacitadas cuidado medio ambiente", "fld32SGDvLsnuIfAa": "Meta autoempleados", "fld3GQTnPheow9DCT": "RFC vinculado", "fld3g5xwuKwuotcUA": "Meta final materiales tratados", "fld4EdWxR2lf3BL7B": "Meta practicas agua residual", "fld4boMPIh0n6wkOO": "Meta hectáreas con uso de fertilizante", "fld5kwNyXryg6efZ6": "Meta personas capacitadas cuidado del ambiente", "fld6OwHf7WUcssTPq": "Año de convocatoria (from Organización)", "fld6gLUPT7Z59MQKy": "Indicador", "fld6iyh9zRjeZPGTI": "Meta Proporción de involucramiento de mujeres, adultos mayores y otros grupos tradicionalmente excluidos", "fld6qNcIbG6fxrZDS": "Meta final acceso a bys", "fld7ObmRHU0qUg3yE": "Meta", "fld7UOW41TwtKwO3S": "Total alcanzado más 60", "fld8Ib86PrpnRmZeB": "Meta final espacios construidos", "fld8uNxhTBStmwUga": "Total final 16-23", "fld9963hvWlT62lfR": "Monto autorizado", "fld9CmCSFesKrw2aa": "Meta mujeres personas uso eficiente de agua", "fld9lEerxYi4Ivk4w": "Meta # Estructuras comunitarias fortalecidas (comités, bancos de semillas, viveros, cooperativas u otras)", "fld9pYLf5gvp65xlc": "Total alcanzado 16-23", "fldAFf2TugPsn8TBp": "Meta especies protegidas", "fldAJZu1P6FMz9K6P": "Total alcanzado 0-6", "fldAK2NvyzKzWFYny": "Mujeres final 7-15", "fldBXbaPWQb7yrd1c": "Final hectáreas conservadas", "fldBwQE4FjVq2gQ0a": "Proyecto (Fase 3)", "fldC3qqO8L9bIwsZr": "OSC", "fldCKGOBdocLiblP7": "Meta capacitación autoempleo", "fldCNTkGmo6U4cx1J": "Meta final mujeres empleadas", "fldCPvGVlzLpG3TLc": "Meta mujeres autoempleados", "fldCTstoXEtbprj8Q": "Actual Personas capacitadas cuidado del ambiente", "fldCduvlp9H9A6f2W": "Meta final hectareas regeneradas (Reforestadas)", "fldCe2BfeRkMjNWjF": "Meta personas conocimiento de saneamiento", "fldDCxXLvbGdDr3qX": "Meta personas acceden a alimentos org", "fldDv9FS2WCnpB9y6": "Actual mujeres autoempleadas", "fldEFsCFkWReytUOQ": "Costo total", "fldEkm9iIko0K8ERU": "Meta final agua potabilizada", "fldFGJ1GDMP8YyXaI": "Meta final hectáreas bajo manejo regenerativo", "fldFbqTwY5NdPJZp5": "Mujeres final 16-23", "fldGFxZ8AJVFLnXSy": "Meta # Soluciones basadas en la naturaleza (SbN) implementadas", "fldGmUWrfA7Vlvbs0": "Meta # Grupos fortalecidos o acompañados", "fldHSmAofrO0xkBG3": "Meta final especies protegidas", "fldHVb55tITtov9y0": "Total alcanzado 41-60", "fldHh6hTtccDT3aMH": "Actual mujeres alcanzadas x obras de mejoramiento", "fldIVXyT35deiGgr7": "Actual agua potabilizada", "fldIXeQXy0hR3C10E": "Actual practicas agua residuales", "fldJ2UMB022HfcdHM": "Número de mujeres que participan en act de fortalecimiento", "fldJH1Gy4l3roFFtq": "Meta act comunitarias promovidas", "fldK0uZ4vUqB2fiL4": "Actual mujeres capacitadas cuidado del ambiente", "fldKgbX2qNMp53S01": "Tipo de donativo (from Organización)", "fldL2G7v7WwspdaZP": "Actual protección del agua", "fldLHSwZZ9fWj6ZhV": "Meta final mujeres acceso a bys", "fldMB7aFEMpCCdRQU": "meta final mujeres conocimiento saneamiento", "fldMc06mwSCL13Z7V": "Estado operativo", "fldMxp5XBpOok6Sjl": "Meta Incremento porcentual en ventas comunitarias", "fldNcY2p2EPVe7Zci": "Actual mujeres empleos generados", "fldNgyjYtiBrpfeKB": "Meta final KWh renovable", "fldNkXx0xnfqyC4hS": "Actual capacitados autoempleo", "fldO4uCmqUop44Xap": "Meta mujeres acceso a bys", "fldOE7pA28QaLojVR": "meta final practicas protección del agua", "fldOMzDrgJCDGFCNl": "Meta mujeres personas capacitadas cuidado del ambiente", "fldORQTmuNCtrlNBN": "Meta actual promoción cultura indiana", "fldPFmxNMQlQrFQX1": "Actual políticas de protección animal", "fldPMHp87UsY3KLfB": "Nombre de la org (from Nota conceptual)", "fldPYCMvdMhEDWEf7": "Nombre Organización", "fldPqRMWu2eiN762b": "Meta Agua potabilizada", "fldQAA8QMHSn6yDSl": "# hectáreas conservadas", "fldQF7o8eO8JonvlA": "Meta hectáreas regeneradas", "fldQp16hTnKvKwVKd": "Actual hectáreas protegidas", "fldQstCfaLj4qghvT": "Meta acceso a bys", "fldRLDz0zXyGtHO74": "Meta mujeres productores con acceso a productividad", "fldRhxiaUfmNtIBjQ": "Tipo de donativo (from Nota conceptual) (from OSC)", "fldRio0glnfPm3CN4": "Meta mujeres personas conocimiento de saneamiento", "fldSG0aELBkK4ka0i": "Fase 3: Información del proyecto", "fldSRMlZDHhAcdGBQ": "Total final 0-6", "fldSteZtuHVTaRCix": "Actual hectareas reforestadas", "fldT4aRl9roIZ0MB1": "Meta final practicas aguas residuales", "fldTCf1Yrb9I9Elt3": "Meta políticas para proteger especies", "fldTDnlAcha9wt8v3": "Total alcanzado mujeres más 60", "fldTGIVHT2u930sOw": "Total alcanzado mujeres 16-23", "fldTbERlujbyJongb": "Meta personas en actividades comunitarias", "fldTrRzOkrYLyAbHT": "Meta empleo generado", "fldTvFWegrJoPjVk2": "meta de hectáreas bajo manejo regenerativo", "fldU8jvx4Fa8YNvid": "total personas en acr comunitarias", "fldUHO446hn5Jqv4N": "Actual productores con acceso a productividad", "fldUMjpXClujBjTA4": "Total final más 60", "fldUZHyTJeSUXuXKU": "Meta final viviendas", "fldUmik5roZCPkfxR": "Meta actividades comunitarias mujeres", "fldVohC4Hsqz2R1iE": "Meta final mujeres capacitaciones autoempleo", "fldVuagJHuKqQl0Xw": "Meta final mujeres acceden a alimentos org", "fldWLbWOSYUS25UkC": "meta final empleo generado", "fldXfseKgQHx5x8X5": "Meta alimentos producidos", "fldY1AijU2A54QJM9": "Actual mujeres capacitación autoempleo", "fldYHqQRBra4YcyoL": "Meta final hectáreas con uso de fertilizante", "fldYK7AK1eGPAD3jh": "Meta promoción cultural", "fldYfZniUKfqkMoYu": "Meta mujeres autoempleadas", "fldYmE9uVw080447B": "Meta final autoempleados", "fldYoDP5JfwgPajmW": "Actual Meta mujeres uso eficiente de agua", "fldYucEMX7qOzkmO4": "Actual hectáreas conservadas", "fldZv8ctPCe5lp8ci": "# final hectáreas protegidas", "flda0BjV3PneaPgXw": "Nombre del proyecto (from Nota conceptual)", "fldaIEGQBpD0IpxHz": "Total final 41-60", "fldbooJGLhdUjXW4j": "Meta # Jóvenes involucrados en procesos comunitarios o productivos", "fldc1PnuRoRWmYqFx": "Meta practicas para protección de agua", "fldc5KCERPNp4Uiqp": "Actual viviendas contruidas", "fldcdioOxBZfmFfgT": "Meta final politicas para proteger especies", "fldd3SHvW9k2J5CCc": "Meta final personas acceden a alimentos org", "flddOzahA5BBS7nRt": "Total alcanzado mujeres 41-60", "flddWMlnUhIHCMU8l": "Mujeres final más 60", "flddaGFtySpzg0GJF": "Actual autoempleos", "flddoVSNPUM0Lzgkt": "Información del proyecto", "flde62EERcLGJNEic": "Mujeres final 0-6", "fldedWkVOHtE5X52c": "Actual prácticas para conservar suelos", "fldfDy1wMTyqEcEut": "Total alcanzado 24-40", "fldfPqnnp2PPUe8DO": "Meta final mujeres alcanzados x obras de mejoramiento", "fldg6RWPQCV7AeIc9": "Meta final talleres de cuidado del ambiente", "fldgFDTAcZC34RwiM": "Meta mujeres capacitación autoempleo", "fldgpEQuH4947E0n7": "Total alcanzado mujeres 0-6", "fldgskSjsfHkSmf5F": "Actual personas uso eficiente de agua", "fldgswfzpWBPChmdD": "Actual residuos tóxicos", "fldh1jOgb7DqAW5mB": "Meta # Territorios con pilotos/parcelas demostrativas operando", "fldhER7MBspQX0Ky4": "mujeres en act comunitarias", "fldhFIGPfOLnhi9cx": "Meta final personas en act comunitarias", "fldhqntOPFkDuIsYU": "Meta mujeres personas alcanzadas obras de mejoramiento", "fldiex14Zu1uTeRLk": "Total alcanzado mujeres 24-40", "fldjIvVm7ScQyxgLR": "Actual mujeres productores con acceso a productividad", "fldjQirT7p3l9txjP": "Mujeres final 41-60", "fldjzz4qH5hH0hWB7": "Meta # Metodologías documentadas", "fldk2KwUGj6qNa0Sr": "Total final 24-40", "fldk8eJ2yRCdKVpPp": "Monto Otorgado", "fldk92Nd3s6BA9hVc": "Meta productores con acceso a productividad", "fldkPoYSzB018QECA": "Actual acceso a alimentos org", "fldkgh5WTFnGaAeIG": "Real alcanzado", "fldl1JLaw1rnBnJj1": "Estatus final (Uso para reporte)", "fldlC5ckkCAPjD5AW": "Actual talleres de cuidado medio ambiente", "fldlKyO1EYnb2T3EY": "Actual empleos generados", "fldlczUlIdlL5X8il": "Actual bajo manejo regenerativo", "fldloqCYaHGJs4DDG": "Meta final mujeres productores con acceso a prod", "fldlzDaINadegwEAH": "RFC", "fldmaoh8wxpCSOaFC": "Año de convocatoria (from Nota conceptual)", "fldnMD4NLJZw86Xej": "Actual alimentos producidos", "fldnO2IwyVfUk82Gl": "Meta espacios públicos construidos", "fldoRMNbUswqAr7eW": "Meta mujeres personas acceden a alimentos org", "fldoe1cne1soUoMAM": "Actual KWh renovable", "fldpB2hutLrHaOMUS": "Actual especies protegidas", "fldpFwAO2sNWu2Asq": "Actual espacios públicos const", "fldpT6yQDrfupJxwn": "meta final personas conocimiento saneamiento", "fldpjeEku7XZOdGOU": "Meta materiales tratados", "fldq37ePjyXbYtk6V": "Actual acceso a bys", "fldq894D2uUvHWwWa": "Meta final promoción de cultura", "fldqQM9obsHPGo3ef": "Cuántas mujeres participaron de las mismas", "fldqhCT1OWivnrOtV": "Meta personas uso eficiente de agua", "fldr75xXKLtGCXNQO": "Actual personas conocimiento de saneamiento", "fldrmLcXi5XoWfr3l": "Actual personas alcanzadas x obras de mejoramiento", "fldrrJjCcqLzaTHLl": "Meta % de actividades coordinadas con estructuras comunitarias", "fldrrOjMcBOruYM49": "meta final personas capacitadas cuidado medio ambiente", "fldsx0ltEnN8gultl": "Meta actual actividades comunitarias", "fldtE4HpBOAVjaFH7": "Final uso eficiente de agua", "fldtUH6KgeHc6GTd9": "Meta final personas alcanzas x obras de mejoramiento", "fldtlqLl1XN4RuO9O": "Meta final act comunitarias promovidas", "flduHFe1iKo45CjJo": "Total alcanzado mujeres 7-15", "flduszpTvzzQnCWH0": "# de prácticas para conservar/regenerar suelos", "fldv3HuZHQKUt2qt3": "Meta final alimentos producidos", "fldvLfI8OOMcRBmnk": "Final mujeres uso eficiente de agua", "fldve0kCGKLg4zVaF": "Total alcanzado 7-15", "fldvqX52DBGHbxPR7": "Suma población proyecto", "fldwAz0pA4DoHNI4g": "Meta final capacitación autoempleo", "fldwJ5OJ6UjHdi8CJ": "Meta final residuos tóxicos reducidos", "fldwmlVAUddhV3y4i": "Meta KWh renovable", "fldxEunVA1idVYA6r": "Meta talleres cuidado del ambiente", "fldxlNRQRcnHlBFj0": "Meta personas alcanzadas obras de mejoramiento", "fldxrGx8HA6nxdZfF": "Total final 7-15", "fldy0TblZPGma3rto": "Meta % de mujeres en roles de liderazgo o toma de decisiones", "fldy9ZgVmK9JYCp0q": "Meta final mujeres en act comunitarias", "fldylBeYqNqFHsYYj": "Meta viviendas construidas", "fldzBVlCewUcRerEb": "Actual mujeres acceso a bys", "fldzqgpf2vn0N3lFA": "Meta mujeres empleo generado"};
+function collectFields(){
+  const s={F3:new Set(Object.values(P)),RI:new Set(Object.values(RIF)),RF:new Set(Object.values(RFF))};
+  const add=(set,f)=>{if(!f)return;(Array.isArray(f)?f:[f]).forEach(x=>set.add(x));};
+  IND.forEach(i=>[i,i.muj].filter(Boolean).forEach(x=>{add(s.RI,x.ri);add(s.RF,x.rf);}));
+  return {F3:[...s.F3],RI:[...s.RI],RF:[...s.RF]};
+}
+async function init(){
+  const loader=document.getElementById('loader');
+  try{
+    const fl=collectFields();
+    const [ORGF,F3,RI,RF,INDT,F1]=await Promise.all([
+      fetchAll(TBL.ORGF,Object.values(OF)),
+      fetchAll(TBL.F3,fl.F3),
+      fetchAll(TBL.RI,fl.RI),
+      fetchAll(TBL.RF,fl.RF),
+      fetchAll(TBL.IND,Object.values(INF)),
+      fetchAll(TBL.F1,Object.values(NC))
+    ]);
+    DATA=buildModel({ORGF,F3,RI,RF,IND:INDT,F1});
+    initFilters();
+    loader.style.display='none';
+    document.getElementById('content').style.display='block';
+    renderAll();
+    document.getElementById('foot').textContent=`Datos leídos de Airtable el ${new Date().toLocaleString('es-MX')} · ${DATA.orgf.length} donativos · ${DATA.universe.length} proyectos con financiamiento o reportes`;
+  }catch(e){
+    loader.innerHTML=`<div class="err-msg"><strong>Error al cargar datos de Airtable.</strong><br>${esc(e.message)}<br><br>
+      Si abriste el archivo dentro de una vista previa, probá abrirlo directamente en Chrome o Edge.</div>`;
+  }
+}
+init();
+</script>
+</body>
+</html>
